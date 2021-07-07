@@ -2,21 +2,27 @@ package com.example.myvoozkotlin.home.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.homelibrary.model.News
+import androidx.lifecycle.viewModelScope
+import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
-import com.example.myvoozkotlin.home.data.NewsUseCase
-import com.example.myvoozkotlin.home.domain.INewsUseCase
+import com.example.myvoozkotlin.home.domain.NewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val newsUseCase: NewsUseCase
-    ): ViewModel() {
+) : ViewModel() {
 
-    val newsResponse = MutableLiveData<Event<MutableList<News>>>()
-    fun loadNews(idGroup: Int){
-        newsResponse.postValue(newsUseCase.invoke(idGroup))
+    val newsResponse = MutableLiveData<Event<List<News>>>()
+    fun loadNews(idGroup: Int) {
+        viewModelScope.launch {
+            newsUseCase(idGroup).collect {
+                newsResponse.postValue(it)
+            }
+        }
     }
 
 }

@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import com.example.myvoozkotlin.databinding.ActivityMainBinding
 import com.example.myvoozkotlin.home.HomeFragment
 import com.example.myvoozkotlin.profile.ProfileFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null

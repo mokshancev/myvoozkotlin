@@ -2,10 +2,9 @@ package com.example.myvoozkotlin
 
 import android.app.Application
 import com.example.myvoozkotlin.domain.framework.Interactors
-import com.example.myvoozkotlin.domain.interactors.LoadNews
-import com.example.myvoozkotlin.domain.repository.RemoteDataSourceImpl
-import com.example.myvoozkotlin.home.data.NewsRepository
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class BaseApp: Application() {
 
     lateinit var interactors: Interactors
@@ -17,8 +16,5 @@ class BaseApp: Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-
-        //val newsRepository = NewsRepository(RemoteDataSourceImpl())
-        //interactors = Interactors(LoadNews(newsRepository))
     }
 }
