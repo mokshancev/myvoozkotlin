@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.myvoozkotlin.home.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.myvoozkotlin.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/fade_out"
+            app:popUpTo="com.android.tools.property.panel.api.EnumValue$Companion$LOADING$1@68d85a15" />
+        <action
+            android:id="@+id/action_mainFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.myvoozkotlin.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+</navigation>
