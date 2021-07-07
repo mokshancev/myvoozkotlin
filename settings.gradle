@@ -1,0 +1,2 @@
+rootProject.name = "MyVooz.Kotlin"
+include ':app'
