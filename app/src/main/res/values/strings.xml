@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyVooz.Kotlin</string>
+    <string name="title_profile">Профиль</string>
+</resources>
