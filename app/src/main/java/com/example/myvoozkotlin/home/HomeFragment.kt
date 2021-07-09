@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.databinding.FragmentHomeBinding
 import com.example.myvoozkotlin.helpers.Status
@@ -21,7 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment: Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val newsViewModel: NewsViewModel by viewModels()
+    private val newsViewModel: NewsViewModel by  viewModels()
+    private var isShowEmptyPair = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +32,7 @@ class HomeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        setListeners()
         return binding.root
     }
 
@@ -43,12 +47,32 @@ class HomeFragment: Fragment() {
 
     }
 
+    private fun setListeners(){
+        binding.cvShowEmptyLessonsButton.setOnClickListener {
+            if(isShowEmptyPair){
+                binding.ivShowEmptyLessons.setImageResource(R.drawable.ic_cog)
+            }
+            else{
+                binding.ivShowEmptyLessons.setImageResource(R.drawable.ic_eye)
+            }
+        }
+    }
+
     private fun initNewsAdapter(news: List<News>) {
         if (binding.rvStory.adapter == null) {
             binding.rvStory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.rvStory.adapter = NewsAdapter(news)
         } else {
             (binding.rvStory.adapter as? NewsAdapter)?.update(news)
+        }
+    }
+
+    private fun initWeekAdapter(news: List<News>) {
+        if (binding.rvWeek.adapter == null) {
+            binding.rvWeek.layoutManager = GridLayoutManager(requireContext(), 7)
+            binding.rvWeek.adapter = NewsAdapter(news)
+        } else {
+            (binding.rvWeek.adapter as? NewsAdapter)?.update(news)
         }
     }
 
