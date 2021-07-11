@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.databinding.ItemStoryBinding
 
-class NewsAdapter(private var news: List<News>): RecyclerView.Adapter<NewsAdapter.IntercomViewHolder>() {
+class NewsAdapter(private var news: List<News>, ): RecyclerView.Adapter<NewsAdapter.IntercomViewHolder>() {
 
     inner class IntercomViewHolder(val binding : ItemStoryBinding) : RecyclerView.ViewHolder(binding.root)
 

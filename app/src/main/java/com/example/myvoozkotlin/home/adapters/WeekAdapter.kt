@@ -13,9 +13,11 @@ import com.example.myvoozkotlin.databinding.ItemStoryBinding
 import com.example.myvoozkotlin.helpers.Utils
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
+import com.example.myvoozkotlin.home.helpers.OnDatePicked
+import com.example.myvoozkotlin.home.helpers.OnDayPicked
 import java.util.*
 
-class WeekAdapter(private var calendar: Calendar): RecyclerView.Adapter<WeekAdapter.IntercomViewHolder>() {
+class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDayPicked): RecyclerView.Adapter<WeekAdapter.IntercomViewHolder>() {
 
     inner class IntercomViewHolder(val binding : ItemDayBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -27,11 +29,17 @@ class WeekAdapter(private var calendar: Calendar): RecyclerView.Adapter<WeekAdap
         val binding = holder.binding
         val c = Utils.getCalendarDayOfWeek(calendar, position)
 
+        holder.itemView.setOnClickListener {
+            onDayPicked.onDayClick(position)
+        }
+
         binding.apply {
             if(position == 6){
                 tvDayName.hide()
                 tvNumberName.hide()
                 ivArrow.show()
+                flCheck.hide()
+                clContainer.background = null
                 return
             }
 
@@ -45,14 +53,19 @@ class WeekAdapter(private var calendar: Calendar): RecyclerView.Adapter<WeekAdap
             val resource = binding.root.resources
 
             if(calendar.equals(c)){
-                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.buttonBkgSecond))
+                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundPurple))
                 tvNumberName.setTextColor(Color.WHITE)
                 tvDayName.setTextColor(Color.WHITE)
+                flCheck.show()
+                clContainer.setBackgroundResource(R.drawable.background_stroke_day)
             }
             else{
-                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundFill))
+                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundContent))
                 tvNumberName.setTextColor(resource.getColor(R.color.textTertiary))
                 tvDayName.setTextColor(resource.getColor(R.color.textSecondary))
+                flCheck.hide()
+                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundFill))
+                clContainer.background = null
             }
         }
     }

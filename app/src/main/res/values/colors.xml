@@ -9,15 +9,17 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--TEXT-->
-    <color name="textPrimary">#212425</color>
-    <color name="textSecondary">#616465</color>
-    <color name="textTertiary">#a1a4a5</color>
-    <color name="textLink">#3F8AE0</color>
+    <color name="textPrimary">#1f1f1f</color>
+    <color name="textSecondary">#5f5f5f</color>
+    <color name="textTertiary">#9f9f9f</color>
+    <color name="textLink">#016dff</color>
     <color name="textDestructive">#E64646</color>
 
     <!--BKG-->
-    <color name="backgroundFill">#f1f2f4</color>
+    <color name="backgroundFill">#F4F4F4</color>
     <color name="backgroundContent">#fff</color>
+    <color name="backgroundPurple">#FFA25AFF</color>
+    <color name="backgroundLink">#FFdfe5f9</color>
 
     <!--BUTTON-->
     <color name="buttonBkg">#a9adb5</color>
