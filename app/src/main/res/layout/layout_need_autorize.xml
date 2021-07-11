@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_need_autorization"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_flushed"
+        android:layout_gravity="center_horizontal"
+        app:tint="@color/textTertiary" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily='@font/roboto_regular'
+        android:textColor="@color/textTertiary"
+        android:textSize="18dp"
+        android:gravity="center_horizontal"
+        android:text="Авторизуйтесь, чтобы продолжить пользоваться заметками"/>
+</LinearLayout>

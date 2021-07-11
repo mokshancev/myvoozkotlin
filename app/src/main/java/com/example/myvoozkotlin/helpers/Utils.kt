@@ -26,5 +26,4 @@ object Utils {
         }
         return c
     }
-
 }

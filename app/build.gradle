@@ -102,4 +102,7 @@ dependencies {
 
     //story
     implementation 'com.github.OMARIHAMZA:StoryView:1.0.6-alpha'
+
+    //viewpager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-beta04'
 }

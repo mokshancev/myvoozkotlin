@@ -2,16 +2,21 @@ package com.example.myvoozkotlin.note
 
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentNoteBinding
-import com.example.myvoozkotlin.home.adapters.WeekAdapter
+import com.example.myvoozkotlin.helpers.AuthorizationState
+import com.example.myvoozkotlin.helpers.hide
+import com.example.myvoozkotlin.helpers.show
 import com.example.myvoozkotlin.home.helpers.OnTabItemPicked
 import com.example.myvoozkotlin.models.TabItem
-import com.example.myvoozkotlin.note.adapters.TabNoteAdapter
-import java.util.*
+import com.example.myvoozkotlin.note.adapters.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+
 
 class NoteFragment: Fragment(), OnTabItemPicked {
     private var _binding: FragmentNoteBinding? = null
@@ -28,20 +33,56 @@ class NoteFragment: Fragment(), OnTabItemPicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(AuthorizationState.UNAUTORIZATE.equals(BaseApp.getAuthState())){
+            (binding.root.findViewById(R.id.ll_need_autorization) as View).show()
+        }
+        else if(AuthorizationState.AUTORIZATE.equals(BaseApp.getAuthState()) || AuthorizationState.GROUP_AUTORIZATE.equals(BaseApp.getAuthState())){
+            initTabLayout()
+        }
         initToolbar()
-        initTabItemAdapter()
     }
 
-    private fun initTabItemAdapter() {
+    private fun initTabLayout() {
         val items = mutableListOf<TabItem>()
         items.add(TabItem("Активные", 0, true))
         items.add(TabItem("Выполненные", 0, false))
-        if (binding.rvItem.adapter == null) {
-            binding.rvItem.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            binding.rvItem.adapter = TabNoteAdapter(items, this)
-        } else {
-            (binding.rvItem.adapter as? TabNoteAdapter)?.update(items)
-        }
+
+        TabLayoutMediator(
+            binding.tabLayout, binding.viewPager
+        ) { tab, position ->
+            run {
+                tab.text = items.get(position).name
+
+                val textView = LayoutInflater.from(requireContext()).inflate(R.layout.item_tabitem, null)
+                (textView as TextView).text = items.get(position).name
+                tab.setId(position)
+                if(items[position].isActive){
+                    textView.setTextColor(resources.getColor(R.color.textLink))
+                }
+                tab.customView = textView
+            }
+        }.attach()
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                (tab!!.customView as TextView).setTextColor(resources.getColor(R.color.textLink))
+                if(tab.id == 0){
+
+                }
+                else{
+
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                (tab!!.customView as TextView).setTextColor(resources.getColor(R.color.textPrimary))
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
     }
 
     private fun initToolbar() {

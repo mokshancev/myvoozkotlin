@@ -30,6 +30,13 @@ class BaseApp: Application() {
         fun getAuthState(): Int{
             return getSharedPref().getInt(Constants.APP_PREFERENCES_AUTH_STATE, 0)
         }
+
+        fun setAuthState(state: Int){
+            getSharedPref().edit().putInt(
+                Constants.APP_PREFERENCES_AUTH_STATE,
+                state
+            ).apply()
+        }
     }
 
     override fun onCreate() {

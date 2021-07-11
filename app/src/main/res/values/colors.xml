@@ -12,7 +12,8 @@
     <color name="textPrimary">#1f1f1f</color>
     <color name="textSecondary">#5f5f5f</color>
     <color name="textTertiary">#9f9f9f</color>
-    <color name="textLink">#016dff</color>
+    <color name="textLink">#438bf7</color>
+    <color name="textBrandYa">#ff4e33</color>
     <color name="textDestructive">#E64646</color>
 
     <!--BKG-->

@@ -13,9 +13,16 @@
         <action
             android:id="@+id/action_homeFragment_to_noteFragment"
             app:destination="@id/noteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_authFragment"
+            app:destination="@id/authFragment" />
     </fragment>
     <fragment
         android:id="@+id/noteFragment"
         android:name="com.example.myvoozkotlin.note.NoteFragment"
         android:label="NoteFragment" />
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.myvoozkotlin.auth.AuthFragment"
+        android:label="AuthFragment" />
 </navigation>

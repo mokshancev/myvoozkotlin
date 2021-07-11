@@ -38,7 +38,7 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
                 tvDayName.hide()
                 tvNumberName.hide()
                 ivArrow.show()
-                flCheck.hide()
+                //flCheck.hide()
                 clContainer.background = null
                 return
             }
@@ -56,14 +56,14 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundPurple))
                 tvNumberName.setTextColor(Color.WHITE)
                 tvDayName.setTextColor(Color.WHITE)
-                flCheck.show()
+                //flCheck.show()
                 clContainer.setBackgroundResource(R.drawable.background_stroke_day)
             }
             else{
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundContent))
                 tvNumberName.setTextColor(resource.getColor(R.color.textTertiary))
                 tvDayName.setTextColor(resource.getColor(R.color.textSecondary))
-                flCheck.hide()
+                //flCheck.hide()
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundFill))
                 clContainer.background = null
             }
