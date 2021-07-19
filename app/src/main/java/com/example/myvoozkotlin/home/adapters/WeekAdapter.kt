@@ -38,8 +38,7 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
                 tvDayName.hide()
                 tvNumberName.hide()
                 ivArrow.show()
-                //flCheck.hide()
-                clContainer.background = null
+                cvStrokeBackground.setCardBackgroundColor(holder.itemView.resources.getColor(R.color.white))
                 return
             }
 
@@ -54,10 +53,9 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
 
             if(calendar.equals(c)){
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundPurple))
-                tvNumberName.setTextColor(Color.WHITE)
-                tvDayName.setTextColor(Color.WHITE)
-                //flCheck.show()
-                clContainer.setBackgroundResource(R.drawable.background_stroke_day)
+                tvNumberName.setTextColor(resource.getColor(R.color.textSecondary))
+                tvDayName.setTextColor(resource.getColor(R.color.textPrimary))
+                cvStrokeBackground.setCardBackgroundColor(holder.itemView.resources.getColor(R.color.backgroundFill))
             }
             else{
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundContent))
@@ -65,7 +63,7 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
                 tvDayName.setTextColor(resource.getColor(R.color.textSecondary))
                 //flCheck.hide()
                 cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundFill))
-                clContainer.background = null
+                cvStrokeBackground.setCardBackgroundColor(holder.itemView.resources.getColor(R.color.white))
             }
         }
     }

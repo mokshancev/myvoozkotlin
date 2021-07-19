@@ -38,7 +38,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_bell"
-            app:tint="@color/textSecondary" />
+            app:tint="@color/textLink" />
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
@@ -51,12 +51,13 @@
         app:cardElevation="0dp"
         app:cardBackgroundColor="@color/backgroundFill"
         app:cardCornerRadius="50dp">
+
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_user_graduate"
-            app:tint="@color/textTertiary" />
+            android:alpha="0.8"
+            android:src="@drawable/happy" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -76,8 +77,19 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_photo_container"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/cv_photo_container" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_group_name"
+        android:text="ИБ-144"
+        android:textSize="16dp"
+        android:textColor="@color/textSecondary"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,17 +100,29 @@
         android:layout_marginHorizontal="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_group_name"
         app:cardBackgroundColor="@color/backgroundFill">
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/textPrimary"
-            android:textSize="16dp"
-            android:text="Выбрать группу"/>
+            android:id="@+id/cv_select_group"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="7dp"
+            android:layout_margin="1dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+            app:cardBackgroundColor="@color/backgroundContent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/textPrimary"
+                android:textSize="16dp"
+                android:text="Выбрать группу"/>
+        </androidx.cardview.widget.CardView>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView

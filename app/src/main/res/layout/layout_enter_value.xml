@@ -22,5 +22,5 @@
         android:textColor="@color/textTertiary"
         android:textSize="18dp"
         android:gravity="center_horizontal"
-        android:text="Авторизуйтесь, чтобы продолжить пользоваться заметками"/>
+        android:text="Введите название нужной штуки"/>
 </LinearLayout>

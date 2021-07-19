@@ -2,4 +2,6 @@
     <string name="app_name">MyVooz.Kotlin</string>
     <string name="title_profile">Профиль</string>
     <string name="title_note">Заметки</string>
+    <string name="title_select_group">Выберите группу</string>
+    <string name="title_search">Поиск</string>
 </resources>

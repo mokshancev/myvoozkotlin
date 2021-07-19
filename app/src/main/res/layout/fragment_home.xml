@@ -286,7 +286,7 @@
         android:scrollbarAlwaysDrawHorizontalTrack="true"
         android:outlineAmbientShadowColor="@null"
         android:outlineSpotShadowColor="@null"
-        android:layout_marginLeft="-32dp"
+        android:layout_marginLeft="-16dp"
         android:accessibilityHeading="false"
         app:headerLayout="@layout/layout_navigationview"
         android:background="@color/backgroundContent"/>

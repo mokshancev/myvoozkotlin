@@ -3,15 +3,12 @@ package com.example.myvoozkotlin.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
-import android.widget.LinearLayout
 import android.widget.Toast
-import android.widget.Toast.makeText
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -85,12 +82,18 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
 
         initObservers()
 
-        load()
+        loadSchedule()
+        loadNews()
+
         if (AuthorizationState.UNAUTORIZATE.ordinal == BaseApp.getAuthState()) {
             binding.navigationView.getHeaderView(0)
                 .findViewById<View>(R.id.ll_notification_setting_button).hide()
             binding.navigationView.getHeaderView(0)
                 .findViewById<View>(R.id.ll_profile_setting_button).hide()
+            binding.navigationView.getHeaderView(0)
+                .findViewById<View>(R.id.cv_select_group).setOnClickListener {
+                    loadSelectGroupFragment()
+                }
         } else if (AuthorizationState.AUTORIZATE.equals(BaseApp.getAuthState()) || AuthorizationState.GROUP_AUTORIZATE.equals(
                 BaseApp.getAuthState()
             )
@@ -151,13 +154,24 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
         }
     }
 
-    private fun load() {
-        val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
-        var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        dayOfWeek = if (dayOfWeek == 1) 6 else dayOfWeek - 2
+    private fun loadNews() {
+        if(newsViewModel.newsResponse.value != null && newsViewModel.newsResponse.value!!.data != null && newsViewModel.newsResponse.value!!.data!!.isNotEmpty()){
+            initNewsAdapter(newsViewModel.newsResponse.value!!.data!!)
+        }
+        else
+            newsViewModel.loadNews(10)
+    }
 
-        newsViewModel.loadNews(10) //todo
-        scheduleViewModel.loadScheduleDay(10, weekOfYear, dayOfWeek)
+    private fun loadSchedule() {
+        if(scheduleViewModel.scheduleDayResponse.value != null && scheduleViewModel.scheduleDayResponse.value!!.data != null && scheduleViewModel.scheduleDayResponse.value!!.data!!.isNotEmpty()){
+            initScheduleDayAdapter(scheduleViewModel.scheduleDayResponse.value!!.data!!)
+        }
+        else{
+            val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
+            var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+            dayOfWeek = if (dayOfWeek == 1) 6 else dayOfWeek - 2
+            scheduleViewModel.loadScheduleDay(10, weekOfYear, dayOfWeek)
+        }
     }
 
     private fun animateNavigationDrawer() {
@@ -168,10 +182,6 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
                 binding.drawerLayour.setScrimColor(0xbba1a4a5.toInt())
 
                 val diffScaledOffset = slideOffset * (1 - END_SCALE)
-                //val offsetScale: Float = 1 - diffScaledOffset
-                //binding.llContent.scaleX = offsetScale
-                //binding.llContent.scaleY = offsetScale
-
                 val xOffset = drawerView.width * slideOffset
                 val xOffsetDiff = binding.llContent.width * diffScaledOffset / 2
                 val xTranslation = xOffset - xOffsetDiff
@@ -327,7 +337,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
                 endWeekRVAnimate()
 
                 checkDateAnother()
-                load()
+                loadSchedule()
             }
         }
     }
@@ -339,8 +349,13 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
             endWeekRVAnimate()
 
             checkDateAnother()
-            load()
+            loadSchedule()
         }
+    }
+
+    private fun loadSelectGroupFragment(){
+        Navigation.findNavController(binding.root)
+        .navigate(R.id.action_homeFragment_to_selectGroupFragment)
     }
 
     private fun configureToolbar() {

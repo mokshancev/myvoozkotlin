@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_authFragment"
             app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_selectGroupFragment"
+            app:destination="@id/selectGroupFragment" />
     </fragment>
     <fragment
         android:id="@+id/noteFragment"
@@ -25,4 +28,16 @@
         android:id="@+id/authFragment"
         android:name="com.example.myvoozkotlin.auth.AuthFragment"
         android:label="AuthFragment" />
+    <fragment
+        android:id="@+id/selectGroupFragment"
+        android:name="com.example.myvoozkotlin.selectGroup.SelectGroupFragment"
+        android:label="SelectGroupFragment" >
+        <action
+            android:id="@+id/action_selectGroupFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.myvoozkotlin.search.SearchFragment"
+        android:label="SearchFragment" />
 </navigation>
