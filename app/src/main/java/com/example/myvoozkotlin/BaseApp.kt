@@ -4,14 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.myvoozkotlin.domain.framework.Interactors
 import com.example.myvoozkotlin.helpers.Constants
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class BaseApp: Application() {
 
-    lateinit var interactors: Interactors
 
     companion object{
         var instance: BaseApp? = null

@@ -1,8 +1,10 @@
 package com.example.myvoozkotlin.home
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -31,13 +33,17 @@ import com.example.myvoozkotlin.home.helpers.ScheduleState
 import com.example.myvoozkotlin.home.viewModels.NewsViewModel
 import com.example.myvoozkotlin.home.viewModels.ScheduleViewModel
 import com.example.myvoozkotlin.models.news.News
+import com.example.myvoozkotlin.search.SearchFragment
+import com.example.myvoozkotlin.search.helpers.SearchEnum
+import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
+class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val newsViewModel: NewsViewModel by viewModels()
@@ -50,6 +56,10 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
 
     companion object {
         const val WEEK_RV_ANIMATE_DURATION: Long = 250
+
+        fun newInstance(): HomeFragment {
+            return HomeFragment()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,8 +101,9 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
             binding.navigationView.getHeaderView(0)
                 .findViewById<View>(R.id.ll_profile_setting_button).hide()
             binding.navigationView.getHeaderView(0)
-                .findViewById<View>(R.id.cv_select_group).setOnClickListener {
+                .findViewById<View>(R.id.ll_select_group).setOnClickListener {
                     loadSelectGroupFragment()
+                    binding.drawerLayour.close()
                 }
         } else if (AuthorizationState.AUTORIZATE.equals(BaseApp.getAuthState()) || AuthorizationState.GROUP_AUTORIZATE.equals(
                 BaseApp.getAuthState()
@@ -100,6 +111,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
         ) {
 
         }
+
         setListeners()
     }
 
@@ -130,7 +142,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
             }
 
         binding.navigationView.getHeaderView(0)
-            .findViewById<View>(R.id.cv_autorization_button).setOnClickListener {
+            .findViewById<View>(R.id.ll_autorization_button).setOnClickListener {
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_homeFragment_to_authFragment)
                 binding.drawerLayour.close()
@@ -152,6 +164,8 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
                 startWeekRVAnimate()
             }
         }
+
+        BaseApp.getSharedPref().registerOnSharedPreferenceChangeListener(this)
     }
 
     private fun loadNews() {
@@ -354,8 +368,10 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
     }
 
     private fun loadSelectGroupFragment(){
-        Navigation.findNavController(binding.root)
-        .navigate(R.id.action_homeFragment_to_selectGroupFragment)
+        val fragment = SelectGroupFragment.newInstance()
+        childFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.rootViewMain, fragment, SelectGroupFragment.javaClass.simpleName).commit()
     }
 
     private fun configureToolbar() {
@@ -387,5 +403,14 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked {
                 .navigate(R.id.action_homeFragment_to_noteFragment)
         }
         return true
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.d("keykey", key.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        BaseApp.getSharedPref().unregisterOnSharedPreferenceChangeListener(this)
     }
 }

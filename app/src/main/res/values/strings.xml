@@ -4,4 +4,5 @@
     <string name="title_note">Заметки</string>
     <string name="title_select_group">Выберите группу</string>
     <string name="title_search">Поиск</string>
+    <string name="toast_select_group">Выберите группу</string>
 </resources>

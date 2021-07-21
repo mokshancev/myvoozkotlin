@@ -2,7 +2,7 @@
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_need_autorization"
+    android:id="@+id/ll_enter_value"
     android:orientation="vertical"
     android:padding="32dp"
     android:layout_gravity="center"
@@ -22,5 +22,5 @@
         android:textColor="@color/textTertiary"
         android:textSize="18dp"
         android:gravity="center_horizontal"
-        android:text="Введите название нужной штуки"/>
+        android:text="Введите название"/>
 </LinearLayout>

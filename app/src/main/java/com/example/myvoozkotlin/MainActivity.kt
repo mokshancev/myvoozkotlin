@@ -5,6 +5,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.myvoozkotlin.databinding.ActivityMainBinding
+import com.example.myvoozkotlin.home.HomeFragment
+import com.example.myvoozkotlin.search.SearchFragment
+import com.example.myvoozkotlin.search.helpers.SearchEnum
+import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,28 +27,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun configureViews() {
-        initNavigationView()
-    }
-
-    private fun initNavigationView() {
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        val fragment = HomeFragment.newInstance()
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.rootViewMain, fragment, HomeFragment.javaClass.simpleName).commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.homeFragment)
-            popBackStack(item, R.id.homeFragment)
-        else if(item.itemId == R.id.profileFragment)
-            popBackStack(item, R.id.profileFragment)
+//        if(item.itemId == R.id.homeFragment)
+//            //popBackStack(item, R.id.homeFragment)
+//        else if(item.itemId == R.id.profileFragment)
+//            //popBackStack(item, R.id.profileFragment)
         return true
-    }
-
-    private fun popBackStack(item: MenuItem, fragmentId: Int){
-        val navController = findNavController(R.id.nav_host_fragment)
-        if (item.itemId != navController.currentDestination?.id) {
-            if(!findNavController(R.id.nav_host_fragment).popBackStack(fragmentId, false)) {
-                findNavController(R.id.nav_host_fragment).navigate(fragmentId)
-            }
-        }
     }
 }
