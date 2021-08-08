@@ -11,6 +11,9 @@ interface SearchApi {
     @GET("profile?type=institutions")
     suspend fun loadUniversityList(@Query("text") text : String): Response<List<SearchItem>>
 
+    @GET("profile?type=objects")
+    suspend fun loadObjectsList(@Query("text") text : String, @Query("id_university") idUniversity : Int): Response<List<SearchItem>>
+
     @GET("profile?type=groups")
     suspend fun loadGroupList(@Query("text") text : String, @Query("id_university") idUniversity : Int): Response<List<SearchItem>>
 }

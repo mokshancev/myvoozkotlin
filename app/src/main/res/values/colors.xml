@@ -21,6 +21,13 @@
     <color name="backgroundContent">#fff</color>
     <color name="backgroundPurple">#FFA25AFF</color>
     <color name="backgroundLink">#FFdfe5f9</color>
+    <color name="backgroundButtons">#e8f6db</color>
+    <color name="transparent">#00000000</color>
+
+
+    <color name="backgroundNote1">#fffcdae5</color>
+    <color name="backgroundNote2">#ffe1e7e9</color>
+    <color name="backgroundNote3">#fff9f3d3</color>
 
     <!--BUTTON-->
     <color name="buttonBkg">#a9adb5</color>

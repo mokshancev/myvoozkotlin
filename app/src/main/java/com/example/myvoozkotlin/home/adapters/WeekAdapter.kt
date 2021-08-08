@@ -42,7 +42,7 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
                 return
             }
 
-            tvDayName.show()
+            //tvDayName.show()
             tvNumberName.show()
             ivArrow.hide()
 
@@ -52,13 +52,11 @@ class WeekAdapter(private var calendar: Calendar, private val onDayPicked: OnDay
             val resource = binding.root.resources
 
             if(calendar.equals(c)){
-                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundPurple))
-                tvNumberName.setTextColor(resource.getColor(R.color.textSecondary))
+                tvNumberName.setTextColor(resource.getColor(R.color.white))
                 tvDayName.setTextColor(resource.getColor(R.color.textPrimary))
-                cvStrokeBackground.setCardBackgroundColor(holder.itemView.resources.getColor(R.color.backgroundFill))
+                cvStrokeBackground.setCardBackgroundColor(holder.itemView.resources.getColor(R.color.textSecondary))
             }
             else{
-                cvStrokeBackground.setCardBackgroundColor(resource.getColor(R.color.backgroundContent))
                 tvNumberName.setTextColor(resource.getColor(R.color.textTertiary))
                 tvDayName.setTextColor(resource.getColor(R.color.textSecondary))
                 //flCheck.hide()

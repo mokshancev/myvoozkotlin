@@ -43,4 +43,19 @@ class SearchRepositoryImpl @Inject constructor(
             emit(Event.error("lol2"))
             e.printStackTrace()
         }
+
+    override fun loadObjectList(text: String, idUniversity: Int): Flow<Event<List<SearchItem>>> =
+        flow<Event<List<SearchItem>>> {
+            emit(Event.loading())
+            val apiResponse = searchApi.loadObjectsList(text, idUniversity)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null)
+                emit(Event.success(apiResponse.body()!!))
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
 }

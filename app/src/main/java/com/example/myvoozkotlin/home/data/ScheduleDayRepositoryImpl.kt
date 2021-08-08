@@ -19,6 +19,7 @@ class ScheduleDayRepositoryImpl @Inject constructor(
         flow<Event<List<List<Lesson>>>> {
             emit(Event.loading())
             val apiResponse = newsApi.loadDaySchedule(idGroup, week, day)
+            println("-----" + idGroup + " " + week + " " + day)
 
             if (apiResponse.isSuccessful && apiResponse.body() != null)
                 emit(Event.success(apiResponse.body()!!))

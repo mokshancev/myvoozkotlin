@@ -17,13 +17,13 @@ import com.example.myvoozkotlin.models.news.News
 
 class SchedulePairAdapter(
     context: Context?,
-    itemList: List<Lesson>,
+    var itemLesson: List<Lesson>,
     isInfinite: Boolean,
 ):
-    LoopingPagerAdapter<Lesson>(context, itemList, isInfinite) {
+    LoopingPagerAdapter<Lesson>(context, itemLesson, isInfinite) {
 
-    fun update(news: List<Lesson>) {
-        this.itemList = itemList
+    fun update(lessons: List<Lesson>) {
+        itemLesson = lessons
         notifyDataSetChanged()
     }
 
@@ -32,6 +32,11 @@ class SchedulePairAdapter(
     }
 
     override fun bindView(convertView: View?, listPosition: Int, viewType: Int) {
-        //val containerCV: CardView = convertView!!.findViewById(R.id.cv_container)
+        val lesson = itemLesson[listPosition]
+        convertView!!.findViewById<TextView>(R.id.tv_name)!!.text = lesson.number.toString() + ". " + lesson.name
+        convertView.findViewById<TextView>(R.id.tv_type).text = lesson.typeName
+        convertView!!.findViewById<TextView>(R.id.tv_fio)!!.text = lesson.teacher
+
+        convertView.hashCode()
     }
 }

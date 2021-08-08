@@ -2,10 +2,10 @@
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_need_autorization"
     android:orientation="vertical"
     android:padding="32dp"
     android:layout_gravity="center"
+    android:background="@color/backgroundContent"
     android:gravity="center"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView

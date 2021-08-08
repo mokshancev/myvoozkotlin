@@ -10,10 +10,11 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/roboto_fonts_family</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="ActionBar.nameText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -23,6 +24,18 @@
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">@color/backgroundPurple</item>
+        <item name="colorAccent">@color/textLink</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Theme" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/textLink</item>
+        <item name="colorOnPrimary">@color/textLink</item>
+    </style>
+    <style name="PhotoAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 </resources>

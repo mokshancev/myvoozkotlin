@@ -12,12 +12,10 @@ import com.example.myvoozkotlin.R
 import com.rd.PageIndicatorView
 
 
-class ScheduleDayAdapter(val context: Context, private var news: List<List<Lesson>>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleDayAdapter(val context: Context, private var lessons: List<List<Lesson>>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_NORMAL = 0
     private val VIEW_TYPE_EMPTY = 1
-
-    var lessons: List<List<Lesson>> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_NORMAL)
@@ -41,11 +39,11 @@ class ScheduleDayAdapter(val context: Context, private var news: List<List<Lesso
     }
 
     fun update(news: List<List<Lesson>>) {
-        this.news = news
+        this.lessons = news
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = news.size
+    override fun getItemCount() = lessons.size
 
     private inner class ItemPairLessonEmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
@@ -62,15 +60,12 @@ class ScheduleDayAdapter(val context: Context, private var news: List<List<Lesso
         private val viewPager: LoopingViewPager = itemView.findViewById(R.id.viewpager)
         private val indicatorView: PageIndicatorView = itemView.findViewById(R.id.indicator)
         private val firstTimeTV: TextView = itemView.findViewById(R.id.tv_first_time)
-        private val secondTimeTV: TextView = itemView.findViewById(R.id.tv_last_time)
-        val adapter = SchedulePairAdapter(itemView.context, lessons.get(position), false)
+        private val lastTimeTV: TextView = itemView.findViewById(R.id.tv_last_time)
 
-        init {
 
-        }
 
         fun bind(position: Int) {
-            viewPager.adapter = adapter
+            viewPager.adapter = SchedulePairAdapter(itemView.context, lessons[position], false)
             indicatorView.count = viewPager.indicatorCount
             viewPager.setIndicatorPageChangeListener(object :
                 LoopingViewPager.IndicatorPageChangeListener {
@@ -83,6 +78,8 @@ class ScheduleDayAdapter(val context: Context, private var news: List<List<Lesso
                 }
 
             })
+            firstTimeTV.text = lessons[position][0].firstTime
+            lastTimeTV.text = lessons[position][0].lastTime
         }
     }
 }

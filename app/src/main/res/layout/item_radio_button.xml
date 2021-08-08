@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    app:cardCornerRadius="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/cvMainBackground"
+    android:layout_marginTop="8dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/textLink"
+    android:outlineAmbientShadowColor="@color/textTertiary"
+    android:outlineSpotShadowColor="@color/textTertiary"
+    app:cardElevation="0dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitle"
+            android:textSize="15dp"
+            android:textColor="@color/white"
+            android:text="Личная"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

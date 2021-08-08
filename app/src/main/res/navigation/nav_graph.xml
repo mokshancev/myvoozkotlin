@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/noteFragment"
-        android:name="com.example.myvoozkotlin.note.NoteFragment"
+        android:name="com.example.myvoozkotlin.note.NoteListFragment"
         android:label="NoteFragment" />
     <fragment
         android:id="@+id/authFragment"

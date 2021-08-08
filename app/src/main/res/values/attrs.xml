@@ -66,6 +66,36 @@
             <enum name="fill" value="1" />
             <enum name="fillWithAnimation" value="2" />
         </attr>
+    </declare-styleable>
 
+    <declare-styleable name="StoriesProgressView">
+        <attr name="progressCount" format="integer|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="StoryView">
+        <attr name="storyImageRadius" format="dimension"/>
+        <attr name="storyItemIndicatorWidth" format="dimension"/>
+        <attr name="spaceBetweenImageAndIndicator" format="dimension"/>
+        <attr name="pendingIndicatorColor" format="color"/>
+        <attr name="visitedIndicatorColor" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="StoryPlayerProgressView">
+        <attr name="progressBarHeight" format="dimension"/>
+        <attr name="gapBetweenProgressBar" format="dimension"/>
+        <attr name="progressBarPrimaryColor" format="color"/>
+        <attr name="progressBarSecondaryColor" format="color"/>
+        <attr name="singleStoryDisplayTime" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwipeBackLayout">
+        <attr name="swipeBackFactor" format="float"></attr>
+        <attr name="maskAlpha" format="integer"></attr>
+        <attr name="isSwipeFromEdge" format="boolean"></attr>
+        <attr name="directionMode">
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+            <enum name="top" value="4" />
+            <enum name="bottom" value="8" />
+        </attr>
     </declare-styleable>
 </resources>

@@ -1,13 +1,20 @@
 package com.example.myvoozkotlin.home.adapters
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.databinding.ItemStoryBinding
+import com.example.myvoozkotlin.home.helpers.OnStoryClick
+import com.example.myvoozkotlin.models.news.News
+import omari.hamza.storyview.StoryView
+import omari.hamza.storyview.callback.StoryClickListeners
+import omari.hamza.storyview.model.MyStory
+import java.util.*
 
-class NewsAdapter(private var news: List<News>, ): RecyclerView.Adapter<NewsAdapter.IntercomViewHolder>() {
+class NewsAdapter(private var news: List<News>, private var onStoryClick: OnStoryClick): RecyclerView.Adapter<NewsAdapter.IntercomViewHolder>() {
 
     inner class IntercomViewHolder(val binding : ItemStoryBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -24,6 +31,10 @@ class NewsAdapter(private var news: List<News>, ): RecyclerView.Adapter<NewsAdap
                 .load(story.image)
                 .into(itemImage)
             tvTitle.text = story.title
+        }
+
+        binding.root.setOnClickListener {
+            onStoryClick.onStoryClick(news[position])
         }
     }
 

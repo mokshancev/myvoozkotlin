@@ -7,6 +7,7 @@ import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.search.domain.SearchUniversityUseCase
 import com.example.myvoozkotlin.models.SearchItem
 import com.example.myvoozkotlin.search.domain.SearchGroupUseCase
+import com.example.myvoozkotlin.search.domain.SearchObjectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchUniversityUseCase: SearchUniversityUseCase,
+    private val searchObjectUseCase: SearchObjectUseCase,
     private val searchGroupUseCase: SearchGroupUseCase
 ) : ViewModel() {
 
@@ -30,6 +32,14 @@ class SearchViewModel @Inject constructor(
     fun loadGroupList(text: String, idUniversity: Int) {
         viewModelScope.launch {
             searchGroupUseCase(text, idUniversity).collect {
+                searchResponse.postValue(it)
+            }
+        }
+    }
+
+    fun loadObjectList(text: String, idUniversity: Int) {
+        viewModelScope.launch {
+            searchObjectUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }
         }

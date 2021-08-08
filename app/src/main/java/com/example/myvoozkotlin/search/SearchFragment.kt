@@ -1,21 +1,20 @@
 package com.example.myvoozkotlin.search
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.annotation.Nullable
-import androidx.core.os.bundleOf
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentSearchBinding
 import com.example.myvoozkotlin.helpers.Status
@@ -28,8 +27,9 @@ import com.example.myvoozkotlin.search.helpers.SearchEnum
 import com.example.myvoozkotlin.search.viewModels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
-class SearchFragment : Fragment(), OnSearchItemPicked {
+class SearchFragment : BaseFragment(), OnSearchItemPicked {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by viewModels()
@@ -46,6 +46,7 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
         const val CONSTANT_ADDITIONAL_VALUE = "add_value"
         const val REQUEST_UNIVERSITY = "search_response_university"
         const val REQUEST_GROUP = "search_response_group"
+        const val REQUEST_OBJECT = "search_response_object"
 
         fun newInstance(type: Int, addValue: Int): SearchFragment {
             val bundle = Bundle().apply {
@@ -69,13 +70,42 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureViews()
+        setListeners()
+        initRunnable()
 
+        type = arguments?.getInt(CONSTANT_TYPE)!!
+        addValue = arguments?.getInt(CONSTANT_ADDITIONAL_VALUE)!!
+    }
+
+    private fun configureViews(){
+        initToolbar()
+        initObservers()
+        hideKeyBoard()
+    }
+
+    private fun setListeners(){
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchHandler.removeCallbacks(searchRunnable)
+                searchHandler.postDelayed(searchRunnable, SEARCH_TIME_DELAY)
+                return true
+            }
+
+        })
+    }
+
+    private fun initRunnable() {
         searchHandler = Handler()
         searchRunnable = Runnable {
             if(searchView.query.toString().length < 3){
                 binding.progressBar.hide()
                 binding.root.findViewById<View>(R.id.ll_enter_value).show()
                 binding.root.findViewById<View>(R.id.ll_empty).hide()
+                binding.rvSearchList.hide()
             }
             else{
                 if(type == SearchEnum.UNIVERSITY.ordinal){
@@ -84,15 +114,11 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
                 else if(type == SearchEnum.GROUP.ordinal){
                     searchViewModel.loadGroupList(searchView.query.toString(), addValue)
                 }
+                else if(type == SearchEnum.OBJECT.ordinal){
+                    searchViewModel.loadObjectList(searchView.query.toString(), addValue)
+                }
             }
         }
-        type = arguments?.getInt(CONSTANT_TYPE)!!
-        addValue = arguments?.getInt(CONSTANT_ADDITIONAL_VALUE)!!
-    }
-
-    private fun configureViews(){
-        initToolbar()
-        initObservers()
     }
 
     private fun initObservers() {
@@ -101,6 +127,7 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
 
     private fun observeOnNewsResponse() {
         searchViewModel.searchResponse.observe(viewLifecycleOwner, Observer {
+            searchHandler.removeCallbacks(searchRunnable)
             when (it.status) {
                 Status.LOADING -> {
                     binding.root.findViewById<View>(R.id.ll_enter_value).hide()
@@ -149,24 +176,13 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
         binding.toolbar.inflateMenu(R.menu.menu_search)
         val menuItem = binding.toolbar.menu.findItem(R.id.item_search)
         searchView = MenuItemCompat.getActionView(menuItem) as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchHandler.removeCallbacks(searchRunnable)
-                searchHandler.postDelayed(searchRunnable, SEARCH_TIME_DELAY)
-                return true
-            }
-
-        })
     }
 
     private fun addBackButton(){
         binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_arrow_left)
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+            parentFragmentManager.popBackStack()
+            hideKeyBoard()
         }
     }
 
@@ -177,12 +193,25 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
         else
             bundle.putString("fullName", searchItem.fullName)
         bundle.putInt("id", searchItem.id)
+
         if(type == SearchEnum.UNIVERSITY.ordinal){
             parentFragmentManager.setFragmentResult(REQUEST_UNIVERSITY, bundle)
         }
         else if(type == SearchEnum.GROUP.ordinal){
             parentFragmentManager.setFragmentResult(REQUEST_GROUP, bundle)
         }
+        else if(type == SearchEnum.OBJECT.ordinal){
+            parentFragmentManager.setFragmentResult(REQUEST_OBJECT, bundle)
+        }
         parentFragmentManager.popBackStack();
+        hideKeyBoard()
+    }
+
+    private fun hideKeyBoard(){
+        val inputMethodManager: InputMethodManager =
+            requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        if(requireActivity().currentFocus != null){
+            inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
+        }
     }
 }

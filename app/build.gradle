@@ -3,7 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
-
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'realm-android'
+apply plugin: 'kotlin-parcelize'
 
 buildscript {
     repositories {
@@ -105,4 +107,24 @@ dependencies {
 
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0-beta04'
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+    //vk auth
+    implementation 'com.vk:android-sdk-core:3.1.0'
+
+    //photo load
+    implementation 'com.android.volley:volley:1.1.1'
+
+    //permission
+    implementation 'com.karumi:dexter:6.2.3'
+
+    //zoom photo
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    //blur
+    implementation 'io.alterac.blurkit:blurkit:1.1.0'
 }

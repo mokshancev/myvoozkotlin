@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/rootViewSelectGroup"
+    android:id="@+id/rootSelectGroupView"
+    android:fitsSystemWindows="true"
     android:background="@color/backgroundContent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.core.widget.NestedScrollView
@@ -26,7 +27,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:titleTextAppearance="@style/ActionBar.nameText"
                 android:background="@color/backgroundContent" />
         </com.google.android.material.appbar.AppBarLayout>

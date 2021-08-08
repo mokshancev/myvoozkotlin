@@ -1,6 +1,9 @@
 package com.example.myvoozkotlin.helpers
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
+import com.example.myvoozkotlin.BaseApp
 import java.util.*
 
 object Utils {
@@ -12,6 +15,23 @@ object Utils {
             3 -> return "Чт"
             4 -> return "Пт"
             else -> return "Сб"
+        }
+    }
+
+    fun getMonthName(position: Int): String{
+        when(position){
+            0 -> return "Янв"
+            1 -> return "Фев"
+            2 -> return "Мар"
+            3 -> return "Апр"
+            4 -> return "Май"
+            5 -> return "Июн"
+            6 -> return "Июл"
+            7 -> return "Авг"
+            8 -> return "Сен"
+            9 -> return "Окт"
+            10 -> return "Ноя"
+            else -> return "Дек"
         }
     }
 

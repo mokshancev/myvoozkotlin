@@ -5,4 +5,20 @@
     <string name="title_select_group">Выберите группу</string>
     <string name="title_search">Поиск</string>
     <string name="toast_select_group">Выберите группу</string>
+    <string name="select_university">Сначала выберите университет</string>
+    <string name="not_selected">Не выбрано</string>
+    <string name="toast_select_university">Выберите университет</string>
+    <string name="title_about">О приложении</string>
+    <string name="toast_repeat_auth">Попробуйте авторизоваться еще раз</string>
+    <string name="default_user_name">Анонимный А.</string>
+    <string name="title_add_note">Новая заметка</string>
+    <string name="select_object">Выберите предмет</string>
+    <string name="object">Предмет</string>
+    <string name="time_success">Срок выполнения</string>
+    <string name="type_access">Тип доступа</string>
+    <string name="error_max_photo_count">Нельзя загрузить больше 4 файлов</string>
+    <string name="success_create_note">Заметка успешно создана</string>
+    <string name="self_note">Личная</string>
+    <string name="group_note">Групповая</string>
+    <integer name="com_vk_sdk_AppId">7261626</integer>
 </resources>

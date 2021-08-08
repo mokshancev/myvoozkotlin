@@ -2,25 +2,24 @@ package com.example.myvoozkotlin.home
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homelibrary.model.Lesson
 import com.example.myvoozkotlin.BaseApp
+import com.example.myvoozkotlin.MainFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentHomeBinding
 import com.example.myvoozkotlin.helpers.*
@@ -29,25 +28,29 @@ import com.example.myvoozkotlin.home.adapters.ScheduleDayAdapter
 import com.example.myvoozkotlin.home.adapters.WeekAdapter
 import com.example.myvoozkotlin.home.helpers.OnDatePicked
 import com.example.myvoozkotlin.home.helpers.OnDayPicked
+import com.example.myvoozkotlin.home.helpers.OnStoryClick
 import com.example.myvoozkotlin.home.helpers.ScheduleState
 import com.example.myvoozkotlin.home.viewModels.NewsViewModel
 import com.example.myvoozkotlin.home.viewModels.ScheduleViewModel
+import com.example.myvoozkotlin.home.viewModels.UserViewModel
 import com.example.myvoozkotlin.models.news.News
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.SearchEnum
-import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
+import com.example.myvoozkotlin.note.NoteListFragment
 import dagger.hilt.android.AndroidEntryPoint
+import omari.hamza.storyview.StoryView
+import omari.hamza.storyview.callback.StoryClickListeners
+import omari.hamza.storyview.model.MyStory
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
-    SharedPreferences.OnSharedPreferenceChangeListener {
+    OnSharedPreferenceChangeListener, OnStoryClick {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val newsViewModel: NewsViewModel by viewModels()
     private val scheduleViewModel: ScheduleViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     private var scheduleState = ScheduleState.SHOW
 
     private lateinit var calendar: Calendar
@@ -56,16 +59,10 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
 
     companion object {
         const val WEEK_RV_ANIMATE_DURATION: Long = 250
+        const val ANIMATE_TRANSITION_DURATION: Int = 300
 
         fun newInstance(): HomeFragment {
             return HomeFragment()
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (null != savedInstanceState) {
-
         }
     }
 
@@ -73,8 +70,9 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        BaseApp.getSharedPref().registerOnSharedPreferenceChangeListener(this)
         return binding.root
     }
 
@@ -92,25 +90,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
 
         initObservers()
 
-        loadSchedule()
-        loadNews()
-
-        if (AuthorizationState.UNAUTORIZATE.ordinal == BaseApp.getAuthState()) {
-            binding.navigationView.getHeaderView(0)
-                .findViewById<View>(R.id.ll_notification_setting_button).hide()
-            binding.navigationView.getHeaderView(0)
-                .findViewById<View>(R.id.ll_profile_setting_button).hide()
-            binding.navigationView.getHeaderView(0)
-                .findViewById<View>(R.id.ll_select_group).setOnClickListener {
-                    loadSelectGroupFragment()
-                    binding.drawerLayour.close()
-                }
-        } else if (AuthorizationState.AUTORIZATE.equals(BaseApp.getAuthState()) || AuthorizationState.GROUP_AUTORIZATE.equals(
-                BaseApp.getAuthState()
-            )
-        ) {
-
-        }
+        initAuthUser()
 
         setListeners()
     }
@@ -119,7 +99,12 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         setHasOptionsMenu(true)
         initWeekAdapter(calendar)
         configureToolbar()
-        animateNavigationDrawer()
+        checkDateAnother()
+    }
+
+    private fun initAuthUser(){
+        loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
+        loadNews(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
     }
 
     private fun setListeners() {
@@ -133,25 +118,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
             }
         }
 
-        binding.navigationView.setOnClickListener { binding.drawerLayour.close() }
 
-        binding.navigationView.getHeaderView(0)
-            .findViewById<View>(R.id.ll_vk_social_button).setOnClickListener {
-                openLink(Constants.APP_PREFERENCES_VK_SOCIAL_LINK)
-                binding.drawerLayour.close()
-            }
-
-        binding.navigationView.getHeaderView(0)
-            .findViewById<View>(R.id.ll_autorization_button).setOnClickListener {
-                Navigation.findNavController(binding.root)
-                    .navigate(R.id.action_homeFragment_to_authFragment)
-                binding.drawerLayour.close()
-            }
-
-        binding.navigationView.getHeaderView(0)
-            .findViewById<View>(R.id.cv_close_button).setOnClickListener {
-                binding.drawerLayour.close()
-            }
 
         binding.cvDateButton.setOnClickListener {
             if (binding.rvWeek.isVisible) {
@@ -164,51 +131,29 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
                 startWeekRVAnimate()
             }
         }
-
-        BaseApp.getSharedPref().registerOnSharedPreferenceChangeListener(this)
     }
 
-    private fun loadNews() {
+    private fun loadNews(idGroup: Int) {
         if(newsViewModel.newsResponse.value != null && newsViewModel.newsResponse.value!!.data != null && newsViewModel.newsResponse.value!!.data!!.isNotEmpty()){
             initNewsAdapter(newsViewModel.newsResponse.value!!.data!!)
         }
         else
-            newsViewModel.loadNews(10)
+            newsViewModel.loadNews(idGroup)
     }
 
-    private fun loadSchedule() {
-        if(scheduleViewModel.scheduleDayResponse.value != null && scheduleViewModel.scheduleDayResponse.value!!.data != null && scheduleViewModel.scheduleDayResponse.value!!.data!!.isNotEmpty()){
-            initScheduleDayAdapter(scheduleViewModel.scheduleDayResponse.value!!.data!!)
-        }
-        else{
-            val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
-            var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-            dayOfWeek = if (dayOfWeek == 1) 6 else dayOfWeek - 2
-            scheduleViewModel.loadScheduleDay(10, weekOfYear, dayOfWeek)
-        }
-    }
-
-    private fun animateNavigationDrawer() {
-        binding.drawerLayour.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                super.onDrawerSlide(drawerView, slideOffset)
-
-                binding.drawerLayour.setScrimColor(0xbba1a4a5.toInt())
-
-                val diffScaledOffset = slideOffset * (1 - END_SCALE)
-                val xOffset = drawerView.width * slideOffset
-                val xOffsetDiff = binding.llContent.width * diffScaledOffset / 2
-                val xTranslation = xOffset - xOffsetDiff
-                binding.llContent.translationX = xTranslation
-            }
-        })
+    private fun loadSchedule(idGroup: Int) {
+        val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
+        var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        dayOfWeek = if (dayOfWeek == 1) 6 else dayOfWeek - 2
+        println("-----" + idGroup + " " + weekOfYear + " " + dayOfWeek)
+        scheduleViewModel.loadScheduleDay(idGroup, weekOfYear, dayOfWeek)
     }
 
     private fun initNewsAdapter(news: List<News>) {
         if (binding.rvStory.adapter == null) {
             binding.rvStory.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            binding.rvStory.adapter = NewsAdapter(news)
+            binding.rvStory.adapter = NewsAdapter(news, this)
         } else {
             (binding.rvStory.adapter as? NewsAdapter)?.update(news)
         }
@@ -295,30 +240,14 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         })
     }
 
-    private fun openLink(link: String) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-        startActivity(browserIntent)
-    }
-
     private fun checkDateAnother() {
-        if (calendar.equals(currentCalendar)) {
-            binding.apply {
-                tvDateTitle.hide()
-                cvDateChangeIndicator.hide()
-            }
-        } else {
-            binding.apply {
-                tvDateTitle.show()
-                cvDateChangeIndicator.show()
-                binding.tvDateTitle.text =
-                    calendar.get(Calendar.DAY_OF_MONTH).toString() + " " + getNameWithPattern(
-                        calendar,
-                        "MMM"
-                    )
-            }
-        }
+        binding.tvDateTitle.text =
+            calendar.get(Calendar.DAY_OF_MONTH).toString() + " " + getNameWithPattern(
+                calendar,
+                "MMM"
+            )
         val dayName = getNameWithPattern(calendar, "EEEE")
-        binding.tvDateTitle.text = dayName.substring(0, 1).toUpperCase() + dayName.substring(1)
+        binding.tvDayTitle.text = dayName.substring(0, 1).toUpperCase() + dayName.substring(1)
     }
 
     private fun getNameWithPattern(calendar: Calendar, pattern: String): String {
@@ -351,7 +280,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
                 endWeekRVAnimate()
 
                 checkDateAnother()
-                loadSchedule()
+                loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
             }
         }
     }
@@ -363,15 +292,17 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
             endWeekRVAnimate()
 
             checkDateAnother()
-            loadSchedule()
+            loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
         }
     }
 
-    private fun loadSelectGroupFragment(){
-        val fragment = SelectGroupFragment.newInstance()
-        childFragmentManager.beginTransaction()
+
+
+    private fun loadNoteFragment(){
+        val fragment = NoteListFragment.newInstance()
+        requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(null)
-            .replace(R.id.rootViewMain, fragment, SelectGroupFragment.javaClass.simpleName).commit()
+            .replace(R.id.rootMainView, fragment, NoteListFragment.javaClass.simpleName).commit()
     }
 
     private fun configureToolbar() {
@@ -380,8 +311,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         binding.toolbar.inflateMenu(R.menu.menu_home)
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.item_note -> Navigation.findNavController(binding.root)
-                    .navigate(R.id.action_homeFragment_to_noteFragment)
+                R.id.item_note -> loadNoteFragment()
             }
             true
         }
@@ -389,28 +319,54 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
 
     private fun addBackButton() {
         binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_user_circle)
-        binding.toolbar.setNavigationOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                binding.drawerLayour.open()
-            }
-
-        })
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.item_note) {
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_homeFragment_to_noteFragment)
-        }
-        return true
+        binding.toolbar.setNavigationOnClickListener { (parentFragment as MainFragment).openLeftMenuList() }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.d("keykey", key.toString())
+        if(key.equals(Constants.APP_PREFERENCES_USER_GROUP_ID)){
+            initAuthUser()
+        }
+        else if(key.equals(Constants.APP_PREFERENCES_AUTH_STATE)){
+            initAuthUser()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         BaseApp.getSharedPref().unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onStoryClick(stories: News) {
+        val myStories = ArrayList<MyStory>()
+        for (story in stories.stories) {
+            myStories.add(
+                MyStory(
+                    story.image,
+                    Calendar.getInstance().time
+                )
+            )
+            println("----" + story.image)
+        }
+        StoryView.Builder(requireActivity().getSupportFragmentManager())
+            .setStoriesList(myStories)
+            .setStoryDuration(5000)
+            .setTitleText(stories.name)
+            .setTitleLogoUrl(stories.logoImage)
+            .setSubtitleText("Медиацентр")
+            .setStoryClickListeners(object : StoryClickListeners {
+                override fun onDescriptionClickListener(position: Int) {
+                    val browserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(stories.link))
+                    startActivity(browserIntent)
+                }
+
+                override fun onTitleIconClickListener(position: Int) {}
+            })
+            .setOnStoryChangedCallback {
+                //Toast.makeText(context, position + "", Toast.LENGTH_SHORT).show();
+            }
+            .setStartingIndex(0)
+            .build()
+            .show()
     }
 }

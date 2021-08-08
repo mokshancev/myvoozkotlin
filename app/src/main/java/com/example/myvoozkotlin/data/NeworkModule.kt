@@ -1,5 +1,6 @@
 package com.example.myvoozkotlin.data
 
+import com.example.myvoozkotlin.helpers.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,12 +15,11 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 class NeworkModule {
-    val baseurl = "https://myvooz.ru/"
 
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseurl)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
