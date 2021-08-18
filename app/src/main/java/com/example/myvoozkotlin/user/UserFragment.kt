@@ -83,7 +83,7 @@ class UserFragment: BaseFragment(), OnAuthUserChange {
                     val bitmap =
                         MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, contentURI)
 
-                    userViewModel.uploadImage(bitmap, authUserModel!!.accessToken, authUserModel!!.id, "image_profile")
+                    userViewModel.uploadImage(bitmap, authUserModel!!.accessToken, authUserModel!!.id)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

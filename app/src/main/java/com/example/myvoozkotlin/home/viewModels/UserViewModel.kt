@@ -12,15 +12,18 @@ import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.helpers.Utils
 import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
+import com.example.myvoozkotlin.user.domain.UploadPhotoUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val changeFullNameUseCase: ChangeFullNameUseCase,
+    private val uploadPhotoUseCase: UploadPhotoUseCase,
     private val userRepository: UserRepository,
     private val dbUtils: DbUtils
 ) : ViewModel() {
@@ -44,14 +47,9 @@ class UserViewModel @Inject constructor(
     }
 
     val uploadImageResponse = MutableLiveData<Event<Boolean>>()
-    fun uploadImage(bitmap: Bitmap, accessToken: String, idUser: Int, type: String) {
+    fun uploadImage(image: Bitmap, accessToken: String, idUser: Int) {
         viewModelScope.launch {
-            Log.d("bwrbwbwrb", "bwerbwbweb1")
-            uploadImageResponse.postValue(Event.loading())
-            Log.d("bwrbwbwrb", "bwerbwbweb2")
-            Utils.uploadImage(bitmap, accessToken, idUser, type)
-            Log.d("bwrbwbwrb", "bwerbwbwe3")
-            uploadImageResponse.postValue(Event.success(true))
+            uploadPhotoUseCase.invoke(accessToken, idUser, image)
         }
     }
 
