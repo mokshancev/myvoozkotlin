@@ -16,7 +16,8 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteAdapter(private var notes: List<Note>): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
+class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
+    private var notes: MutableList<Note> = mutableListOf()
 
     inner class IntercomViewHolder(val binding : ItemNoteBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -80,8 +81,6 @@ class NoteAdapter(private var notes: List<Note>): RecyclerView.Adapter<NoteAdapt
             val minutes =
                 if (calendar[Calendar.MINUTE] < 10) "0" + calendar[Calendar.MINUTE] else calendar[Calendar.MINUTE].toString()
 
-            binding.clBackground.setBackgroundColor(holder.itemView.resources.getColor(R.color.backgroundFill))
-
             if (cal_cur.after(calendar)) {
                 val mm =
                     if (calendar[Calendar.MONTH] < 10) "0" + calendar[Calendar.MONTH] else calendar[Calendar.MONTH].toString()
@@ -104,8 +103,15 @@ class NoteAdapter(private var notes: List<Note>): RecyclerView.Adapter<NoteAdapt
         }
     }
 
-    fun update(note: List<Note>) {
+    fun update(note: MutableList<Note>) {
         this.notes = note
+        this.notes.sortBy { it.date }
+        notifyDataSetChanged()
+    }
+
+    fun addNote(note: Note) {
+        notes.add(note)
+        this.notes.sortBy { it.date }
         notifyDataSetChanged()
     }
 

@@ -87,7 +87,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_top">
+                    android:background="@drawable/background_border_top">
 
                     <TextView
                         android:layout_width="wrap_content"

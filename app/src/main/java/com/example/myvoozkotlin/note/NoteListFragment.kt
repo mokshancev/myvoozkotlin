@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myvoozkotlin.BaseApp
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentNoteBinding
 import com.example.myvoozkotlin.helpers.AuthorizationState
@@ -16,6 +17,7 @@ import com.example.myvoozkotlin.home.viewModels.UserViewModel
 import com.example.myvoozkotlin.models.Note
 import com.example.myvoozkotlin.note.adapters.NoteAdapter
 import com.example.myvoozkotlin.note.viewModels.NoteViewModel
+import com.example.myvoozkotlin.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,13 +55,20 @@ class NoteListFragment: Fragment() {
     private fun checkState(){
         if (AuthorizationState.UNAUTORIZATE.ordinal == BaseApp.getAuthState()) {
             binding.apply {
-                cvAddNoteButton.hide()
                 llNeedAutorization.root.show()
             }
         }
         else if (AuthorizationState.AUTORIZATE.ordinal == BaseApp.getAuthState()){
             binding.apply {
-                cvAddNoteButton.show()
+                binding.toolbar.inflateMenu(R.menu.menu_add)
+                binding.toolbar.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.itemAddNote -> {
+                            loadAddNoteFragment()
+                        }
+                    }
+                    true
+                }
                 val authUserModel = userViewModel.getCurrentAuthUser()
                 noteViewModel.loadUserNote(
                     authUserModel.accessToken, authUserModel.id, 0
@@ -69,7 +78,15 @@ class NoteListFragment: Fragment() {
         }
         else if (AuthorizationState.GROUP_AUTORIZATE.ordinal == BaseApp.getAuthState()){
             binding.apply {
-                cvAddNoteButton.show()
+                binding.toolbar.inflateMenu(R.menu.menu_add)
+                binding.toolbar.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.itemAddNote -> {
+                            loadAddNoteFragment()
+                        }
+                    }
+                    true
+                }
                 val authUserModel = userViewModel.getCurrentAuthUser()
                 noteViewModel.loadUserNote(
                     authUserModel.accessToken, authUserModel.id, 0
@@ -80,8 +97,9 @@ class NoteListFragment: Fragment() {
     }
 
     private fun setListeners(){
-        binding.cvAddNoteButton.setOnClickListener {
-            loadAddNoteFragment()
+        parentFragmentManager.setFragmentResultListener(AddNoteFragment.REQUEST_NOTE, this) { key, bundle ->
+            val note = bundle.getSerializable(AddNoteFragment.CONSTANT_NOTE) as Note
+            (binding.rvNotes.adapter as? NoteAdapter)?.addNote(note)
         }
     }
 
@@ -136,9 +154,10 @@ class NoteListFragment: Fragment() {
         if (binding.rvNotes.adapter == null) {
             binding.rvNotes.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            binding.rvNotes.adapter = NoteAdapter(news)
+            binding.rvNotes.adapter = NoteAdapter()
+            (binding.rvNotes.adapter as? NoteAdapter)?.update(news.toMutableList())
         } else {
-            (binding.rvNotes.adapter as? NoteAdapter)?.update(news)
+            (binding.rvNotes.adapter as? NoteAdapter)?.update(news.toMutableList())
         }
     }
 

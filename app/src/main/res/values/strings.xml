@@ -20,5 +20,14 @@
     <string name="success_create_note">Заметка успешно создана</string>
     <string name="self_note">Личная</string>
     <string name="group_note">Групповая</string>
+    <string name="title_create_group_of_user">Создание группы</string>
+    <string name="toast_name_group">Введите название группы</string>
+    <string name="toast_user_name">Введите имя</string>
+    <string name="toast_user_second_name">Введите фамилию</string>
+    <string name="title_group">Группа</string>
+    <string name="toast_group_of_user_change_group">Группа изменена</string>
+    <string name="toast_gou_name">Введите название</string>
+    <string name="title_gou_user_list">Список участников</string>
+    <string name="toast_gou_invite_link_copy">Скопировано</string>
     <integer name="com_vk_sdk_AppId">7261626</integer>
 </resources>

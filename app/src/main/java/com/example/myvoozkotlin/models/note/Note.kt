@@ -2,6 +2,7 @@ package com.example.myvoozkotlin.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
+import java.io.Serializable
 
 
 data class Note(
@@ -15,4 +16,4 @@ data class Note(
         @SerializedName("id_user") var idUser:Int,
         @SerializedName("id_object") var idObject:Int,
         @SerializedName("images") var images:List<PhotoItem>,
-    )
+    ) : Serializable

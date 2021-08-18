@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_border_top"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlMakeHeadBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="Назначить руководителем"
+                android:textColor="@color/textPrimary"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlremoveBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="Исключить"
+                android:textColor="@color/textBrandYa"
+                android:textSize="18dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

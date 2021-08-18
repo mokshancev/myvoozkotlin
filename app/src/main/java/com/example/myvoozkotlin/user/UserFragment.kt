@@ -1,35 +1,31 @@
 package com.example.myvoozkotlin.user
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.BaseFragment
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
-import com.example.myvoozkotlin.databinding.FragmentNoteBinding
+import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentUserBinding
-import com.example.myvoozkotlin.helpers.AuthorizationState
-import com.example.myvoozkotlin.helpers.Constants
-import com.example.myvoozkotlin.helpers.hide
-import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.home.HomeFragment
-import com.example.myvoozkotlin.home.helpers.OnTabItemPicked
+import com.example.myvoozkotlin.helpers.*
+import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
 import com.example.myvoozkotlin.home.viewModels.UserViewModel
-import com.example.myvoozkotlin.models.TabItem
-import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.vk.api.sdk.VK
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 
 @AndroidEntryPoint
-class UserFragment: BaseFragment(){
+class UserFragment: BaseFragment(), OnAuthUserChange {
     private val userViewModel: UserViewModel by viewModels()
+    private var authUserModel: AuthUserModel? = null
 
     companion object {
         const val ANIMATE_TRANSITION_DURATION: Int = 300
@@ -57,6 +53,12 @@ class UserFragment: BaseFragment(){
     }
 
     private fun configureViews() {
+        authUserModel = userViewModel.getCurrentAuthUser()
+        initData()
+        initToolbar()
+    }
+
+    private fun initData(){
         val authUserModel = userViewModel.getCurrentAuthUser()
         if(authUserModel.photo.isNotEmpty()){
             binding.ivPhotoUser.show()
@@ -70,12 +72,39 @@ class UserFragment: BaseFragment(){
             binding.ivPhotoUser.hide()
         binding.tvUserName.text = authUserModel.lastName + " " + authUserModel.firstName[0] + "."
         binding.tvChangeUserName.text = authUserModel.lastName + " " + authUserModel.firstName
-        initToolbar()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (data != null) {
+                val contentURI = data.data
+                try {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, contentURI)
+
+                    userViewModel.uploadImage(bitmap, authUserModel!!.accessToken, authUserModel!!.id, "image_profile")
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun setListeners(){
-        binding.clChangeUserNamebutton.setOnClickListener {
+        userViewModel.changeAuthUserListener(this)
 
+        binding.clChangeUserNamebutton.setOnClickListener {
+            val fragment = ChangeFullNameDialogFragment()
+            fragment.show(parentFragmentManager,
+                ChangeFullNameDialogFragment::javaClass.javaClass.simpleName)
+        }
+
+        binding.cvPhotoContainer.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+            photoPickerIntent.addCategory(Intent.CATEGORY_OPENABLE)
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, 1)
         }
     }
 
@@ -99,7 +128,16 @@ class UserFragment: BaseFragment(){
     private fun addBackButton(){
         binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_arrow_left)
         binding.toolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().onBackPressed()
         }
+    }
+
+    override fun onAuthUserChange() {
+        initData()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        userViewModel.changeAuthUserListener(null)
     }
 }

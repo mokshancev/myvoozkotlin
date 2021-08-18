@@ -119,7 +119,9 @@ class AuthFragment: AppCompatActivity() {
             val callback = object : VKAuthCallback {
                 override fun onLogin(token: VKAccessToken) {
                     authViewModel.authVk(token.accessToken
-                        , token.userId, BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_UNIVERSITY_ID, 0), BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0), "s")
+                        , token.userId, BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_UNIVERSITY_ID, 0)
+                        , BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0), "s")
+                    //todo add notification accessToken
                 }
 
                 override fun onLoginFailed(errorCode: Int) {

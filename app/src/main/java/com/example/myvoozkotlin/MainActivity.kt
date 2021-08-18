@@ -3,6 +3,7 @@ package com.example.myvoozkotlin
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -14,8 +15,10 @@ import com.example.myvoozkotlin.about.AboutFragment
 import com.example.myvoozkotlin.databinding.ActivityMainBinding
 import com.example.myvoozkotlin.helpers.contract.Navigator
 import com.example.myvoozkotlin.helpers.contract.ResultListener
+import com.example.myvoozkotlin.helpers.forView.NewDialog
 import com.example.myvoozkotlin.home.HomeFragment
 import com.example.myvoozkotlin.note.NoteListFragment
+import com.example.myvoozkotlin.splash.SplashFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
+    private var dialog: NewDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +41,32 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
     private fun configureViews() {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.activityMainContainer, MainFragment(), MainFragment().javaClass.simpleName)
+            .replace(R.id.activityMainContainer, SplashFragment(), SplashFragment().javaClass.simpleName)
             .addToBackStack(null)
             .commit()
     }
 
+    fun showWait(isShow: Boolean){
+        if(dialog == null){
+            dialog = NewDialog(R.layout.dialog_fragment_loading)
+        }
+        dialog?.let {
+            it.isCancelable = false
+            it.setOnBindViewListener(object : NewDialog.OnBindView {
+                override fun onView(view: View?) {
+
+                }
+            })
+        }
+        if(isShow){
+            if(!dialog!!.isAdded){
+                dialog!!.show(supportFragmentManager, null)
+            }
+        }
+        else{
+            dialog!!.dismiss()
+        }
+    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        if(item.itemId == R.id.homeFragment)
@@ -89,41 +114,5 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
         listener: ResultListener<T>
     ) {
         TODO("Not yet implemented")
-    }
-
-    inner class ViewPagerAdapter(manager: FragmentManager?) : FragmentStatePagerAdapter(manager!!) {
-        private val fragmentList: MutableList<Fragment> = ArrayList()
-        var currentFragment: Fragment? = null
-            private set
-
-        override fun getItem(position: Int): Fragment {
-            return fragmentList[position]
-        }
-
-        override fun getItemPosition(`object`: Any): Int {
-            return PagerAdapter.POSITION_NONE
-        }
-
-        override fun getCount(): Int {
-            return fragmentList.size
-        }
-
-        override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
-            if (currentFragment !== `object`) {
-                currentFragment = `object` as Fragment
-
-            }
-            super.setPrimaryItem(container, position, `object`)
-        }
-
-        //adding fragments and title method
-        fun addFragment(fragment: Fragment) {
-            fragmentList.add(fragment)
-        }
-
-        fun replaceFrag(position: Int, fragment: Fragment) {
-            fragmentList.removeAt(position)
-            fragmentList.add(position, fragment)
-        }
     }
 }

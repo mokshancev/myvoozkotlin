@@ -1,9 +1,6 @@
 package com.example.myvoozkotlin.data.di
 
-import com.example.myvoozkotlin.data.api.AuthApi
-import com.example.myvoozkotlin.data.api.NewsApi
-import com.example.myvoozkotlin.data.api.NoteApi
-import com.example.myvoozkotlin.data.api.ScheduleApi
+import com.example.myvoozkotlin.data.api.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +9,7 @@ import retrofit2.Retrofit
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object HomeModule {
+object ApiModule {
 
     @Provides
     fun provideNewsApi(retrofit: Retrofit) : NewsApi {
@@ -32,5 +29,15 @@ object HomeModule {
     @Provides
     fun provideNoteApi(retrofit: Retrofit) : NoteApi {
         return retrofit.create(NoteApi::class.java)
+    }
+
+    @Provides
+    fun provideGroupOfUserApi(retrofit: Retrofit) : GroupOfUserApi {
+        return retrofit.create(GroupOfUserApi::class.java)
+    }
+
+    @Provides
+    fun provideUserApi(retrofit: Retrofit) : UserApi {
+        return retrofit.create(UserApi::class.java)
     }
 }

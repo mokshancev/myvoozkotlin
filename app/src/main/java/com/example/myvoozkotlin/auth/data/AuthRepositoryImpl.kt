@@ -12,11 +12,15 @@ import com.example.myvoozkotlin.data.db.realmModels.UserVeryShortModel
 import com.example.myvoozkotlin.helpers.AuthorizationState
 import com.example.myvoozkotlin.helpers.Constants
 import com.example.myvoozkotlin.helpers.Event
+import com.example.myvoozkotlin.helpers.UtilsUI
+import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
 import io.realm.Realm
+import io.realm.RealmResults
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+
 
 class AuthRepositoryImpl @Inject constructor(
     var realm: Realm,
@@ -60,6 +64,9 @@ class AuthRepositoryImpl @Inject constructor(
                 groupOfUserModel.idOlder = authUser.groupOfUser.idOlder
                 groupOfUserModel.idGroup = authUser.groupOfUser.idGroup
                 groupOfUserModel.countUsers = authUser.groupOfUser.countUsers
+                groupOfUserModel.nameUniversity = authUser.groupOfUser.nameUniversity
+                groupOfUserModel.idUniversity = authUser.groupOfUser.idUniversity
+                groupOfUserModel.nameGroup = authUser.groupOfUser.nameGroup
                 groupOfUserModel.name = authUser.groupOfUser.name
                 groupOfUserModel.image = authUser.groupOfUser.image
 
@@ -74,7 +81,12 @@ class AuthRepositoryImpl @Inject constructor(
 
                 emit(Event.success(apiResponse.body()!!))
 
-                BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.AUTORIZATE.ordinal).apply()
+                if(authUser.groupOfUser.id != 0){
+                    BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.GROUP_AUTORIZATE.ordinal).apply()
+                }
+                else{
+                    BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.AUTORIZATE.ordinal).apply()
+                }
                 BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_USER_GROUP_ID, authUser.idGroup).apply()
                 BaseApp.getSharedPref().edit().putString(Constants.APP_PREFERENCES_USER_GROUP_NAME, authUser.nameGroup).apply()
                 BaseApp.getSharedPref().edit().putString(Constants.APP_PREFERENCES_USER_UNIVERSITY_NAME, authUser.nameUniversity).apply()

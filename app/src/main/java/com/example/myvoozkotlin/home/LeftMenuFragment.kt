@@ -4,13 +4,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.Nullable
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -19,21 +16,22 @@ import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.MainFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.auth.AuthFragment
-import com.example.myvoozkotlin.databinding.FragmentAboutBinding
 import com.example.myvoozkotlin.databinding.FragmentLeftMenuBinding
-import com.example.myvoozkotlin.databinding.FragmentSelectGroupBinding
+import com.example.myvoozkotlin.groupOfUser.CreateGroupOfUserFragment
+import com.example.myvoozkotlin.groupOfUser.GroupOfUserFragment
 import com.example.myvoozkotlin.helpers.*
 import com.example.myvoozkotlin.helpers.contract.navigator
+import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
 import com.example.myvoozkotlin.home.viewModels.UserViewModel
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.SearchEnum
 import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
 import com.example.myvoozkotlin.user.UserFragment
-import com.karumi.dexter.listener.SnackbarUtils.show
 import com.vk.api.sdk.VK
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+@AndroidEntryPoint
+class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeListener,
+    OnAuthUserChange {
 
     companion object {
         fun newInstance(): LeftMenuFragment {
@@ -66,6 +64,7 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
     }
 
     private fun setListeners(){
+        userViewModel.changeAuthUserListener(this)
 
         binding.llVkSocialButton.setOnClickListener {
             openLink(Constants.APP_PREFERENCES_VK_SOCIAL_LINK)
@@ -74,8 +73,6 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
         binding.llAutorizationButton.setOnClickListener {
             loadAuthFragment()
         }
-
-
 
         binding.llAboutButton.setOnClickListener {
             loadAboutFragment()
@@ -102,11 +99,25 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
             .replace(R.id.rootMainView, fragment, SelectGroupFragment.javaClass.simpleName).commit()
     }
 
+    private fun loadCreateGroupOfUserFragment(){
+        val fragment = CreateGroupOfUserFragment.newInstance()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.rootMainView, fragment, CreateGroupOfUserFragment.javaClass.simpleName).commit()
+    }
+
     private fun loadUserFragment(){
         val fragment = UserFragment.newInstance()
         requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.rootMainView, fragment, UserFragment.javaClass.simpleName).commit()
+    }
+
+    private fun loadGroupOfUserFragment(){
+        val fragment = GroupOfUserFragment.newInstance()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.rootMainView, fragment, GroupOfUserFragment.javaClass.simpleName).commit()
     }
 
     private fun initAuthUser(){
@@ -124,20 +135,37 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
                 ivPhotoUser.hide()
                 tvUserName.text = requireContext().getString(R.string.default_user_name)
                 clPhotoContainer.setOnClickListener {}
+
+                cvGOUButton.hide()
+                cvCreateGOUButton.hide()
+                cvJoinGOUButton.hide()
             }
         }
         else if (AuthorizationState.AUTORIZATE.ordinal == BaseApp.getAuthState()){
             val authUserModel = userViewModel.getCurrentAuthUser()
             binding.apply {
                 llNotificationSettingButton.show()
+                llProfileSettingButton.show()
                 llProfileSettingButton.apply {
                     show()
                     setOnClickListener {
                         loadUserFragment()
                     }
                 }
+                cvCreateGOUButton.show()
+                cvJoinGOUButton.show()
+                cvCreateGOUButton.setOnClickListener {
+                    loadCreateGroupOfUserFragment()
+                }
+
                 llAutorizationButton.hide()
-                llSelectGroup.hide()
+                llSelectGroup.apply {
+                    show()
+                    setOnClickListener {
+                        loadSelectGroupFragment() }
+                }
+
+                llLogoutButton.hide()
                 llLogoutButton.apply {
                     show()
                     setOnClickListener {
@@ -160,6 +188,61 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
                 clPhotoContainer.setOnClickListener {
                     loadUserFragment()
                 }
+
+                cvGOUButton.hide()
+            }
+        }
+        else if(AuthorizationState.GROUP_AUTORIZATE.ordinal == BaseApp.getAuthState()){
+            val authUserModel = userViewModel.getCurrentAuthUser()
+            binding.apply {
+
+                llAutorizationButton.hide()
+                llLogoutButton.hide()
+                llLogoutButton.apply {
+                    show()
+                    setOnClickListener {
+                        VK.logout()
+                        BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.UNAUTORIZATE.ordinal).apply()
+                    }
+                }
+
+                llProfileSettingButton.show()
+                llProfileSettingButton.apply {
+                    show()
+                    setOnClickListener {
+                        loadUserFragment()
+                    }
+                }
+
+                if(authUserModel.photo.isNotEmpty()){
+                    ivPhotoUser.show()
+                    Glide.with(requireContext())
+                        .load(authUserModel.photo)
+                        .centerCrop()
+                        .transition(DrawableTransitionOptions.withCrossFade(HomeFragment.ANIMATE_TRANSITION_DURATION))
+                        .into(ivPhotoUser)
+                }
+                else
+                    ivPhotoUser.hide()
+
+                tvUserName.text = authUserModel.lastName + " " + authUserModel.firstName[0] + "."
+
+                cvCreateGOUButton.hide()
+                cvJoinGOUButton.hide()
+                llSelectGroup.hide()
+
+                cvGOUButton.show()
+                cvGOUButton.setOnClickListener {
+                    loadGroupOfUserFragment()
+                }
+
+                tvGOUName.text = authUserModel.groupOfUser?.name ?: "null"
+                tvGOUGroup.text = authUserModel.groupOfUser?.nameGroup
+                Glide.with(requireContext())
+                    .load(authUserModel.groupOfUser!!.image)
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade(HomeFragment.ANIMATE_TRANSITION_DURATION))
+                    .into(ivGOUPreview)
             }
         }
         binding.tvGroupName.text = BaseApp.getSharedPref().getString(Constants.APP_PREFERENCES_USER_GROUP_NAME, "")
@@ -182,5 +265,9 @@ class LeftMenuFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceCha
     fun openLink(link: String) {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
         startActivity(browserIntent)
+    }
+
+    override fun onAuthUserChange() {
+        initAuthUser()
     }
 }

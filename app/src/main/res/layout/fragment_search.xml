@@ -5,6 +5,7 @@
     android:background="@color/backgroundContent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -23,7 +24,7 @@
             android:background="@color/backgroundContent" />
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_list"
+        android:id="@+id/rvSearchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"

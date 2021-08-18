@@ -62,6 +62,8 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
 
     companion object {
         const val PHOTO_SELECT_REQUEST_CODE = 1
+        const val REQUEST_NOTE = "response_note"
+        const val CONSTANT_NOTE = "note"
         const val MAX_PHOTO_COUNT = 4
         fun newInstance(): AddNoteFragment {
             return AddNoteFragment()
@@ -339,6 +341,10 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
                 Status.LOADING -> {
                 }
                 Status.SUCCESS -> {
+                    val bundle = Bundle()
+                    bundle.putSerializable(CONSTANT_NOTE, it.data)
+
+                    parentFragmentManager.setFragmentResult(REQUEST_NOTE, bundle)
                     requireActivity().onBackPressed()
                     UtilsUI.makeToast(getString(R.string.success_create_note))
                 }

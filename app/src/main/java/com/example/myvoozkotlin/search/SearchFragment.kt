@@ -43,6 +43,7 @@ class SearchFragment : BaseFragment(), OnSearchItemPicked {
     companion object{
         const val SEARCH_TIME_DELAY = 700L
         const val CONSTANT_TYPE = "type"
+        const val CONSTANT_WITH_REQUEST = "withRequest"
         const val CONSTANT_ADDITIONAL_VALUE = "add_value"
         const val REQUEST_UNIVERSITY = "search_response_university"
         const val REQUEST_GROUP = "search_response_group"
