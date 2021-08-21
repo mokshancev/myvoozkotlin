@@ -3,12 +3,9 @@ package com.example.myvoozkotlin.data.api
 import com.example.homelibrary.model.EntryLink
 import com.example.homelibrary.model.InviteData
 import com.example.homelibrary.model.UserShort
-import com.example.myvoozkotlin.models.Note
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.util.*
 
 interface GroupOfUserApi {
 
@@ -18,6 +15,13 @@ interface GroupOfUserApi {
         @Query("user_id") user_id: Int,
         @Query("name_group") nameGroup: String,
         @Query("id_group") idGroup: Int
+    ): Response<InviteData>
+
+    @GET("profile?type=invite_group_of_user_code")
+    suspend fun inviteGroupOfUser(
+        @Query("access_token") access_token: String?,
+        @Query("user_id") user_id: Int,
+        @Query("text") text: String
     ): Response<InviteData>
 
     @GET("profile?type=logout_group_of_user")

@@ -159,18 +159,20 @@ class PhotoFragment: AppCompatActivity() {
             )
             .into(binding.photoView)
 
-        binding.toolbar.inflateMenu(R.menu.menu_delete)
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.item_delete -> {
-                    val bundle = Bundle()
-                    bundle.putInt(CONSTANT_ID_PHOTO, idPhoto)
-                    //parentFragmentManager.setFragmentResult(REQUEST_DELETE_PHOTO, bundle)
-                    setNormalStatusBar()
-                    onBackPressed()
+        if(idPhoto != 0){
+            binding.toolbar.inflateMenu(R.menu.menu_delete)
+            binding.toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.item_delete -> {
+                        val bundle = Bundle()
+                        bundle.putInt(CONSTANT_ID_PHOTO, idPhoto)
+                        //parentFragmentManager.setFragmentResult(REQUEST_DELETE_PHOTO, bundle)
+                        setNormalStatusBar()
+                        onBackPressed()
+                    }
                 }
+                true
             }
-            true
         }
 
 

@@ -30,6 +30,9 @@ class NewsAdapter(private var news: List<News>, private var onStoryClick: OnStor
             Glide.with(holder.itemView)
                 .load(story.image)
                 .into(itemImage)
+            Glide.with(holder.itemView)
+                .load(story.logoImage)
+                .into(ivUnion)
             tvTitle.text = story.title
         }
 

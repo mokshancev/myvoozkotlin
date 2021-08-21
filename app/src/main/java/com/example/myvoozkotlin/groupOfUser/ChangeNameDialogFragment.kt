@@ -10,13 +10,12 @@ import androidx.lifecycle.Observer
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.DialogFragmentChangeGroupOfUserNameBinding
-import com.example.myvoozkotlin.databinding.DialogFragmentChangeUserFullnameBinding
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +25,7 @@ class ChangeNameDialogFragment: BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +53,9 @@ class ChangeNameDialogFragment: BottomSheetDialogFragment() {
 
     private fun configureViews() {
         binding.apply {
-            etName.setText(authUserModel.groupOfUser!!.name)
+            if(authUserModel != null){
+                etName.setText(authUserModel!!.groupOfUser!!.name)
+            }
         }
     }
 
@@ -90,7 +91,9 @@ class ChangeNameDialogFragment: BottomSheetDialogFragment() {
                 binding.etName.text.length !in 1..32 ->
                     UtilsUI.makeToast(getString(R.string.toast_gou_name))
                 else ->{
-                    groupOfUserViewModel.changeName(authUserModel.accessToken, authUserModel.id, binding.etName.text.toString())
+                    if(authUserModel != null){
+                        groupOfUserViewModel.changeName(authUserModel!!.accessToken, authUserModel!!.id, binding.etName.text.toString())
+                    }
                 }
             }
         }

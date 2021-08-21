@@ -1,6 +1,7 @@
 package com.example.myvoozkotlin.data.di
 
 import com.example.myvoozkotlin.data.api.*
+import com.example.myvoozkotlin.notification.data.api.NotificationApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,5 +40,10 @@ object ApiModule {
     @Provides
     fun provideUserApi(retrofit: Retrofit) : UserApi {
         return retrofit.create(UserApi::class.java)
+    }
+
+    @Provides
+    fun provideNotificationApi(retrofit: Retrofit) : NotificationApi {
+        return retrofit.create(NotificationApi::class.java)
     }
 }

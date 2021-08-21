@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.*
 import com.android.volley.toolbox.Volley
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentAddNoteBinding
 import com.example.myvoozkotlin.helpers.*
@@ -31,7 +29,7 @@ import com.example.myvoozkotlin.home.TimePickerDialogFragment
 import com.example.myvoozkotlin.home.helpers.OnDatePicked
 import com.example.myvoozkotlin.home.helpers.OnTabItemPicked
 import com.example.myvoozkotlin.home.helpers.OnTimePicked
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.models.PhotoItem
 import com.example.myvoozkotlin.models.RadioItem
 import com.example.myvoozkotlin.models.SearchItem
@@ -288,7 +286,7 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
 
                         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
                         noteViewModel.addNote(
-                            authUserModel.accessToken,
+                            authUserModel!!.accessToken,
                             authUserModel.id,
                             idObject,
                             binding.etShortText.text.toString(),

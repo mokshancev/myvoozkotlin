@@ -4,28 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
-import com.example.myvoozkotlin.MainFragment
+import com.example.myvoozkotlin.main.presentation.MainFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.auth.viewModels.AuthViewModel
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
-import com.example.myvoozkotlin.databinding.FragmentSelectGroupBinding
 import com.example.myvoozkotlin.databinding.FragmentSplashBinding
-import com.example.myvoozkotlin.helpers.Constants
 import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.SearchEnum
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 
 
-class SplashFragment : BaseFragment() {
+class SplashFragment : Fragment() {
 
     companion object {
         fun newInstance(): SplashFragment {
@@ -37,7 +29,7 @@ class SplashFragment : BaseFragment() {
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,8 +56,8 @@ class SplashFragment : BaseFragment() {
                 .commit()
         }
         else{
-            authViewModel.authVk(authUserModel.accessToken
-                , authUserModel.id, authUserModel.idUniversity, authUserModel.idGroup, "s")
+            authViewModel.authVk(authUserModel!!.accessToken
+                , authUserModel!!.id, authUserModel!!.idUniversity, authUserModel!!.idGroup, "s")
             //todo add notification accessToken
         }
     }

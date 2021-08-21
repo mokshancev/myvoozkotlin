@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homelibrary.model.UserShort
 import com.example.myvoozkotlin.BaseFragment
@@ -17,10 +16,7 @@ import com.example.myvoozkotlin.groupOfUser.adapter.UserListGouAdapter
 import com.example.myvoozkotlin.groupOfUser.helpers.OnUserListItemPicked
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.*
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
-import com.example.myvoozkotlin.models.SearchItem
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.OnSearchItemPicked
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +29,7 @@ class UserListGroupOfUserFragment : BaseFragment(), OnUserListItemPicked {
 
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
 
     private var _binding: FragmentGouUserListBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +48,7 @@ class UserListGroupOfUserFragment : BaseFragment(), OnUserListItemPicked {
         initObservers()
         setListeners()
         authUserModel = userViewModel.getCurrentAuthUser()
-        groupOfUserViewModel.getUserList(authUserModel.accessToken, authUserModel.id)
+        groupOfUserViewModel.getUserList(authUserModel!!.accessToken, authUserModel!!.id)
     }
 
     private fun configureViews(){
@@ -100,7 +96,7 @@ class UserListGroupOfUserFragment : BaseFragment(), OnUserListItemPicked {
         if (binding.rvUserList.adapter == null) {
             binding.rvUserList.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            binding.rvUserList.adapter = UserListGouAdapter(userList, authUserModel, this)
+            binding.rvUserList.adapter = UserListGouAdapter(userList, authUserModel!!, this)
             (binding.rvUserList.adapter as? UserListGouAdapter)?.update(userList)
         } else {
             (binding.rvUserList.adapter as? UserListGouAdapter)?.update(userList)

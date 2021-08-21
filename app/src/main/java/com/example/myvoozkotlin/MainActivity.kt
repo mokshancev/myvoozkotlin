@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -19,6 +20,7 @@ import com.example.myvoozkotlin.helpers.forView.NewDialog
 import com.example.myvoozkotlin.home.HomeFragment
 import com.example.myvoozkotlin.note.NoteListFragment
 import com.example.myvoozkotlin.splash.SplashFragment
+import com.example.myvoozkotlin.user.ChangeFullNameDialogFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,11 +41,7 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
     }
 
     private fun configureViews() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.activityMainContainer, SplashFragment(), SplashFragment().javaClass.simpleName)
-            .addToBackStack(null)
-            .commit()
+        showSplashScreen()
     }
 
     fun showWait(isShow: Boolean){
@@ -52,11 +50,6 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
         }
         dialog?.let {
             it.isCancelable = false
-            it.setOnBindViewListener(object : NewDialog.OnBindView {
-                override fun onView(view: View?) {
-
-                }
-            })
         }
         if(isShow){
             if(!dialog!!.isAdded){
@@ -64,28 +57,59 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
             }
         }
         else{
-            dialog!!.dismiss()
+            if(dialog!!.isAdded){
+                dialog!!.dismiss()
+            }
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        if(item.itemId == R.id.homeFragment)
-//            //popBackStack(item, R.id.homeFragment)
-//        else if(item.itemId == R.id.profileFragment)
-//            //popBackStack(item, R.id.profileFragment)
         return true
     }
 
-    override fun showAboutScreen(idRes: Int, fragmentManager: FragmentManager) {
-        launchFragment(idRes, AboutFragment.newInstance(), fragmentManager)
+    override fun showAboutScreen() {
+        launchFragment(AboutFragment.newInstance())
     }
 
-    override fun showNoteScreen(idRes: Int, fragmentManager: FragmentManager) {
-        launchFragment(idRes, NoteListFragment.newInstance(), fragmentManager)
+    override fun showNoteScreen() {
+        launchFragment(NoteListFragment.newInstance())
     }
 
-    override fun showHomeScreen(idRes: Int, fragmentManager: FragmentManager) {
-        launchFragment(idRes, HomeFragment.newInstance(), fragmentManager)
+    override fun showHomeScreen() {
+        launchFragment(HomeFragment.newInstance())
+    }
+
+    override fun showSplashScreen() {
+        launchFragment(SplashFragment.newInstance())
+    }
+
+    override fun showSelectGroupScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showCreateGroupOfUserScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showInviteGroupOfUserScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showUserScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showGroupOfUserScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showNotificationScreen() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showDialog(dialogFragment: DialogFragment) {
+        dialogFragment.show(supportFragmentManager,
+            dialogFragment::javaClass.javaClass.simpleName)
     }
 
     override fun goBack() {
@@ -97,13 +121,13 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
     }
 
     override fun <T : Parcelable> publishResult(result: T) {
-        TODO("Not yet implemented")
+
     }
 
-    private fun launchFragment(idRes: Int, fragment: Fragment, fragmentManager: FragmentManager) {
+    private fun launchFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .replace(idRes, fragment, fragment.javaClass.simpleName)
+            .replace(R.id.rootMainView, fragment, fragment.javaClass.simpleName)
             .addToBackStack(null)
             .commit()
     }
@@ -113,6 +137,6 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
         owner: LifecycleOwner,
         listener: ResultListener<T>
     ) {
-        TODO("Not yet implemented")
+
     }
 }

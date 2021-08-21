@@ -24,7 +24,7 @@ import com.vk.api.sdk.auth.VKScope
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AuthFragment: AppCompatActivity() {
+class AuthActivity: AppCompatActivity() {
     private var _binding: FragmentAuthBinding? = null
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by viewModels()
@@ -36,8 +36,8 @@ class AuthFragment: AppCompatActivity() {
 
     companion object {
         private const val RC_SIGN_IN = 1
-        fun newInstance(): AuthFragment {
-            return AuthFragment()
+        fun newInstance(): AuthActivity {
+            return AuthActivity()
         }
     }
 

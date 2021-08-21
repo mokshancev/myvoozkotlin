@@ -1,17 +1,14 @@
 package com.example.myvoozkotlin.note.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.ItemNoteBinding
 import com.example.myvoozkotlin.helpers.Utils
-import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.models.Note
+import com.example.myvoozkotlin.note.model.Note
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

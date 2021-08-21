@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GroupOfUserRepository {
     fun createGroupOfUser(accessToken: String, idUser: Int, name: String, idGroup: Int): Flow<Event<InviteData>>
+    fun inviteGroupOfUser(accessToken: String, idUser: Int, text: String): Flow<Event<InviteData>>
     fun logoutGroupOfUser(accessToken: String, idUser: Int): Flow<Event<Boolean>>
     fun changeIdGroup(accessToken: String, idUser: Int, idGroup: Int): Flow<Event<Boolean>>
     fun changeName(accessToken: String, idUser: Int, text: String): Flow<Event<Boolean>>

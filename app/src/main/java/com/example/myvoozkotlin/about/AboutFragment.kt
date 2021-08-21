@@ -21,7 +21,7 @@ import com.example.myvoozkotlin.search.SearchFragment
 import com.example.myvoozkotlin.search.helpers.SearchEnum
 
 
-class AboutFragment : BaseFragment() {
+class AboutFragment : Fragment() {
 
     companion object {
         fun newInstance(): AboutFragment {

@@ -28,6 +28,7 @@ class GroupOfUserViewModel @Inject constructor(
     private val removeUserGroupOfUserUseCase: RemoveUserGroupOfUserUseCase,
     private val updateEntryLinkGroupOfUserUseCase: UpdateEntryLinkGroupOfUserUseCase,
     private val lockEntryLinkGroupOfUserUseCase: LockEntryLinkGroupOfUserUseCase,
+    private val inviteGroupOfUserUseCase: InviteGroupOfUserUseCase,
     private val dbUtils: DbUtils,
     private val logoutGroupOfUserUseCase: LogoutGroupOfUserUseCase
 ) : ViewModel() {
@@ -37,6 +38,15 @@ class GroupOfUserViewModel @Inject constructor(
         viewModelScope.launch {
             createGroupOfUserUseCase(accessToken, idUser, name, idGroup).collect {
                 createGroupOfUserResponse.postValue(it)
+            }
+        }
+    }
+
+    val inviteGroupOfUserResponse = MutableLiveData<Event<InviteData>>()
+    fun inviteGroupOfUser(accessToken: String, idUser: Int, name: String) {
+        viewModelScope.launch {
+            inviteGroupOfUserUseCase(accessToken, idUser, name).collect {
+                inviteGroupOfUserResponse.postValue(it)
             }
         }
     }
@@ -124,8 +134,8 @@ class GroupOfUserViewModel @Inject constructor(
 
     fun changeGroupGOU(idGroup: Int, nameGroup: String){
         val authUser = dbUtils.getCurrentAuthUser()
-        authUser.groupOfUser!!.idGroup = idGroup
-        authUser.groupOfUser!!.nameGroup = nameGroup
+        authUser!!.groupOfUser!!.idGroup = idGroup
+        authUser!!.groupOfUser!!.nameGroup = nameGroup
         dbUtils.setCurrentAuthUser(authUser)
     }
 }

@@ -8,16 +8,13 @@ import com.android.volley.toolbox.Volley
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.data.db.DbUtils
 import com.example.myvoozkotlin.data.db.RealmUtils
+import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.helpers.filePath.VolleyMultipartRequest
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.*
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -88,7 +85,13 @@ object Utils {
                             if(url != null){
                                 val dbUtils = DbUtils(Realm.getDefaultInstance())
                                 val authUserModel = dbUtils.getCurrentAuthUser()
-                                authUserModel.groupOfUser!!.image = url
+                                if(type == "group_profile"){
+                                    authUserModel!!.groupOfUser!!.image = url
+                                }
+                                else{
+                                    authUserModel!!.photo = url
+                                }
+
                                 Log.d("bwebwebweb", url)
                                 dbUtils.setCurrentAuthUser(authUserModel)
                             }
@@ -135,35 +138,35 @@ object Utils {
         }
     }
 
-    fun buildImageBodyPart(fileName: String, bitmap: Bitmap):  MultipartBody.Part {
-        val leftImageFile = convertBitmapToFile(fileName, bitmap)
-        val reqFile = RequestBody.create("image/*".toMediaTypeOrNull(),    leftImageFile)
-        return MultipartBody.Part.createFormData(fileName,     leftImageFile.name, reqFile)}
+    private fun scaleDown(
+        realImage: Bitmap,
+        maxImageSize: Float,
+        filter: Boolean
+    ): Bitmap {
+        val ratio = Math.min(
+            maxImageSize / realImage.width,
+            maxImageSize / realImage.height
+        )
+        val width = Math.round(ratio * realImage.width)
+        val height = Math.round(ratio * realImage.height)
+        return Bitmap.createScaledBitmap(
+            realImage, width,
+            height, filter
+        )
+    }
 
-    fun convertBitmapToFile(fileName: String, bitmap: Bitmap): File {
-        //create a file to write bitmap data
-        val file = File(BaseApp.instance!!.cacheDir, fileName)
-        file.createNewFile()
+    private fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray? {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream)
+        return byteArrayOutputStream.toByteArray()
+    }
 
-        //Convert bitmap to byte array
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
-        val bitMapData = bos.toByteArray()
-
-        //write the bytes in file
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(file)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
+    fun getAuthorisationState(authUserModel: AuthUserModel?): AuthorizationState {
+        if(authUserModel != null){
+            if(authUserModel.idGroupOfUser == 0)
+                return AuthorizationState.AUTORIZATE
+            return AuthorizationState.GROUP_AUTORIZATE
         }
-        try {
-            fos?.write(bitMapData)
-            fos?.flush()
-            fos?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return file
+        return AuthorizationState.UNAUTORIZATE
     }
 }

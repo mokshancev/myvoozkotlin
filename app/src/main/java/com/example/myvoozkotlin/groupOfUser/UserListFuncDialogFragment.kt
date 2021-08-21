@@ -12,9 +12,7 @@ import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.DialogFragmentGouUserFuncBinding
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.Status
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.SearchEnum
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +22,7 @@ class UserListFuncDialogFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
     private var idUser = 0
 
     companion object {
@@ -119,11 +117,11 @@ class UserListFuncDialogFragment : BottomSheetDialogFragment() {
 
     private fun setListeners() {
         binding.rlMakeHeadBtn.setOnClickListener {
-            groupOfUserViewModel.makeHead(authUserModel.accessToken, authUserModel.id, idUser)
+            groupOfUserViewModel.makeHead(authUserModel!!.accessToken, authUserModel!!.id, idUser)
         }
 
         binding.rlremoveBtn.setOnClickListener {
-            groupOfUserViewModel.removeUser(authUserModel.accessToken, authUserModel.id, idUser)
+            groupOfUserViewModel.removeUser(authUserModel!!.accessToken, authUserModel!!.id, idUser)
         }
     }
 }

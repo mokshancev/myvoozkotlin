@@ -1,13 +1,8 @@
 package com.example.myvoozkotlin.note.data
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.util.Log
 import com.example.myvoozkotlin.data.api.NoteApi
 import com.example.myvoozkotlin.helpers.Event
-import com.example.myvoozkotlin.helpers.filePath.UploadImage
-import com.example.myvoozkotlin.models.Note
-import com.example.myvoozkotlin.models.PhotoItem
+import com.example.myvoozkotlin.note.model.Note
 import com.example.myvoozkotlin.note.domain.NoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

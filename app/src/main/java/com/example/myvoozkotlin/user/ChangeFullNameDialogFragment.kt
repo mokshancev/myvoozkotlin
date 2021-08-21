@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.DialogFragmentChangeUserFullnameBinding
@@ -14,7 +14,7 @@ import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +23,6 @@ class ChangeFullNameDialogFragment: BottomSheetDialogFragment() {
     private var _binding: DialogFragmentChangeUserFullnameBinding? = null
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,16 +33,14 @@ class ChangeFullNameDialogFragment: BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = DialogFragmentChangeUserFullnameBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        authUserModel = userViewModel.getCurrentAuthUser()
         configureViews()
         initObservers()
         setListeners()
@@ -51,32 +48,35 @@ class ChangeFullNameDialogFragment: BottomSheetDialogFragment() {
 
     private fun configureViews() {
         binding.apply {
-            etFirstName.setText(authUserModel.firstName)
-            etSecondName.setText(authUserModel.lastName)
+            getCurrentUser()?.let {
+                etFirstName.setText(it.firstName)
+                etSecondName.setText(it.lastName)
+            }
         }
     }
 
-    private fun initObservers() {
-        observeOnNewsResponse()
+    private fun getCurrentUser(): AuthUserModel?{
+        return userViewModel.getCurrentAuthUser()
     }
 
-    private fun observeOnNewsResponse() {
-        userViewModel.changeFullNameResponse.observe(viewLifecycleOwner, Observer {
+    private fun initObservers() {
+        observeOnChangeFullNameResponse()
+    }
+
+    private fun observeOnChangeFullNameResponse() {
+        userViewModel.changeFullNameResponse.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.LOADING -> {
-                    setLoadStateBtn()
+                    (requireActivity() as MainActivity).showWait(true)
                 }
                 Status.SUCCESS -> {
-                    setOpenStateBtn()
-
-                    if (it.data == null) {
-
-                    } else {
+                    (requireActivity() as MainActivity).showWait(false)
+                    if (it.data != null) {
                         dismiss()
                     }
                 }
                 Status.ERROR -> {
-                    //binding.progressBar.hide()
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })
@@ -90,22 +90,11 @@ class ChangeFullNameDialogFragment: BottomSheetDialogFragment() {
                 binding.etSecondName.text.length !in 1..32 ->
                     UtilsUI.makeToast(getString(R.string.toast_user_second_name))
                 else ->{
-                    userViewModel.changeFullName(authUserModel.accessToken, authUserModel.id, binding.etFirstName.text.toString(), binding.etSecondName.text.toString())
+                    getCurrentUser()?.let {
+                        userViewModel.changeFullName(it.accessToken, it.id, binding.etFirstName.text.toString(), binding.etSecondName.text.toString())
+                    }
                 }
             }
         }
-    }
-
-    private fun setLoadStateBtn(){
-        binding.ivLoading.show()
-        val rotationAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_infinity)
-        binding.ivLoading.startAnimation(rotationAnimation)
-        binding.cvSaveButton.isEnabled = false
-    }
-
-    private fun setOpenStateBtn(){
-        binding.ivLoading.hide()
-        binding.ivLoading.clearAnimation()
-        binding.cvSaveButton.isEnabled = true
     }
 }

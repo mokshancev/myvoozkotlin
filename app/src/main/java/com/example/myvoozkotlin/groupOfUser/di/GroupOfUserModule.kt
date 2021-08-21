@@ -1,4 +1,4 @@
-package com.example.myvoozkotlin.data.di
+package com.example.myvoozkotlin.groupOfUser.di
 
 import com.example.myvoozkotlin.data.api.GroupOfUserApi
 import com.example.myvoozkotlin.data.api.NoteApi
@@ -35,6 +35,11 @@ object GroupOfUserModule {
     @Provides
     fun provideLogoutGroupOfUserUseCase(groupOfUserRepository: GroupOfUserRepository): LogoutGroupOfUserUseCase {
         return LogoutGroupOfUserUseCaseImpl(groupOfUserRepository)
+    }
+
+    @Provides
+    fun provideInviteGroupOfUserUseCase(groupOfUserRepository: GroupOfUserRepository): InviteGroupOfUserUseCase {
+        return InviteGroupOfUserUseCaseImpl(groupOfUserRepository)
     }
 
     @Provides

@@ -1,13 +1,19 @@
-package com.example.myvoozkotlin.helpers.adapters
+package com.example.myvoozkotlin.main.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
+import com.example.myvoozkotlin.main.helpers.enums.MainPagesEnum
 import java.util.ArrayList
 
 class ViewPagerAdapter(manager: FragmentManager?) : FragmentStatePagerAdapter(manager!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val mFragmentList: MutableList<Fragment> = ArrayList()
+
+    companion object{
+        const val LEFT_MENU_PAGE_WIDTH = 0.85F
+        const val SECOND_PAGE_WIDTH = 1.0F
+    }
 
     override fun getItem(position: Int): Fragment {
         return mFragmentList[position]
@@ -25,14 +31,9 @@ class ViewPagerAdapter(manager: FragmentManager?) : FragmentStatePagerAdapter(ma
         mFragmentList.add(fragment)
     }
 
-    fun replaceFrag(position: Int, fragment: Fragment) {
-        mFragmentList.removeAt(position)
-        mFragmentList.add(position, fragment)
-    }
-
     override fun getPageWidth(position: Int): Float {
-        if(position == 0)
-            return 0.85F
-        return 1F
+        if(position == MainPagesEnum.LEFT_MENU_FRAGMENT.ordinal)
+            return LEFT_MENU_PAGE_WIDTH
+        return SECOND_PAGE_WIDTH
     }
 }

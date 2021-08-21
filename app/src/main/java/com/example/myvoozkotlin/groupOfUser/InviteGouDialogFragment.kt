@@ -18,7 +18,7 @@ import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -29,7 +29,7 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         authUserModel = userViewModel.getCurrentAuthUser()
-        groupOfUserViewModel.getEntryLink(authUserModel.accessToken, authUserModel.id)
+        groupOfUserViewModel.getEntryLink(authUserModel!!.accessToken, authUserModel!!.id)
 
         configureViews()
         initObservers()
@@ -166,7 +166,7 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
 
     private fun setListeners() {
         binding.cvUpdateButton.setOnClickListener {
-            groupOfUserViewModel.updateEntryLink(authUserModel.accessToken, authUserModel.id)
+            groupOfUserViewModel.updateEntryLink(authUserModel!!.accessToken, authUserModel!!.id)
         }
 
         binding.cvCopyBtn.setOnClickListener {
@@ -178,14 +178,14 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
         }
 
         binding.lockButton.setOnClickListener {
-            groupOfUserViewModel.lockEntryLink(authUserModel.accessToken, authUserModel.id, 0)
+            groupOfUserViewModel.lockEntryLink(authUserModel!!.accessToken, authUserModel!!.id, 0)
             binding.lockButton.hide()
             binding.lockOpenButton.show()
             initLock(false)
         }
 
         binding.lockOpenButton.setOnClickListener {
-            groupOfUserViewModel.lockEntryLink(authUserModel.accessToken, authUserModel.id, 1)
+            groupOfUserViewModel.lockEntryLink(authUserModel!!.accessToken, authUserModel!!.id, 1)
             binding.lockButton.show()
             binding.lockOpenButton.hide()
             initLock(true)
@@ -214,7 +214,7 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
             }
         }
 
-        if(authUserModel.id != authUserModel.groupOfUser!!.idOlder){
+        if(authUserModel!!.id != authUserModel!!.groupOfUser!!.idOlder){
             binding.apply {
                 cvUpdateButton.hide()
                 lockOpenButton.hide()

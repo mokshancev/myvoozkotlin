@@ -1,4 +1,4 @@
-package com.example.myvoozkotlin.home.viewModels
+package com.example.myvoozkotlin.user.presentation.viewModel
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -7,38 +7,49 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.data.db.DbUtils
-import com.example.myvoozkotlin.data.db.realmModels.GroupOfUserModel
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.helpers.Utils
-import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
-import com.example.myvoozkotlin.user.domain.UploadPhotoUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.Realm
+import io.realm.RealmChangeListener
+import io.realm.RealmResults
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val changeFullNameUseCase: ChangeFullNameUseCase,
-    private val uploadPhotoUseCase: UploadPhotoUseCase,
     private val userRepository: UserRepository,
-    private val dbUtils: DbUtils
+    private val dbUtils: DbUtils,
+    private val realm: Realm
 ) : ViewModel() {
 
-    val currentAuthUserResponse = MutableLiveData<Event<AuthUserModel>>()
     fun getCurrentAuthUser() = dbUtils.getCurrentAuthUser()
 
-    fun updateGroupOfUser(groupOfUserModel: GroupOfUserModel){
-        val authUserModel = dbUtils.getCurrentAuthUser()
-        authUserModel.groupOfUser = groupOfUserModel
+    private var userRealm: RealmResults<AuthUserModel> =
+        realm.where(AuthUserModel::class.java).findAll()
+
+    init {
+        userRealm.addChangeListener(RealmChangeListener {
+            authUserChange.postValue(Any())
+        })
+    }
+
+    val authUserChange = MutableLiveData<Any>()
+
+    fun setCurrentUser(authUserModel: AuthUserModel) {
         dbUtils.setCurrentAuthUser(authUserModel)
     }
 
+    fun removeCurrentUser() {
+        dbUtils.removeCurrentUser()
+    }
+
     val changeFullNameResponse = MutableLiveData<Event<Boolean>>()
-    fun changeFullName(accessToken: String, idUser : Int, firstName : String, secondName : String) {
+    fun changeFullName(accessToken: String, idUser: Int, firstName: String, secondName: String) {
         viewModelScope.launch {
             changeFullNameUseCase(accessToken, idUser, firstName, secondName).collect {
                 changeFullNameResponse.postValue(it)
@@ -47,13 +58,25 @@ class UserViewModel @Inject constructor(
     }
 
     val uploadImageResponse = MutableLiveData<Event<Boolean>>()
-    fun uploadImage(image: Bitmap, accessToken: String, idUser: Int) {
+    fun uploadImage(bitmap: Bitmap, accessToken: String, idUser: Int, type: String) {
         viewModelScope.launch {
-            uploadPhotoUseCase.invoke(accessToken, idUser, image)
+            uploadImageResponse.postValue(Event.loading())
+            Utils.uploadImage(bitmap, accessToken, idUser, type)
+            Log.d("bwrbwbwrb", "bwerbwbwe3")
+            uploadImageResponse.postValue(Event.success(true))
         }
     }
 
-    fun changeAuthUserListener(onAuthUserChange: OnAuthUserChange?){
-        userRepository.changeAuthUserListener(onAuthUserChange)
+    fun getIdUniversity(): Int {
+        return userRepository.getIdUniversity()
+    }
+
+    fun getNameGroup(): String {
+        return userRepository.getNameGroup()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        userRealm.removeAllChangeListeners()
     }
 }

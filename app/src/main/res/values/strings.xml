@@ -29,5 +29,9 @@
     <string name="toast_gou_name">Введите название</string>
     <string name="title_gou_user_list">Список участников</string>
     <string name="toast_gou_invite_link_copy">Скопировано</string>
+    <string name="title_notification">Уведомления</string>
+    <string name="title_join_to_gou">Присоединиться к группе</string>
+    <string name="button_join">Присоединиться</string>
+    <string name="toast_invite_gou">Введите ключ приглашения, он 8-ми значный</string>
     <integer name="com_vk_sdk_AppId">7261626</integer>
 </resources>

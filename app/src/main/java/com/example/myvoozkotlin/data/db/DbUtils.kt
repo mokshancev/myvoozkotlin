@@ -8,16 +8,22 @@ class DbUtils @Inject constructor(
     private val realm: Realm
 ) {
 
-    fun getCurrentAuthUser(): AuthUserModel {
-        var contractModel = realm.where(AuthUserModel::class.java)
+    fun getCurrentAuthUser(): AuthUserModel? {
+        val authUserModel = realm.where(AuthUserModel::class.java)
             .findFirst()
-        return if (contractModel == null) {
-            contractModel = AuthUserModel()
-            contractModel
-        } else realm.copyFromRealm(contractModel)
+        return if (authUserModel == null) {
+            null
+        } else realm.copyFromRealm(authUserModel)
     }
 
     fun setCurrentAuthUser(authUserModel: AuthUserModel) {
         realm.executeTransaction { it.insertOrUpdate(authUserModel) }
+    }
+
+    fun removeCurrentUser() {
+        val entity = realm.where(AuthUserModel::class.java).findFirst()
+        realm.executeTransaction {
+            entity?.deleteFromRealm()
+        }
     }
 }

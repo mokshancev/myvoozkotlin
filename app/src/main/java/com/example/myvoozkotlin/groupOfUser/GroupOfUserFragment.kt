@@ -1,8 +1,9 @@
 package com.example.myvoozkotlin.groupOfUser
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.*
-import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.myvoozkotlin.BaseApp
@@ -10,24 +11,18 @@ import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
-import com.example.myvoozkotlin.data.db.realmModels.GroupOfUserModel
-import com.example.myvoozkotlin.data.db.realmModels.UserVeryShortModel
-import com.example.myvoozkotlin.databinding.FragmentCreateGroupOfUserBinding
 import com.example.myvoozkotlin.databinding.FragmentGroupOfUserBinding
-import com.example.myvoozkotlin.databinding.FragmentUserBinding
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.*
-import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.search.SearchFragment
 import com.example.myvoozkotlin.search.helpers.SearchEnum
-import com.example.myvoozkotlin.user.ChangeFullNameDialogFragment
-import com.example.myvoozkotlin.user.UserFragment
-import com.vk.api.sdk.VK
+import com.example.myvoozkotlin.user.presentation.UserFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 
 @AndroidEntryPoint
-class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
+class GroupOfUserFragment: BaseFragment(){
     companion object {
         const val ANIMATE_TRANSITION_DURATION: Int = 300
         fun newInstance(): GroupOfUserFragment {
@@ -66,11 +61,7 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
         initToolbar()
         if(authUserModel!!.photo.isNotEmpty()){
             binding.ivPhotoUser.show()
-            Glide.with(this)
-                .load(authUserModel!!.groupOfUser!!.image)
-                .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade(UserFragment.ANIMATE_TRANSITION_DURATION))
-                .into(binding.ivPhotoUser)
+
         }
         else
             binding.ivPhotoUser.hide()
@@ -78,7 +69,6 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
     }
 
     private fun setListeners(){
-        userViewModel.changeAuthUserListener(this)
 
         parentFragmentManager.setFragmentResultListener(SearchFragment.REQUEST_GROUP, this) { key, bundle ->
             nameGroup = bundle.getString("fullName", "null")
@@ -106,6 +96,13 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
         binding.llUsers.setOnClickListener {
             loadUserListFragment()
         }
+
+        binding.cvPhotoContainer.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+            photoPickerIntent.addCategory(Intent.CATEGORY_OPENABLE)
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, 1)
+        }
     }
 
     private fun initData(){
@@ -117,11 +114,17 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
         binding.tvHeadUser.text = authUserModel!!.groupOfUser!!.userVeryShortModel!!.name
         binding.tvChangeGroupOfUserName.text = authUserModel!!.groupOfUser!!.name
         binding.tvChangeGroup.text = authUserModel!!.groupOfUser!!.nameGroup
+        Glide.with(this)
+            .load(authUserModel!!.groupOfUser!!.image)
+            .centerCrop()
+            .transition(DrawableTransitionOptions.withCrossFade(UserFragment.ANIMATE_TRANSITION_DURATION))
+            .into(binding.ivPhotoUser)
     }
 
     private fun initObservers() {
         observeOnChangeIdGroupResponse()
         observeOnLogoutGroupOfUserResponse()
+        observeOnAuthUserChangeResponse()
     }
 
     private fun observeOnChangeIdGroupResponse() {
@@ -149,6 +152,23 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (data != null) {
+                val contentURI = data.data
+                try {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, contentURI)
+                    (requireActivity() as MainActivity).showWait(true)
+                    userViewModel.uploadImage(bitmap, authUserModel!!.accessToken, authUserModel!!.id, "group_profile")
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
     private fun observeOnLogoutGroupOfUserResponse() {
         groupOfUserViewModel.logoutGroupOfUserResponse.observe(viewLifecycleOwner, {
             when (it.status) {
@@ -160,6 +180,9 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
                     if (it.data == null) {
 
                     } else {
+                        val authUserModel = userViewModel.getCurrentAuthUser()
+                        authUserModel!!.idGroupOfUser = 0
+                        userViewModel.setCurrentUser(authUserModel)
                         BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.AUTORIZATE.ordinal).apply()
                         (requireActivity() as MainActivity).showWait(false)
                         requireActivity().onBackPressed()
@@ -169,6 +192,14 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
 
                 }
             }
+        })
+    }
+
+    private fun observeOnAuthUserChangeResponse() {
+        userViewModel.authUserChange.observe(viewLifecycleOwner, {
+            authUserModel = userViewModel.getCurrentAuthUser()
+            (requireActivity() as MainActivity).showWait(false)
+            initData()
         })
     }
 
@@ -207,15 +238,5 @@ class GroupOfUserFragment: BaseFragment(), OnAuthUserChange {
         binding.toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        userViewModel.changeAuthUserListener(null)
-    }
-
-    override fun onAuthUserChange() {
-        authUserModel = userViewModel.getCurrentAuthUser()
-        initData()
     }
 }

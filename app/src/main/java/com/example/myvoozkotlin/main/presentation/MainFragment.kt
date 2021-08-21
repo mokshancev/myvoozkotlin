@@ -1,4 +1,4 @@
-package com.example.myvoozkotlin
+package com.example.myvoozkotlin.main.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
+import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentMainBinding
-import com.example.myvoozkotlin.helpers.adapters.ViewPagerAdapter
+import com.example.myvoozkotlin.main.adapters.ViewPagerAdapter
 import com.example.myvoozkotlin.helpers.forView.LockableViewPager
 import com.example.myvoozkotlin.home.HomeFragment
-import com.example.myvoozkotlin.home.LeftMenuFragment
+import com.example.myvoozkotlin.leftMenu.presentation.LeftMenuFragment
+import com.example.myvoozkotlin.main.helpers.enums.MainPagesEnum
 
 class MainFragment: Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -21,6 +22,8 @@ class MainFragment: Fragment() {
     private var viewPagerFragment: LockableViewPager? = null
 
     companion object {
+        const val START_ALPHA = 1.0f
+        const val END_ALPHA = 0.5f
         fun newInstance(): MainFragment {
             return MainFragment()
         }
@@ -37,42 +40,43 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewPagerAdapter()
-        initLockableViewPager()
-
+        configureViews()
         openHomeList()
     }
 
-    private fun initViewPagerAdapter(){
-        adapter = ViewPagerAdapter(childFragmentManager)
-        adapter?.addFrag(LeftMenuFragment())
-        adapter?.addFrag(HomeFragment())
+    private fun configureViews(){
+        configureViewPagerAdapter()
+        configureLockableViewPager()
     }
 
-    private fun initLockableViewPager(){
+    private fun configureViewPagerAdapter(){
         viewPagerFragment = requireView().findViewById(R.id.vpFirstTabFragment)
-        viewPagerFragment?.offscreenPageLimit = 2
-        viewPagerFragment?.adapter = adapter
+        viewPagerFragment?.offscreenPageLimit = MainPagesEnum.values().size
+        if(viewPagerFragment!!.adapter == null){
+            adapter = ViewPagerAdapter(childFragmentManager)
+            adapter?.addFrag(LeftMenuFragment())
+            adapter?.addFrag(HomeFragment())
+            viewPagerFragment?.adapter = adapter
+        }
+    }
 
+    private fun configureLockableViewPager(){
         viewPagerFragment?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
-//                if(state == ViewPager2.SCROLL_STATE_DRAGGING){
-//                    (adapter?.getItem(1) as HomeFragment).showLockBackground(true)
-//                }
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 if(!positionOffset.equals(0.0F))
-                    adapter?.getItem(1)!!.requireView().alpha =  0.5F*(1 + positionOffset)
+                    adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha =  END_ALPHA*(START_ALPHA + positionOffset)
             }
 
             override fun onPageSelected(position: Int) {
-                if(adapter?.getItem(1)?.view != null){
-                    if (position == 1){
-                        adapter?.getItem(1)!!.requireView().alpha = 1.0F
+                if(adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)?.view != null){
+                    if (position == MainPagesEnum.HOME_FRAGMENT.ordinal){
+                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = START_ALPHA
                     }
                     else{
-                        adapter?.getItem(1)!!.requireView().alpha = 0.5F
+                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = END_ALPHA
                     }
                 }
             }
@@ -80,10 +84,10 @@ class MainFragment: Fragment() {
     }
 
     fun openHomeList() {
-        viewPagerFragment?.currentItem = 1
+        viewPagerFragment?.currentItem = MainPagesEnum.HOME_FRAGMENT.ordinal
     }
 
     fun openLeftMenuList() {
-        viewPagerFragment?.currentItem = 0
+        viewPagerFragment?.currentItem = MainPagesEnum.LEFT_MENU_FRAGMENT.ordinal
     }
 }

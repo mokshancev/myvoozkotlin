@@ -1,12 +1,7 @@
 package com.example.myvoozkotlin.note.domain
 
-import android.content.Context
-import android.graphics.Bitmap
-import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
-import com.example.myvoozkotlin.models.Note
-import com.example.myvoozkotlin.models.PhotoItem
-import com.example.myvoozkotlin.models.SearchItem
+import com.example.myvoozkotlin.note.model.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {

@@ -40,13 +40,36 @@ class GroupOfUserRepositoryImpl @Inject constructor(
             e.printStackTrace()
         }
 
+    override fun inviteGroupOfUser(
+        accessToken: String,
+        idUser: Int,
+        text: String
+    ): Flow<Event<InviteData>> =
+        flow<Event<InviteData>> {
+            emit(Event.loading())
+            val apiResponse = groupOfUserApi.inviteGroupOfUser(accessToken, idUser, text)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null)
+                emit(Event.success(apiResponse.body()!!))
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
+
     override fun logoutGroupOfUser(accessToken: String, idUser: Int): Flow<Event<Boolean>> =
         flow<Event<Boolean>> {
             emit(Event.loading())
             val apiResponse = groupOfUserApi.logoutGroupOfUser(accessToken, idUser)
 
-            if (apiResponse.isSuccessful && apiResponse.body() != null)
+            if (apiResponse.isSuccessful && apiResponse.body() != null){
+                val authUserModel = dbUtils.getCurrentAuthUser()
+                authUserModel!!.idGroupOfUser = 0
+                dbUtils.setCurrentAuthUser(authUserModel)
                 emit(Event.success(apiResponse.body()!!))
+            }
             else{
                 emit(Event.error("lol"))
             }
@@ -81,7 +104,7 @@ class GroupOfUserRepositoryImpl @Inject constructor(
 
             if (apiResponse.isSuccessful && apiResponse.body() != null){
                 val authUserModel = dbUtils.getCurrentAuthUser()
-                authUserModel.groupOfUser!!.name = text
+                authUserModel!!.groupOfUser!!.name = text
                 dbUtils.setCurrentAuthUser(authUserModel)
                 emit(Event.success(apiResponse.body()!!))
             }

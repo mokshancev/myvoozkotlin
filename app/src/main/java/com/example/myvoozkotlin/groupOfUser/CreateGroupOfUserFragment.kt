@@ -1,24 +1,22 @@
 package com.example.myvoozkotlin.groupOfUser
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.annotation.Nullable
-import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.BaseFragment
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
-import com.example.myvoozkotlin.auth.viewModels.AuthViewModel
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.data.db.realmModels.GroupOfUserModel
 import com.example.myvoozkotlin.data.db.realmModels.UserVeryShortModel
 import com.example.myvoozkotlin.databinding.FragmentCreateGroupOfUserBinding
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.*
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.search.SearchFragment
 import com.example.myvoozkotlin.search.helpers.SearchEnum
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +26,7 @@ class CreateGroupOfUserFragment : BaseFragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
-    private lateinit var authUserModel: AuthUserModel
+    private var authUserModel: AuthUserModel? = null
 
     companion object {
         fun newInstance(): CreateGroupOfUserFragment {
@@ -72,7 +70,9 @@ class CreateGroupOfUserFragment : BaseFragment() {
 
         binding.tvUniversityName.text = nameUniversity
         binding.tvGroupName.text = nameGroup
-        binding.etGOUName.setText("Группа ${authUserModel.nameGroup}")
+        if(authUserModel != null){
+            binding.etGOUName.setText("Группа ${authUserModel!!.nameGroup}")
+        }
     }
 
     private fun setDefaultGroupValue(){
@@ -106,8 +106,8 @@ class CreateGroupOfUserFragment : BaseFragment() {
                 idGroup == 0 ->
                     UtilsUI.makeToast(getString(R.string.toast_select_group))
                 else ->{
-                    println("---print" + authUserModel.accessToken + " " + authUserModel.id + " " + binding.etGOUName.text.toString() + " " + idGroup)
-                    groupOfUserViewModel.createGroupOfUser(authUserModel.accessToken, authUserModel.id, binding.etGOUName.text.toString(), idGroup)
+                    println("---print" + authUserModel!!.accessToken + " " + authUserModel!!.id + " " + binding.etGOUName.text.toString() + " " + idGroup)
+                    groupOfUserViewModel.createGroupOfUser(authUserModel!!.accessToken, authUserModel!!.id, binding.etGOUName.text.toString(), idGroup)
                 }
             }
         }
@@ -138,13 +138,12 @@ class CreateGroupOfUserFragment : BaseFragment() {
             when (it.status) {
                 Status.LOADING -> {
                     setLoadStateBtn()
+                    (requireActivity() as MainActivity).showWait(true)
                 }
                 Status.SUCCESS -> {
                     setOpenStateBtn()
-
-                    if (it.data == null) {
-
-                    } else {
+                    (requireActivity() as MainActivity).showWait(false)
+                    if (it.data != null) {
                         println("gou " + it.data)
                         val groupOfUserModel = GroupOfUserModel()
                         groupOfUserModel.id = it.data.groupOfUser.id
@@ -163,7 +162,10 @@ class CreateGroupOfUserFragment : BaseFragment() {
                         userVeryShortModel.name = it.data.groupOfUser.userVeryShort.name
                         userVeryShortModel.photo = it.data.groupOfUser.userVeryShort.photo
                         groupOfUserModel.userVeryShortModel = userVeryShortModel
-                        userViewModel.updateGroupOfUser(groupOfUserModel)
+                        val authUserModel = userViewModel.getCurrentAuthUser()
+                        authUserModel!!.idGroupOfUser = groupOfUserModel.id
+                        authUserModel.groupOfUser = groupOfUserModel
+                        userViewModel.setCurrentUser(authUserModel)
                         BaseApp.getSharedPref().edit().putInt(Constants.APP_PREFERENCES_AUTH_STATE, AuthorizationState.GROUP_AUTORIZATE.ordinal).apply()
                         requireActivity().onBackPressed()
 

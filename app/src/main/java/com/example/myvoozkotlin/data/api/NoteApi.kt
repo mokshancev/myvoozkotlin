@@ -1,11 +1,9 @@
 package com.example.myvoozkotlin.data.api
 
-import com.example.myvoozkotlin.models.Note
-import retrofit2.Call
+import com.example.myvoozkotlin.note.model.Note
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.util.*
 
 interface NoteApi {
     @GET("profile?type=user_note")

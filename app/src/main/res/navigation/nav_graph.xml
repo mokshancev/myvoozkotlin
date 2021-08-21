@@ -26,7 +26,7 @@
         android:label="NoteFragment" />
     <fragment
         android:id="@+id/authFragment"
-        android:name="com.example.myvoozkotlin.auth.AuthFragment"
+        android:name="com.example.myvoozkotlin.auth.AuthActivity"
         android:label="AuthFragment" />
     <fragment
         android:id="@+id/selectGroupFragment"

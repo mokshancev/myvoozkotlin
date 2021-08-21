@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homelibrary.model.Lesson
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.MainFragment
+import com.example.myvoozkotlin.main.presentation.MainFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentHomeBinding
 import com.example.myvoozkotlin.helpers.*
@@ -32,7 +31,7 @@ import com.example.myvoozkotlin.home.helpers.OnStoryClick
 import com.example.myvoozkotlin.home.helpers.ScheduleState
 import com.example.myvoozkotlin.home.viewModels.NewsViewModel
 import com.example.myvoozkotlin.home.viewModels.ScheduleViewModel
-import com.example.myvoozkotlin.home.viewModels.UserViewModel
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.note.NoteListFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -329,11 +328,6 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         else if(key.equals(Constants.APP_PREFERENCES_AUTH_STATE)){
             initAuthUser()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        BaseApp.getSharedPref().unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onStoryClick(stories: News) {

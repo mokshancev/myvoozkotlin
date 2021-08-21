@@ -150,7 +150,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cvJoinGOUButton"
+        android:id="@+id/cvInviteGOUButton"
         app:layout_constraintTop_toBottomOf="@+id/cvCreateGOUButton"
         app:cardCornerRadius="8dp"
         app:cardBackgroundColor="#c6df90"
@@ -172,7 +172,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvJoinGOUButton"
+        app:layout_constraintTop_toBottomOf="@+id/cvInviteGOUButton"
         android:id="@+id/cvGOUButton"
         android:layout_height="wrap_content"
         android:visibility="gone"

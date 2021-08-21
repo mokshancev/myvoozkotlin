@@ -1,6 +1,7 @@
 package com.example.myvoozkotlin.helpers.contract
 
 import android.os.Parcelable
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
@@ -12,18 +13,18 @@ fun Fragment.navigator(): Navigator {
 }
 
 interface Navigator {
+    fun showAboutScreen()
+    fun showNoteScreen()
+    fun showHomeScreen()
+    fun showSplashScreen()
+    fun showSelectGroupScreen()
+    fun showCreateGroupOfUserScreen()
+    fun showInviteGroupOfUserScreen()
+    fun showUserScreen()
+    fun showGroupOfUserScreen()
+    fun showNotificationScreen()
 
-    //fun showBoxSelectionScreen(options: Options)
-
-    //fun showOptionsScreen(options: Options)
-
-    fun showAboutScreen(idRes: Int, fragmentManager: FragmentManager)
-
-    fun showNoteScreen(idRes: Int, fragmentManager: FragmentManager)
-
-    fun showHomeScreen(idRes: Int, fragmentManager: FragmentManager)
-
-    //fun showCongratulationsScreen()
+    fun showDialog(dialogFragment: DialogFragment)
 
     fun goBack()
 
