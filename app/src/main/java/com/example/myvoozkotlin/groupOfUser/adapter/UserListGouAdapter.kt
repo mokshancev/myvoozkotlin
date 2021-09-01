@@ -35,20 +35,17 @@ class UserListGouAdapter(private var userItems: List<UserShort>, private val aut
             onUserListItemPicked.onUserListItemClick(item)
         }
 
-        if(authUserModel.groupOfUser!!.idOlder == authUserModel.id){
-            binding.cvSettingBtn.show()
-        }
-        else{
-            binding.cvSettingBtn.hide()
-        }
-
         if(authUserModel.id == item.id){
             binding.cvSettingBtn.hide()
         }
         else{
-            binding.cvSettingBtn.show()
+            if(authUserModel.groupOfUser!!.idOlder == authUserModel.id){
+                binding.cvSettingBtn.show()
+            }
+            else{
+                binding.cvSettingBtn.hide()
+            }
         }
-
 
 
         Glide.with(holder.itemView.context)

@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.example.homelibrary.model.Lesson
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.ItemStoryBinding
+import com.example.myvoozkotlin.helpers.hide
+import com.example.myvoozkotlin.helpers.show
 import com.example.myvoozkotlin.models.news.News
 
 class SchedulePairAdapter(
@@ -36,6 +38,15 @@ class SchedulePairAdapter(
         convertView!!.findViewById<TextView>(R.id.tv_name)!!.text = lesson.number.toString() + ". " + lesson.name
         convertView.findViewById<TextView>(R.id.tv_type).text = lesson.typeName
         convertView!!.findViewById<TextView>(R.id.tv_fio)!!.text = lesson.teacher
+
+        if(lesson.teacher.isEmpty()){
+            convertView.findViewById<View>(R.id.ivTeacher).hide()
+            convertView.findViewById<View>(R.id.tv_fio).hide()
+        }
+        else{
+            convertView.findViewById<View>(R.id.ivTeacher).show()
+            convertView.findViewById<View>(R.id.tv_fio).show()
+        }
 
         convertView.hashCode()
     }

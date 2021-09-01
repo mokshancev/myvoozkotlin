@@ -14,10 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentSearchBinding
 import com.example.myvoozkotlin.helpers.Status
+import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
 import com.example.myvoozkotlin.models.SearchItem
@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment(), OnSearchItemPicked {
+class SearchFragment : Fragment(), OnSearchItemPicked {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by viewModels()
@@ -48,6 +48,8 @@ class SearchFragment : BaseFragment(), OnSearchItemPicked {
         const val REQUEST_UNIVERSITY = "search_response_university"
         const val REQUEST_GROUP = "search_response_group"
         const val REQUEST_OBJECT = "search_response_object"
+        const val KEY_FULL_NAME = "fullName"
+        const val KEY_ID = "id"
 
         fun newInstance(type: Int, addValue: Int): SearchFragment {
             val bundle = Bundle().apply {
@@ -82,6 +84,11 @@ class SearchFragment : BaseFragment(), OnSearchItemPicked {
         initToolbar()
         initObservers()
         hideKeyBoard()
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun setListeners(){
@@ -190,10 +197,10 @@ class SearchFragment : BaseFragment(), OnSearchItemPicked {
     override fun onSearchItemClick(searchItem: SearchItem) {
         val bundle = Bundle()
         if(searchItem.fullName.isNullOrEmpty())
-            bundle.putString("fullName", searchItem.name)
+            bundle.putString(KEY_FULL_NAME, searchItem.name)
         else
-            bundle.putString("fullName", searchItem.fullName)
-        bundle.putInt("id", searchItem.id)
+            bundle.putString(KEY_FULL_NAME, searchItem.fullName)
+        bundle.putInt(KEY_ID, searchItem.id)
 
         if(type == SearchEnum.UNIVERSITY.ordinal){
             parentFragmentManager.setFragmentResult(REQUEST_UNIVERSITY, bundle)

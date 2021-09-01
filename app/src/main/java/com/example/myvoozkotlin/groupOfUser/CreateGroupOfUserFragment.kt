@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.annotation.Nullable
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
@@ -22,7 +23,7 @@ import com.example.myvoozkotlin.search.helpers.SearchEnum
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateGroupOfUserFragment : BaseFragment() {
+class CreateGroupOfUserFragment : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
@@ -57,6 +58,11 @@ class CreateGroupOfUserFragment : BaseFragment() {
         setListeners()
 
         initData()
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun initData() {

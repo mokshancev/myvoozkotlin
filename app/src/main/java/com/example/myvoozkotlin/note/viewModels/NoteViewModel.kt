@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.note.model.Note
 import com.example.myvoozkotlin.note.domain.AddNoteUseCase
+import com.example.myvoozkotlin.note.domain.CompletedNoteUseCase
 import com.example.myvoozkotlin.note.domain.NoteListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     private val noteListUseCase: NoteListUseCase,
+    private val completedNoteUseCase: CompletedNoteUseCase,
     private val addNoteUseCase: AddNoteUseCase
 ) : ViewModel() {
 
@@ -32,6 +34,15 @@ class NoteViewModel @Inject constructor(
         viewModelScope.launch {
             addNoteUseCase(accessToken, idUser, idObject, title, text, date, markMe, images).collect {
                 addNoteResponse.postValue(it)
+            }
+        }
+    }
+
+    val completedNoteResponse = MutableLiveData<Event<Any>>()
+    fun completedNote(accessToken: String, idUser: Int, notes: List<Int>) {
+        viewModelScope.launch {
+            completedNoteUseCase(accessToken, idUser, notes).collect {
+                completedNoteResponse.postValue(it)
             }
         }
     }

@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import com.example.myvoozkotlin.BaseFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentNotificationBinding
 import com.example.myvoozkotlin.helpers.AuthorizationState
 import com.example.myvoozkotlin.helpers.Utils
+import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.models.TabItem
 import com.example.myvoozkotlin.notification.adapter.NotificationViewPagerAdapter
@@ -19,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class NotificationFragment: BaseFragment() {
+class NotificationFragment: Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private var authUserModel: AuthUserModel? = null
 
@@ -57,6 +59,11 @@ class NotificationFragment: BaseFragment() {
         initToolbar()
         initObservers()
         configureViewPager()
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun configureViewPager(){

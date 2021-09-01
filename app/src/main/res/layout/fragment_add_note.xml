@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:id="@+id/addNoteRootView"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:background="@color/backgroundContent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.appbar.AppBarLayout

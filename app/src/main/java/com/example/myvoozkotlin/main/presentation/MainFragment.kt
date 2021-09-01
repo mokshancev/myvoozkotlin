@@ -1,5 +1,6 @@
 package com.example.myvoozkotlin.main.presentation
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.example.myvoozkotlin.helpers.forView.LockableViewPager
 import com.example.myvoozkotlin.home.HomeFragment
 import com.example.myvoozkotlin.leftMenu.presentation.LeftMenuFragment
 import com.example.myvoozkotlin.main.helpers.enums.MainPagesEnum
+import com.example.myvoozkotlin.note.NoteListFragment
 
 class MainFragment: Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -56,35 +58,40 @@ class MainFragment: Fragment() {
             adapter = ViewPagerAdapter(childFragmentManager)
             adapter?.addFrag(LeftMenuFragment())
             adapter?.addFrag(HomeFragment())
+            adapter?.addFrag(NoteListFragment())
             viewPagerFragment?.adapter = adapter
         }
     }
 
     private fun configureLockableViewPager(){
-        viewPagerFragment?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                if(!positionOffset.equals(0.0F))
-                    adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha =  END_ALPHA*(START_ALPHA + positionOffset)
-            }
-
-            override fun onPageSelected(position: Int) {
-                if(adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)?.view != null){
-                    if (position == MainPagesEnum.HOME_FRAGMENT.ordinal){
-                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = START_ALPHA
-                    }
-                    else{
-                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = END_ALPHA
-                    }
-                }
-            }
-        })
+//        viewPagerFragment?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+//            override fun onPageScrollStateChanged(state: Int) {
+//            }
+//
+//            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+//                if(!positionOffset.equals(0.0F))
+//                    adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha =  END_ALPHA*(START_ALPHA + positionOffset)
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//                if(adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)?.view != null){
+//                    if (position == MainPagesEnum.HOME_FRAGMENT.ordinal){
+//                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = START_ALPHA
+//                    }
+//                    else{
+//                        adapter?.getItem(MainPagesEnum.HOME_FRAGMENT.ordinal)!!.requireView().alpha = END_ALPHA
+//                    }
+//                }
+//            }
+//        })
     }
 
     fun openHomeList() {
         viewPagerFragment?.currentItem = MainPagesEnum.HOME_FRAGMENT.ordinal
+    }
+
+    fun openNoteList() {
+        viewPagerFragment?.currentItem = MainPagesEnum.NOTE_LIST_FRAGMENT.ordinal
     }
 
     fun openLeftMenuList() {

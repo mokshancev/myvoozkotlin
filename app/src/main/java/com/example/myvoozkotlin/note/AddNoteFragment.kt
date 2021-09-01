@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.*
 import com.android.volley.toolbox.Volley
 import com.example.myvoozkotlin.BaseApp
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentAddNoteBinding
 import com.example.myvoozkotlin.helpers.*
@@ -229,6 +230,10 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
             .check()
     }
 
+    private fun setPaddingTopMenu() {
+        binding.toolbar.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureViews()
@@ -260,7 +265,7 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
     }
 
     private fun configureViews() {
-
+        setPaddingTopMenu()
     }
 
     private fun setListeners(){
@@ -337,8 +342,10 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
         noteViewModel.addNoteResponse.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.LOADING -> {
+                    (requireActivity() as MainActivity).showWait(true)
                 }
                 Status.SUCCESS -> {
+                    (requireActivity() as MainActivity).showWait(false)
                     val bundle = Bundle()
                     bundle.putSerializable(CONSTANT_NOTE, it.data)
 

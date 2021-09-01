@@ -19,9 +19,8 @@ import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentUserBinding
 import com.example.myvoozkotlin.helpers.*
-import com.example.myvoozkotlin.helpers.contract.navigator
+import com.example.myvoozkotlin.helpers.navigation.navigator
 import com.example.myvoozkotlin.home.HomeFragment
-import com.example.myvoozkotlin.user.ChangeFullNameDialogFragment
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -60,10 +59,16 @@ class UserFragment: Fragment() {
 
     private fun configureViews() {
         initToolbar()
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun initData(authUserModel: AuthUserModel?) {
         authUserModel?.apply {
+            println("bvnvnvnwnvwev " + authUserModel.accessToken)
             showPhotoUserImage(true, photo)
             "$lastName ${firstName[0]}".also { binding.tvUserName.text = it }
             ("$lastName $firstName").also { binding.tvChangeUserName.text = it }
@@ -145,6 +150,7 @@ class UserFragment: Fragment() {
 
     private fun observeOnAuthUserChangeResponse() {
         userViewModel.authUserChange.observe(viewLifecycleOwner, {
+            (requireActivity() as MainActivity).showWait(false)
             initData(userViewModel.getCurrentAuthUser())
         })
     }

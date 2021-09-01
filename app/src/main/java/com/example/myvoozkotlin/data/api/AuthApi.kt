@@ -14,4 +14,10 @@ interface AuthApi {
                        @Query("id_university") idUniversity: Int,
                        @Query("id_group") idGroup: Int,
                        @Query("key_notif") keyNotification: String): Response<AuthUser>
+
+    @GET("profile?type=auth_2_ya")
+    suspend fun authYa(@Query("access_token") accessToken: String,
+                       @Query("id_university") idUniversity: Int,
+                       @Query("id_group") idGroup: Int,
+                       @Query("key_notif") keyNotification: String): Response<AuthUser>
 }

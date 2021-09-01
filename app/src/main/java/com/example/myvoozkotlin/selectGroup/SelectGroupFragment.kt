@@ -5,32 +5,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentSelectGroupBinding
 import com.example.myvoozkotlin.helpers.Constants
 import com.example.myvoozkotlin.helpers.UtilsUI
+import com.example.myvoozkotlin.helpers.navigation.navigator
+import com.example.myvoozkotlin.helpers.show
 import com.example.myvoozkotlin.search.SearchFragment
 import com.example.myvoozkotlin.search.helpers.SearchEnum
+import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class SelectGroupFragment : BaseFragment() {
+@AndroidEntryPoint
+class SelectGroupFragment : Fragment() {
 
     companion object {
-        fun newInstance(): SelectGroupFragment {
-            return SelectGroupFragment()
+        const val FIRST_OPEN = "first_open"
+        fun newInstance(isFirst: Boolean): SelectGroupFragment {
+            val fragment = SelectGroupFragment()
+            fragment.arguments = bundleOf(FIRST_OPEN to isFirst)
+            return fragment
         }
     }
 
     private var _binding: FragmentSelectGroupBinding? = null
     private val binding get() = _binding!!
+    private val userViewModel: UserViewModel by viewModels()
 
     private var idUniversity = 0
     private var nameUniversity = ""
     private var idGroup = 0
     private var nameGroup = ""
+    private var isFirst = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,18 +52,29 @@ class SelectGroupFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initIntentData()
         configureViews()
         setListeners()
-
         initData()
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.toolbar.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
+    }
+
+    private fun initIntentData(){
+        if(requireArguments() != null){
+            isFirst = requireArguments().getBoolean(FIRST_OPEN, false)
+        }
     }
 
     private fun initData() {
-        nameUniversity = BaseApp.getSharedPref().getString(Constants.APP_PREFERENCES_USER_UNIVERSITY_NAME, "null")!!
-        idUniversity = BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_UNIVERSITY_ID, 0)
+        nameUniversity = userViewModel.getNameUniversity()
+        idUniversity = userViewModel.getIdUniversity()
 
-        nameGroup = BaseApp.getSharedPref().getString(Constants.APP_PREFERENCES_USER_GROUP_NAME, "null")!!
-        idGroup = BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0)
+        nameGroup = userViewModel.getNameGroup()
+        idGroup = userViewModel.getIdGroup()
 
         binding.tvUniversityName.text = nameUniversity
         binding.tvGroupName.text = nameGroup
@@ -65,14 +86,46 @@ class SelectGroupFragment : BaseFragment() {
     }
 
     private fun configureViews(){
-        initToolbar()
+
+        if(isFirst){
+            binding.ivPreview.show()
+            binding.tvTitle.show()
+        }
+        else{
+            initToolbar()
+        }
     }
 
     private fun setListeners(){
-        binding.clUniversityButton.setOnClickListener {
-            loadSearchFragment(SearchEnum.UNIVERSITY.ordinal, 0)
-        }
+        setUniversityClickListener()
+        setGroupClickListener()
+        setSaveClickListener()
 
+        setUniversityResultListener()
+        setGroupResultListener()
+    }
+
+    private fun setUniversityResultListener(){
+        parentFragmentManager.setFragmentResultListener(SearchFragment.REQUEST_UNIVERSITY, this) { key, bundle ->
+            val universityName = bundle.getString(SearchFragment.KEY_FULL_NAME, "null")
+            binding.tvUniversityName.text = universityName
+            idUniversity = bundle.getInt(SearchFragment.KEY_ID)
+            nameUniversity = universityName
+
+            setDefaultGroupValue()
+        }
+    }
+
+    private fun setGroupResultListener(){
+        parentFragmentManager.setFragmentResultListener(SearchFragment.REQUEST_GROUP, this) { key, bundle ->
+            val groupName = bundle.getString(SearchFragment.KEY_FULL_NAME, "null")
+            binding.tvGroupName.text = groupName
+            idGroup = bundle.getInt(SearchFragment.KEY_ID)
+            nameGroup = groupName
+        }
+    }
+
+    private fun setGroupClickListener(){
         binding.clGroupButton.setOnClickListener {
             if(idUniversity == 0)
                 UtilsUI.makeToast(getString(R.string.select_university))
@@ -80,7 +133,15 @@ class SelectGroupFragment : BaseFragment() {
                 loadSearchFragment(SearchEnum.GROUP.ordinal, idUniversity)
             }
         }
+    }
 
+    private fun setUniversityClickListener(){
+        binding.clUniversityButton.setOnClickListener {
+            loadSearchFragment(SearchEnum.UNIVERSITY.ordinal, 0)
+        }
+    }
+
+    private fun setSaveClickListener(){
         binding.cvSaveButton.setOnClickListener {
             when {
                 idUniversity == 0 ->
@@ -89,25 +150,14 @@ class SelectGroupFragment : BaseFragment() {
                     UtilsUI.makeToast(getString(R.string.toast_select_group))
                 else -> {
                     saveSelectValue()
-                    parentFragmentManager.popBackStack()
+                    if(isFirst){
+                        navigator().showMainScreen()
+                    }
+                    else{
+                        parentFragmentManager.popBackStack()
+                    }
                 }
             }
-        }
-
-        parentFragmentManager.setFragmentResultListener(SearchFragment.REQUEST_UNIVERSITY, this) { key, bundle ->
-            val universityName = bundle.getString("fullName", "null")
-            binding.tvUniversityName.text = universityName
-            idUniversity = bundle.getInt("id")
-            nameUniversity = universityName
-
-            setDefaultGroupValue()
-        }
-
-        parentFragmentManager.setFragmentResultListener(SearchFragment.REQUEST_GROUP, this) { key, bundle ->
-            val groupName = bundle.getString("fullName", "null")
-            binding.tvGroupName.text = groupName
-            idGroup = bundle.getInt("id")
-            nameGroup = groupName
         }
     }
 
@@ -128,7 +178,9 @@ class SelectGroupFragment : BaseFragment() {
 
     private fun initToolbar() {
         binding.toolbar.title = getString(R.string.title_select_group)
-        addBackButton()
+        if(!isFirst){
+            addBackButton()
+        }
     }
 
     private fun addBackButton(){

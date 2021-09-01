@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
@@ -20,7 +21,7 @@ import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InviteGroupOfUserFragment : BaseFragment() {
+class InviteGroupOfUserFragment : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val groupOfUserViewModel: GroupOfUserViewModel by viewModels()
@@ -49,11 +50,15 @@ class InviteGroupOfUserFragment : BaseFragment() {
         initObservers()
         setListeners()
         authUserModel = userViewModel.getCurrentAuthUser()
-
+        setPaddingTopMenu()
     }
 
     private fun configureViews(){
         initToolbar()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun setListeners(){

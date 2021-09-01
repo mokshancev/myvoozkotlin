@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.homelibrary.model.Notification
 import com.example.myvoozkotlin.databinding.ItemNoteBinding
 import com.example.myvoozkotlin.helpers.Utils
 import com.example.myvoozkotlin.helpers.hide
@@ -13,7 +14,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
+class NoteAdapter(private val itemClickListener: (Note) -> Unit): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
     private var notes: MutableList<Note> = mutableListOf()
 
     inner class IntercomViewHolder(val binding : ItemNoteBinding) : RecyclerView.ViewHolder(binding.root)
@@ -46,6 +47,10 @@ class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
         else{
             binding.cvPreviewContainer.hide()
             binding.cvAddImagesContainer.hide()
+        }
+
+        binding.root.setOnClickListener {
+            itemClickListener.invoke(note)
         }
 
         binding.apply {
@@ -108,6 +113,12 @@ class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.IntercomViewHolder>() {
 
     fun addNote(note: Note) {
         notes.add(note)
+        this.notes.sortBy { it.date }
+        notifyDataSetChanged()
+    }
+
+    fun removeNote(idNote: Int) {
+        this.notes = this.notes.filter { it.id != idNote }.toMutableList()
         this.notes.sortBy { it.date }
         notifyDataSetChanged()
     }

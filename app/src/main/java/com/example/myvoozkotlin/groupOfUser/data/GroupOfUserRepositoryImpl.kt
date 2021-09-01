@@ -3,13 +3,12 @@ package com.example.myvoozkotlin.groupOfUser.data
 import com.example.homelibrary.model.EntryLink
 import com.example.homelibrary.model.InviteData
 import com.example.homelibrary.model.UserShort
-import com.example.myvoozkotlin.data.api.GroupOfUserApi
-import com.example.myvoozkotlin.models.news.News
-import com.example.myvoozkotlin.data.api.NewsApi
+import com.example.myvoozkotlin.groupOfUser.api.GroupOfUserApi
 import com.example.myvoozkotlin.data.db.DbUtils
+import com.example.myvoozkotlin.data.db.realmModels.GroupOfUserModel
+import com.example.myvoozkotlin.data.db.realmModels.UserVeryShortModel
 import com.example.myvoozkotlin.groupOfUser.domain.GroupOfUserRepository
 import com.example.myvoozkotlin.helpers.Event
-import com.example.myvoozkotlin.home.domain.NewsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -206,6 +205,50 @@ class GroupOfUserRepositoryImpl @Inject constructor(
             val apiResponse = groupOfUserApi.removeUser(accessToken, idUser, idSelUser)
 
             if (apiResponse.isSuccessful && apiResponse.body() != null){
+                val authUserModel = dbUtils.getCurrentAuthUser()
+                authUserModel!!.groupOfUser!!.countUsers = authUserModel!!.groupOfUser!!.countUsers - 1
+                dbUtils.setCurrentAuthUser(authUserModel)
+                emit(Event.success(apiResponse.body()!!))
+            }
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
+
+    override fun getGroupOfUser(accessToken: String, idUser: Int): Flow<Event<InviteData>> =
+        flow<Event<InviteData>> {
+            emit(Event.loading())
+            val apiResponse = groupOfUserApi.getGroupOfUser(accessToken, idUser)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null){
+                val authUser = apiResponse.body()
+                val groupOfUserModel = GroupOfUserModel()
+                authUser?.let {
+
+                    groupOfUserModel.id = it.groupOfUser.id
+                    groupOfUserModel.idCreator = it.groupOfUser.idCreator
+                    groupOfUserModel.idOlder = it.groupOfUser.idOlder
+                    groupOfUserModel.idGroup = it.groupOfUser.idGroup
+                    groupOfUserModel.countUsers = it.groupOfUser.countUsers
+                    groupOfUserModel.nameUniversity = it.groupOfUser.nameUniversity
+                    groupOfUserModel.idUniversity = it.groupOfUser.idUniversity
+                    groupOfUserModel.nameGroup = it.groupOfUser.nameGroup
+                    groupOfUserModel.name = it.groupOfUser.name
+                    groupOfUserModel.image = it.groupOfUser.image
+
+                    val userVeryShortModel = UserVeryShortModel()
+                    userVeryShortModel.id = it.groupOfUser.userVeryShort.id
+                    userVeryShortModel.name = it.groupOfUser.userVeryShort.name
+                    userVeryShortModel.photo = it.groupOfUser.userVeryShort.photo
+                    groupOfUserModel.userVeryShortModel = userVeryShortModel
+                }
+                val authUserModel = dbUtils.getCurrentAuthUser()
+                authUserModel!!.groupOfUser = groupOfUserModel
+                dbUtils.setCurrentAuthUser(authUserModel)
+
                 emit(Event.success(apiResponse.body()!!))
             }
             else{

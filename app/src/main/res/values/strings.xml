@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">MyVooz.Kotlin</string>
+    <string name="app_name">Мой вуз</string>
     <string name="title_profile">Профиль</string>
     <string name="title_note">Заметки</string>
-    <string name="title_select_group">Выберите группу</string>
+    <string name="title_select_group">Выберите свою группу</string>
     <string name="title_search">Поиск</string>
     <string name="toast_select_group">Выберите группу</string>
     <string name="select_university">Сначала выберите университет</string>
@@ -33,5 +33,14 @@
     <string name="title_join_to_gou">Присоединиться к группе</string>
     <string name="button_join">Присоединиться</string>
     <string name="toast_invite_gou">Введите ключ приглашения, он 8-ми значный</string>
+    <string name="title_create_notification">Создание уведомления</string>
+    <string name="slide_about_new_title_0">Привет, это твой мобильный ВУЗ!</string>
+    <string name="slide_about_new_posttitle_0">Здесь очень много функций, которые помогут тебе при обучении!</string>
+    <string name="slide_about_new_title_1">Расписание</string>
+    <string name="slide_about_new_posttitle_1">Просматривай расписание своей группы</string>
+    <string name="slide_about_new_title_2">Групповые заметки</string>
+    <string name="slide_about_new_posttitle_2">Создавай заметки, которые будут доступны всем участникам группы, либо создавай личные, которые будут доступны только самому себе</string>
+    <string name="slide_about_new_title_3">Свободные аудитории</string>
+    <string name="slide_about_new_posttitle_3">Находи свободные аудитории своего университета в 2 клика</string>
     <integer name="com_vk_sdk_AppId">7261626</integer>
 </resources>

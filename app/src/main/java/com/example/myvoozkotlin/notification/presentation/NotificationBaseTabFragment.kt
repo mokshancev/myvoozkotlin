@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homelibrary.model.Notification
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.databinding.FragmentNotificationBaseTabBinding
 import com.example.myvoozkotlin.helpers.*
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
@@ -20,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class NotificationBaseTabFragment: BaseFragment(), (Notification) -> Unit {
+class NotificationBaseTabFragment: Fragment(), (Notification) -> Unit {
     private val userViewModel: UserViewModel by viewModels()
     private val notificationViewModel: NotificationViewModel by viewModels()
 

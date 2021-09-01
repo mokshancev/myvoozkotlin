@@ -80,6 +80,10 @@ class UserListFuncDialogFragment : BottomSheetDialogFragment() {
                         val bundle = Bundle()
                         bundle.putInt(CONSTANT_ID_USER, idUser)
                         parentFragmentManager.setFragmentResult(REQUEST_MAKE_HEAD, bundle)
+                        authUserModel?.apply {
+                            groupOfUserViewModel.changeOlderUser(id, "$lastName $firstName", photo)
+                        }
+
                         dismiss()
                     }
                 }

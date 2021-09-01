@@ -1,0 +1,15 @@
+package com.example.myvoozkotlin.note.data
+
+import com.example.myvoozkotlin.helpers.Event
+import com.example.myvoozkotlin.note.domain.CompletedNoteUseCase
+import com.example.myvoozkotlin.note.model.Note
+import com.example.myvoozkotlin.note.domain.NoteListUseCase
+import com.example.myvoozkotlin.note.domain.NoteRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class CompletedNoteUseCaseImpl @Inject constructor(
+    private val noteRepository: NoteRepository
+) : CompletedNoteUseCase {
+    override fun invoke(accessToken: String, idUser: Int, notes: List<Int>): Flow<Event<Any>> = noteRepository.completedNote(accessToken, idUser, notes)
+}

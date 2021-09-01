@@ -57,7 +57,11 @@ class InviteGouDialogFragment: BottomSheetDialogFragment() {
     }
 
     private fun configureViews() {
+        setPaddingTopMenu()
+    }
 
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun initObservers() {

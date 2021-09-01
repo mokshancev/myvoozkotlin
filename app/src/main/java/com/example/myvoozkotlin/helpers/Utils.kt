@@ -2,12 +2,10 @@ package com.example.myvoozkotlin.helpers
 
 import android.graphics.Bitmap
 import android.util.Log
-import android.widget.Toast
 import com.android.volley.*
 import com.android.volley.toolbox.Volley
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.data.db.DbUtils
-import com.example.myvoozkotlin.data.db.RealmUtils
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.helpers.filePath.VolleyMultipartRequest
 import io.realm.Realm
@@ -83,6 +81,12 @@ object Utils {
                             val url = jsonObject.getString("path")
 
                             if(url != null){
+                                val config = RealmConfiguration.Builder()
+                                    .name("myvooz.realm")
+                                    .schemaVersion(1)
+                                    .allowWritesOnUiThread(true)
+                                    .build()
+                                Realm.setDefaultConfiguration(config)
                                 val dbUtils = DbUtils(Realm.getDefaultInstance())
                                 val authUserModel = dbUtils.getCurrentAuthUser()
                                 if(type == "group_profile"){

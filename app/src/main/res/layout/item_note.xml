@@ -3,25 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
     android:foreground="?android:selectableItemBackground"
     android:outlineAmbientShadowColor="@color/textTertiary"
     android:outlineSpotShadowColor="@color/textTertiary"
     android:layout_marginBottom="8dp"
     app:cardElevation="0dp"
+    app:cardCornerRadius="16dp"
     app:cardPreventCornerOverlap="false">
+
+    <RelativeLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:alpha="0.3"
-            android:background="@color/textTertiary"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_stroke">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,6 +83,7 @@
                 android:layout_marginRight="16dp"
                 app:cardCornerRadius="8dp"
                 android:layout_marginTop="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:cardBackgroundColor="@color/backgroundFill"
                 app:layout_constraintTop_toBottomOf="@+id/cvPreviewContainer">
                 <LinearLayout

@@ -5,6 +5,7 @@
     android:id="@+id/rootAboutView"
     android:background="@color/backgroundContent"
     android:fitsSystemWindows="true"
+    android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.appbar.AppBarLayout

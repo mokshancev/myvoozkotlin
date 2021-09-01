@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     fun authVk(accessToken: String, idUser : Int, idUniversity : Int, idGroup : Int, keyNotification : String): Flow<Event<AuthUser>>
+    fun authYa(accessToken: String, idUniversity : Int, idGroup : Int, keyNotification : String): Flow<Event<AuthUser>>
 }

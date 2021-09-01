@@ -1,17 +1,18 @@
 package com.example.myvoozkotlin.note
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.R
-import com.example.myvoozkotlin.databinding.FragmentNoteBinding
-import com.example.myvoozkotlin.helpers.AuthorizationState
-import com.example.myvoozkotlin.helpers.Status
-import com.example.myvoozkotlin.helpers.hide
-import com.example.myvoozkotlin.helpers.show
+import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
+import com.example.myvoozkotlin.databinding.FragmentNoteListBinding
+import com.example.myvoozkotlin.helpers.*
+import com.example.myvoozkotlin.helpers.navigation.navigator
+import com.example.myvoozkotlin.main.presentation.MainFragment
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.note.model.Note
 import com.example.myvoozkotlin.note.adapters.NoteAdapter
@@ -19,7 +20,7 @@ import com.example.myvoozkotlin.note.viewModels.NoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NoteListFragment: Fragment() {
+class NoteListFragment: Fragment(), (Note) -> Unit {
 
     companion object {
         fun newInstance(): NoteListFragment {
@@ -29,7 +30,7 @@ class NoteListFragment: Fragment() {
 
     private val noteViewModel: NoteViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
-    private var _binding: FragmentNoteBinding? = null
+    private var _binding: FragmentNoteListBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -37,7 +38,7 @@ class NoteListFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNoteBinding.inflate(inflater, container, false)
+        _binding = FragmentNoteListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,57 +49,78 @@ class NoteListFragment: Fragment() {
         initObservers()
         initToolbar()
         checkState()
+        setPaddingTopMenu()
+
+        binding.rvNotes.hide()
+        binding.llEmpty.llEmpty.show()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.toolbar.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
+    }
+
+    private fun observeOnAuthUserChangeResponse() {
+        userViewModel.authUserChange.observe(viewLifecycleOwner, {
+            checkState()
+        })
     }
 
     private fun checkState(){
-        if (AuthorizationState.UNAUTORIZATE.ordinal == BaseApp.getAuthState()) {
-            binding.apply {
-                llNeedAutorization.root.show()
-            }
-        }
-        else if (AuthorizationState.AUTORIZATE.ordinal == BaseApp.getAuthState()){
-            binding.apply {
-                binding.toolbar.inflateMenu(R.menu.menu_add)
-                binding.toolbar.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.itemAddNote -> {
-                            loadAddNoteFragment()
-                        }
-                    }
-                    true
+        binding.toolbar.menu.clear()
+        when(Utils.getAuthorisationState(getCurrentUser())) {
+            AuthorizationState.UNAUTORIZATE -> {
+                binding.apply {
+                    llNeedAutorization.root.show()
                 }
-                val authUserModel = userViewModel.getCurrentAuthUser()
-                noteViewModel.loadUserNote(
-                    authUserModel!!.accessToken, authUserModel.id, 0
-                )
-                llNeedAutorization.root.hide()
             }
-        }
-        else if (AuthorizationState.GROUP_AUTORIZATE.ordinal == BaseApp.getAuthState()){
-            binding.apply {
-                binding.toolbar.inflateMenu(R.menu.menu_add)
-                binding.toolbar.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.itemAddNote -> {
-                            loadAddNoteFragment()
-                        }
-                    }
-                    true
+            AuthorizationState.AUTORIZATE -> {
+                binding.apply {
+                    val authUserModel = userViewModel.getCurrentAuthUser()
+                    noteViewModel.loadUserNote(
+                        authUserModel!!.accessToken, authUserModel.id, 0
+                    )
+                    llNeedAutorization.root.hide()
                 }
-                val authUserModel = userViewModel.getCurrentAuthUser()
-                noteViewModel.loadUserNote(
-                    authUserModel!!.accessToken, authUserModel.id, 0
-                )
-                llNeedAutorization.root.hide()
+                initToolbar()
+            }
+            AuthorizationState.GROUP_AUTORIZATE -> {
+                binding.apply {
+                    val authUserModel = userViewModel.getCurrentAuthUser()
+                    noteViewModel.loadUserNote(
+                        authUserModel!!.accessToken, authUserModel.id, 0
+                    )
+                    llNeedAutorization.root.hide()
+                }
+                initToolbar()
             }
         }
     }
 
     private fun setListeners(){
-        parentFragmentManager.setFragmentResultListener(AddNoteFragment.REQUEST_NOTE, this) { key, bundle ->
+        requireActivity().supportFragmentManager.setFragmentResultListener(AddNoteFragment.REQUEST_NOTE, this) { key, bundle ->
             val note = bundle.getSerializable(AddNoteFragment.CONSTANT_NOTE) as Note
             (binding.rvNotes.adapter as? NoteAdapter)?.addNote(note)
+            binding.rvNotes.show()
+            (binding.root.findViewById(R.id.ll_empty) as View).hide()
         }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(NoteFragment.REQUEST_COMPLETED_NOTE, this) { key, bundle ->
+            val idNote = bundle.getInt(NoteFragment.ID_NOTE, 0)
+            (binding.rvNotes.adapter as? NoteAdapter)?.removeNote(idNote)
+
+            if((binding.rvNotes.adapter as? NoteAdapter)!!.itemCount != 0){
+                binding.rvNotes.show()
+                binding.llEmpty.llEmpty.hide()
+            }
+            else{
+                binding.rvNotes.hide()
+                binding.llEmpty.llEmpty.show()
+            }
+        }
+    }
+
+    private fun getCurrentUser(): AuthUserModel?{
+        return userViewModel.getCurrentAuthUser()
     }
 
     private fun configureViews() {
@@ -107,6 +129,7 @@ class NoteListFragment: Fragment() {
 
     private fun initObservers() {
         observeOnScheduleDayResponse()
+        observeOnAuthUserChangeResponse()
     }
 
     private fun observeOnScheduleDayResponse() {
@@ -123,6 +146,7 @@ class NoteListFragment: Fragment() {
                     if (it.data == null) {
 
                     } else {
+                        Log.d("brmwlbmlwmbwer", "b wbwberwebweb")
                         initNotesAdapter(it.data)
                         if (it.data.isEmpty()) {
                             binding.rvNotes.hide()
@@ -141,80 +165,49 @@ class NoteListFragment: Fragment() {
     }
 
     private fun loadAddNoteFragment(){
-        val fragment = AddNoteFragment.newInstance()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.rootNoteView, fragment, AddNoteFragment.javaClass.simpleName)
-            .addToBackStack("addNote")
-            .commit()
+        navigator().showAddNoteScreen()
     }
 
     private fun initNotesAdapter(news: List<Note>) {
         if (binding.rvNotes.adapter == null) {
             binding.rvNotes.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            binding.rvNotes.adapter = NoteAdapter()
+            binding.rvNotes.adapter = NoteAdapter(this)
             (binding.rvNotes.adapter as? NoteAdapter)?.update(news.toMutableList())
         } else {
             (binding.rvNotes.adapter as? NoteAdapter)?.update(news.toMutableList())
         }
     }
 
-//    private fun initTabLayout() {
-//        val items = mutableListOf<TabItem>()
-//        items.add(TabItem("Активные", 0, true))
-//        items.add(TabItem("Выполненные", 0, false))
-//
-//        TabLayoutMediator(
-//            binding.tabLayout, binding.viewPager as ViewPager2
-//        ) { tab, position ->
-//            run {
-//                tab.text = items.get(position).name
-//
-//                val textView = LayoutInflater.from(requireContext()).inflate(R.layout.item_tabitem, null)
-//                (textView as TextView).text = items.get(position).name
-//                tab.setId(position)
-//                if(items[position].isActive){
-//                    textView.setTextColor(resources.getColor(R.color.textLink))
-//                }
-//                tab.customView = textView
-//            }
-//        }.attach()
-//
-//        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                (tab!!.customView as TextView).setTextColor(resources.getColor(R.color.textLink))
-//                if(tab.id == 0){
-//
-//                }
-//                else{
-//
-//                }
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                (tab!!.customView as TextView).setTextColor(resources.getColor(R.color.textPrimary))
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//
-//            }
-//        })
-//    }
-
     private fun initToolbar() {
         binding.toolbar.title = resources.getString(R.string.title_note)
         addBackButton()
+        binding.toolbar.inflateMenu(R.menu.menu_add)
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.itemAddNote -> {
+                    loadAddNoteFragment()
+                }
+            }
+            true
+        }
     }
 
     private fun addBackButton(){
-        binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_arrow_left)
+        val icon = resources.getDrawable(R.drawable.ic_arrow_left)
+        icon.setTint(ContextCompat.getColor(requireContext(), R.color.textTertiary))
+        binding.toolbar.navigationIcon = icon
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+            (parentFragment as MainFragment).openHomeList()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun invoke(note: Note) {
+        navigator().showNoteScreen(note)
     }
 }

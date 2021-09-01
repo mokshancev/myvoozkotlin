@@ -18,7 +18,7 @@ import com.example.myvoozkotlin.auth.AuthActivity
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentLeftMenuBinding
 import com.example.myvoozkotlin.helpers.*
-import com.example.myvoozkotlin.helpers.contract.navigator
+import com.example.myvoozkotlin.helpers.navigation.navigator
 import com.example.myvoozkotlin.home.HomeFragment
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.main.presentation.MainFragment
@@ -62,6 +62,7 @@ class LeftMenuFragment : Fragment() {
         setVkClickListener()
         setAboutClickListener()
         setLeftMenuClickListener()
+        setNotificationClickListener()
     }
 
     private fun setPaddingTopMenu() {
@@ -77,6 +78,12 @@ class LeftMenuFragment : Fragment() {
     private fun setVkClickListener() {
         binding.llVkSocialButton.setOnClickListener {
             openLink(Constants.APP_PREFERENCES_VK_SOCIAL_LINK)
+        }
+    }
+
+    private fun setNotificationClickListener() {
+        binding.cvNotificationButton.setOnClickListener {
+            navigator().showNotificationScreen()
         }
     }
 
@@ -102,7 +109,10 @@ class LeftMenuFragment : Fragment() {
     }
 
     private fun openSelectGroupFragment() {
-        navigator().showSelectGroupScreen()
+        navigator().showSelectGroupScreen(R.id.rootMainView,
+            isFirst = false,
+            isBackStack = true
+        )
     }
 
     private fun openCreateGroupOfUserFragment() {
@@ -130,7 +140,7 @@ class LeftMenuFragment : Fragment() {
             when (Utils.getAuthorisationState(authUserModel)) {
                 AuthorizationState.UNAUTORIZATE -> {
                     showCreateGOUButton(false)
-                    showInviteGOUButton(true)
+                    showInviteGOUButton(false)
                     showGOUButton(false)
                 }
                 AuthorizationState.AUTORIZATE -> {
@@ -155,11 +165,11 @@ class LeftMenuFragment : Fragment() {
     private fun initUserBlock(authUserModel: AuthUserModel?) {
         when (Utils.getAuthorisationState(authUserModel)) {
             AuthorizationState.UNAUTORIZATE -> {
-                showPhotoUserImage(false, authUserModel!!.photo)
+                showPhotoUserImage(false, "")
 
                 showUserButton(false)
                 showLogoutButton(false)
-                showNotificationButton(false)
+                showNotificationSettingButton(false)
                 showLoginButton(true)
                 showSelectGroupButton(true)
 
@@ -171,7 +181,7 @@ class LeftMenuFragment : Fragment() {
 
                 showUserButton(true)
                 showLogoutButton(true)
-                showNotificationButton(true)
+                showNotificationSettingButton(false)
                 showLoginButton(false)
                 showSelectGroupButton(true)
 
@@ -183,7 +193,7 @@ class LeftMenuFragment : Fragment() {
 
                 showUserButton(true)
                 showLogoutButton(true)
-                showNotificationButton(true)
+                showNotificationSettingButton(false)
                 showLoginButton(false)
                 showSelectGroupButton(false)
 
@@ -197,9 +207,12 @@ class LeftMenuFragment : Fragment() {
         showButton(binding.llProfileSettingButton.id, state) { openUserFragment() }
 
     private fun showLogoutButton(state: Boolean) =
-        showButton(binding.llLogoutButton.id, state) { userViewModel.removeCurrentUser() }
+        showButton(binding.llLogoutButton.id, state) {
+            val fragment = ConfirmLogoutDialogFragment()
+            fragment.show(parentFragmentManager,
+                ConfirmLogoutDialogFragment::javaClass.javaClass.simpleName) }
 
-    private fun showNotificationButton(state: Boolean) =
+    private fun showNotificationSettingButton(state: Boolean) =
         showButton(binding.llNotificationSettingButton.id, state) { openNotificationFragment() }
 
     private fun showLoginButton(state: Boolean) =

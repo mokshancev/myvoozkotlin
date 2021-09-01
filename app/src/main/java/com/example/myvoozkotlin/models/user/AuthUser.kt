@@ -16,5 +16,6 @@ data class AuthUser(
         @SerializedName("id_group") var idGroup:Int,
         @SerializedName("name_group") var nameGroup:String,
         @SerializedName("id_group_of_user") var idGroupOfUser:Int,
+        @SerializedName("error") var error:Int,
         @SerializedName("info_groups_of_user") val groupOfUser:GroupOfUser
     )

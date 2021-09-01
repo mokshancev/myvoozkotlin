@@ -19,4 +19,5 @@ interface GroupOfUserRepository {
     fun lockEntryLink(accessToken: String, idUser: Int, state: Int): Flow<Event<Boolean>>
     fun makeHead(accessToken: String, idUser: Int, idSelUser: Int): Flow<Event<Boolean>>
     fun removeUser(accessToken: String, idUser: Int, idSelUser: Int): Flow<Event<Boolean>>
+    fun getGroupOfUser(accessToken: String, idUser: Int): Flow<Event<InviteData>>
 }

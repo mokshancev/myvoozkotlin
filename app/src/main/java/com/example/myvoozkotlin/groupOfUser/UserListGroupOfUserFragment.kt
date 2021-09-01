@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homelibrary.model.UserShort
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentGouUserListBinding
@@ -20,7 +21,7 @@ import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UserListGroupOfUserFragment : BaseFragment(), OnUserListItemPicked {
+class UserListGroupOfUserFragment : Fragment(), OnUserListItemPicked {
     companion object {
         fun newInstance(): UserListGroupOfUserFragment {
             return UserListGroupOfUserFragment()
@@ -49,10 +50,15 @@ class UserListGroupOfUserFragment : BaseFragment(), OnUserListItemPicked {
         setListeners()
         authUserModel = userViewModel.getCurrentAuthUser()
         groupOfUserViewModel.getUserList(authUserModel!!.accessToken, authUserModel!!.id)
+        setPaddingTopMenu()
     }
 
     private fun configureViews(){
         initToolbar()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun setListeners(){

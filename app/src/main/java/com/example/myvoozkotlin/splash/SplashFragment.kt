@@ -1,22 +1,27 @@
 package com.example.myvoozkotlin.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.myvoozkotlin.main.presentation.MainFragment
 import com.example.myvoozkotlin.R
+import com.example.myvoozkotlin.aboutNew.presentations.viewModel.OnBoardingViewModel
 import com.example.myvoozkotlin.auth.viewModels.AuthViewModel
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentSplashBinding
 import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
+import com.example.myvoozkotlin.helpers.navigation.navigator
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
+import com.google.firebase.iid.FirebaseInstanceId
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
 
     companion object {
@@ -29,7 +34,7 @@ class SplashFragment : Fragment() {
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
-    private var authUserModel: AuthUserModel? = null
+    private val onBoardingViewModel: OnBoardingViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,29 +46,32 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configureViews()
         initObservers()
-
-
-
-        authUserModel = userViewModel.getCurrentAuthUser()
-
-        if(authUserModel == null){
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.activityMainContainer, MainFragment(), MainFragment().javaClass.simpleName)
-                .addToBackStack(null)
-                .commit()
+        if (onBoardingViewModel.isFirstSeen()){
+            navigator().showAboutNewScreen()
         }
         else{
-            authViewModel.authVk(authUserModel!!.accessToken
-                , authUserModel!!.id, authUserModel!!.idUniversity, authUserModel!!.idGroup, "s")
-            //todo add notification accessToken
+            if(userViewModel.getIdGroup() == 0){
+                navigator().showSelectGroupScreen(R.id.activityMainContainer, true,
+                    isBackStack = false
+                )
+            }
+            else{
+                if(getCurrentUser() == null){
+                    navigator().showMainScreen()
+                }
+                else{
+                    getCurrentUser()?.let {
+                        Log.d("bgrbeberb", it.accessToken +" "+ it.id +" "+ it.idUniversity +" "+ it.idGroup+" "+ FirebaseInstanceId.getInstance().token!!)
+                        authViewModel.authVk(it.accessToken, it.id, it.idUniversity, it.idGroup, FirebaseInstanceId.getInstance().token!!)
+                    }
+                }
+            }
         }
     }
 
-    private fun configureViews(){
-
+    private fun getCurrentUser(): AuthUserModel?{
+        return userViewModel.getCurrentAuthUser()
     }
 
     private fun initObservers() {
@@ -77,19 +85,17 @@ class SplashFragment : Fragment() {
 
                 }
                 Status.SUCCESS -> {
-
                     if (it.data == null) {
-
-                    } else {
-                        requireActivity().supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.activityMainContainer, MainFragment(), MainFragment().javaClass.simpleName)
-                            .addToBackStack(null)
-                            .commit()
+                        userViewModel.removeCurrentUser()
+                        navigator().showMainScreen()
+                    }
+                    else{
+                        navigator().showMainScreen()
                     }
                 }
                 Status.ERROR -> {
-                    UtilsUI.makeToast("error auth")
+                    userViewModel.removeCurrentUser()
+                    navigator().showMainScreen()
                 }
             }
         })

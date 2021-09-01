@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "363082137422",
+    "project_id": "myvooz-41c09",
+    "storage_bucket": "myvooz-41c09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363082137422:android:ce9e5d930638e49bc6681f",
+        "android_client_info": {
+          "package_name": "com.example.myvoozkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363082137422-0rr8ak97luj7cre3lp9uh9ucun330c10.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myvoozkotlin",
+            "certificate_hash": "db2548934f82c7031f8044d08bd453d24d2785b8"
+          }
+        },
+        {
+          "client_id": "363082137422-2ffh82h3t8goqfi0j849puio4hdihs3a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc3R8XM5bGx4xeLqy8b49vRsrO389iOy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363082137422-2ffh82h3t8goqfi0j849puio4hdihs3a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

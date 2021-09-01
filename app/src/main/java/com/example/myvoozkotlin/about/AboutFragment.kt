@@ -3,22 +3,15 @@ package com.example.myvoozkotlin.about
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
-import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentAboutBinding
-import com.example.myvoozkotlin.databinding.FragmentSelectGroupBinding
 import com.example.myvoozkotlin.helpers.Constants
 import com.example.myvoozkotlin.helpers.UtilsUI
-import com.example.myvoozkotlin.helpers.contract.navigator
-import com.example.myvoozkotlin.search.SearchFragment
-import com.example.myvoozkotlin.search.helpers.SearchEnum
 
 
 class AboutFragment : Fragment() {
@@ -37,11 +30,6 @@ class AboutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAboutBinding.inflate(inflater, container, false)
-
-        requireFragmentManager().fragments.forEachIndexed { _, fragment ->
-            println("tagggg " + fragment.tag)
-        }
-
         return binding.root
     }
 
@@ -49,10 +37,15 @@ class AboutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         configureViews()
         setListeners()
+        setPaddingTopMenu()
     }
 
     private fun configureViews(){
         initToolbar()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.root.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun setListeners(){

@@ -5,6 +5,7 @@
     android:id="@+id/navigationViewContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/Theme.MyVoozKotlin"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cv_close_button"
+            android:id="@+id/cvCloseButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="16dp"

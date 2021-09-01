@@ -7,7 +7,18 @@ import retrofit2.http.Query
 
 interface NoteApi {
     @GET("profile?type=user_note")
-    suspend fun loadNoteList(@Query("access_token") accessToken : String, @Query("user_id") idUser : Int, @Query("type_n") type : Int): Response<List<Note>>
+    suspend fun loadNoteList(
+        @Query("access_token") accessToken : String,
+        @Query("user_id") idUser : Int,
+        @Query("type_n") type : Int
+    ): Response<List<Note>>
+
+    @GET("profile?type=completed_user_note")
+    suspend fun completedNote(
+        @Query("access_token") accessToken : String,
+        @Query("user_id") idUser : Int,
+        @Query("notes[]") notes : List<Int>
+    ): Response<Any>
 
     @GET("profile?type=add_user_note")
     suspend fun addNote(

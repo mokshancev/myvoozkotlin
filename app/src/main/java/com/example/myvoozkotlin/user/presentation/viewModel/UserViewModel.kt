@@ -62,7 +62,6 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             uploadImageResponse.postValue(Event.loading())
             Utils.uploadImage(bitmap, accessToken, idUser, type)
-            Log.d("bwrbwbwrb", "bwerbwbwe3")
             uploadImageResponse.postValue(Event.success(true))
         }
     }
@@ -73,6 +72,14 @@ class UserViewModel @Inject constructor(
 
     fun getNameGroup(): String {
         return userRepository.getNameGroup()
+    }
+
+    fun getNameUniversity(): String {
+        return userRepository.getNameUniversity()
+    }
+
+    fun getIdGroup(): Int {
+        return userRepository.getIdGroup()
     }
 
     override fun onCleared() {

@@ -4,16 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.databinding.FragmentGroupOfUserBinding
 import com.example.myvoozkotlin.groupOfUser.viewModels.GroupOfUserViewModel
 import com.example.myvoozkotlin.helpers.*
+import com.example.myvoozkotlin.helpers.navigation.navigator
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.search.SearchFragment
 import com.example.myvoozkotlin.search.helpers.SearchEnum
@@ -22,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 
 @AndroidEntryPoint
-class GroupOfUserFragment: BaseFragment(){
+class GroupOfUserFragment: Fragment(){
     companion object {
         const val ANIMATE_TRANSITION_DURATION: Int = 300
         fun newInstance(): GroupOfUserFragment {
@@ -55,6 +57,7 @@ class GroupOfUserFragment: BaseFragment(){
         initData()
         initObservers()
         setListeners()
+        groupOfUserViewModel.getGroupOfUserUser(authUserModel!!.accessToken, authUserModel!!.id)
     }
 
     private fun configureViews() {
@@ -66,6 +69,11 @@ class GroupOfUserFragment: BaseFragment(){
         else
             binding.ivPhotoUser.hide()
         binding.tvUserName.text = authUserModel!!.groupOfUser!!.name
+        setPaddingTopMenu()
+    }
+
+    private fun setPaddingTopMenu() {
+        binding.toolbar.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
     }
 
     private fun setListeners(){
@@ -87,13 +95,13 @@ class GroupOfUserFragment: BaseFragment(){
                 ChangeNameDialogFragment::javaClass.javaClass.simpleName)
         }
 
-        binding.llInvite.setOnClickListener {
+        binding.cvAddUser.setOnClickListener {
             val fragment = InviteGouDialogFragment()
             fragment.show(parentFragmentManager,
                 InviteGouDialogFragment::javaClass.javaClass.simpleName)
         }
 
-        binding.llUsers.setOnClickListener {
+        binding.clUserListGroupButton.setOnClickListener {
             loadUserListFragment()
         }
 
@@ -103,6 +111,14 @@ class GroupOfUserFragment: BaseFragment(){
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, 1)
         }
+
+        setNotificationClickListener()
+    }
+
+    private fun setNotificationClickListener(){
+//        binding.llNotification.setOnClickListener {
+//            openNotificationFragment()
+//        }
     }
 
     private fun initData(){
@@ -113,6 +129,7 @@ class GroupOfUserFragment: BaseFragment(){
         binding.tvCountUsers.text = authUserModel!!.groupOfUser!!.countUsers.toString()
         binding.tvHeadUser.text = authUserModel!!.groupOfUser!!.userVeryShortModel!!.name
         binding.tvChangeGroupOfUserName.text = authUserModel!!.groupOfUser!!.name
+        binding.tvPostTitleListGroup.text = "${authUserModel!!.groupOfUser!!.countUsers} чел."
         binding.tvChangeGroup.text = authUserModel!!.groupOfUser!!.nameGroup
         Glide.with(this)
             .load(authUserModel!!.groupOfUser!!.image)
@@ -125,6 +142,7 @@ class GroupOfUserFragment: BaseFragment(){
         observeOnChangeIdGroupResponse()
         observeOnLogoutGroupOfUserResponse()
         observeOnAuthUserChangeResponse()
+        observeOnGetGroupOfUserResponse()
     }
 
     private fun observeOnChangeIdGroupResponse() {
@@ -143,6 +161,27 @@ class GroupOfUserFragment: BaseFragment(){
                         binding.tvGroupName.text = nameGroup
                         binding.tvChangeGroup.text = nameGroup
                         UtilsUI.makeToast(getString(R.string.toast_group_of_user_change_group))
+                    }
+                }
+                Status.ERROR -> {
+
+                }
+            }
+        })
+    }
+
+    private fun observeOnGetGroupOfUserResponse() {
+        groupOfUserViewModel.groupOfUserResponse.observe(viewLifecycleOwner, {
+            when (it.status) {
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+
+                    if (it.data == null) {
+
+                    } else {
+
                     }
                 }
                 Status.ERROR -> {
@@ -199,7 +238,12 @@ class GroupOfUserFragment: BaseFragment(){
         userViewModel.authUserChange.observe(viewLifecycleOwner, {
             authUserModel = userViewModel.getCurrentAuthUser()
             (requireActivity() as MainActivity).showWait(false)
-            initData()
+            if(authUserModel!!.idGroupOfUser == 0){
+                requireActivity().onBackPressed()
+            }
+            else{
+                initData()
+            }
         })
     }
 
@@ -215,6 +259,10 @@ class GroupOfUserFragment: BaseFragment(){
         parentFragmentManager.beginTransaction()
             .addToBackStack(null)
             .add(R.id.rootGroupOfUserView, fragment, UserListGroupOfUserFragment.javaClass.simpleName).commit()
+    }
+
+    private fun openNotificationFragment(){
+        navigator().showCreateNotificationGOUScreen()
     }
 
     private fun initToolbar() {

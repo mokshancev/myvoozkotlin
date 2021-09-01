@@ -21,6 +21,8 @@
     <color name="backgroundContent">#fff</color>
     <color name="backgroundPurple">#FFA25AFF</color>
     <color name="backgroundDefaultButton">#1267ee</color>
+    <color name="backgroundGreenButton">#4bb34b</color>
+    <color name="backgroundDefaultLightButton">#dfe5fa</color>
     <color name="backgroundLink">#FFdfe5f9</color>
     <color name="backgroundButtons">#e8f6db</color>
     <color name="transparent">#00000000</color>

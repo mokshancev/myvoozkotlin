@@ -18,10 +18,8 @@ import com.example.myvoozkotlin.home.domain.NewsUseCase
 import com.example.myvoozkotlin.home.domain.ScheduleDayRepository
 import com.example.myvoozkotlin.home.domain.ScheduleDayUseCase
 import com.example.myvoozkotlin.user.data.ChangeFullNameUseCaseImpl
-import com.example.myvoozkotlin.user.data.UploadPhotoUseCaseImpl
 import com.example.myvoozkotlin.user.data.UserRepositoryImpl
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
-import com.example.myvoozkotlin.user.domain.UploadPhotoUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -36,11 +34,6 @@ object UserModule {
     @Provides
     fun provideAuthVkUseCase(userRepository: UserRepository): ChangeFullNameUseCase{
         return ChangeFullNameUseCaseImpl(userRepository)
-    }
-
-    @Provides
-    fun provideUploadPhotoUseCase(userRepository: UserRepository): UploadPhotoUseCase{
-        return UploadPhotoUseCaseImpl(userRepository)
     }
 
     @Provides

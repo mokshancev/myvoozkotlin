@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homelibrary.model.AuthUser
 import com.example.myvoozkotlin.auth.domain.AuthVkUseCase
+import com.example.myvoozkotlin.auth.domain.AuthYaUseCase
 import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.domain.NewsUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authVkUseCase: AuthVkUseCase
+    private val authVkUseCase: AuthVkUseCase,
+    private val authYaUseCase: AuthYaUseCase
 ) : ViewModel() {
 
     val authVkResponse = MutableLiveData<Event<AuthUser>>()
@@ -27,5 +29,13 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    val authYaResponse = MutableLiveData<Event<AuthUser>>()
+    fun authYa(accessToken: String, idUniversity : Int, idGroup : Int, keyNotification : String) {
 
+        viewModelScope.launch {
+            authYaUseCase(accessToken, idUniversity, idGroup, keyNotification).collect {
+                authYaResponse.postValue(it)
+            }
+        }
+    }
 }

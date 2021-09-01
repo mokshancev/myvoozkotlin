@@ -19,9 +19,9 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.myvoozkotlin.BaseFragment
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentPhotoBinding
+import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.models.PhotoItem
 import com.example.myvoozkotlin.search.SearchFragment
@@ -131,7 +131,7 @@ class PhotoFragment: AppCompatActivity() {
 
     private fun configureViews() {
         photoItem = intent.getSerializableExtra(BUNDLE_PHOTO) as PhotoItem
-        binding.toolbar.setPadding(0, BaseFragment.getStatusBarHeight(resources), 0, 0)
+        binding.toolbar.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
         Glide.with(this)
             .load(photoItem.fullPhoto)
             .listener(object: RequestListener<Drawable> {

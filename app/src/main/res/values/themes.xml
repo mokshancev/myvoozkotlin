@@ -15,6 +15,11 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/roboto_fonts_family</item>
         <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="sdaasdsadasd">
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <style name="ActionBar.nameText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

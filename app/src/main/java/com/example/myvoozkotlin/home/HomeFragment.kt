@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -94,11 +96,16 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         setListeners()
     }
 
+    private fun setPaddingTopMenu() {
+        binding.appBarLayout.setPadding(0, UtilsUI.getStatusBarHeight(resources), 0, 0)
+    }
+
     private fun configureViews() {
         setHasOptionsMenu(true)
         initWeekAdapter(calendar)
         configureToolbar()
         checkDateAnother()
+        setPaddingTopMenu()
     }
 
     private fun initAuthUser(){
@@ -298,10 +305,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
 
 
     private fun loadNoteFragment(){
-        val fragment = NoteListFragment.newInstance()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.rootMainView, fragment, NoteListFragment.javaClass.simpleName).commit()
+        (parentFragment as MainFragment).openNoteList()
     }
 
     private fun configureToolbar() {
