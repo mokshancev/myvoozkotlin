@@ -6,6 +6,7 @@ import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.helpers.OnAuthUserChange
+import com.example.myvoozkotlin.searchEmptyAuditory.model.Classroom
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import kotlinx.coroutines.flow.Flow
@@ -16,5 +17,6 @@ interface UserRepository {
     fun getIdUniversity(): Int
     fun getNameGroup(): String
     fun getIdGroup(): Int
+    fun getEmptyAuditory(date: String, idCorpus: Int, lowNumber: Int, upperNumber: Int, idUniversity: Int): Flow<Event<List<List<Classroom>>>>
     fun getNameUniversity(): String
 }

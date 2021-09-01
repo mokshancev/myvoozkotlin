@@ -1,4 +1,4 @@
-package com.example.myvoozkotlin.data.api
+package com.example.myvoozkotlin.search.api
 
 import com.example.homelibrary.model.Lesson
 import com.example.myvoozkotlin.models.SearchItem
@@ -16,4 +16,7 @@ interface SearchApi {
 
     @GET("profile?type=groups")
     suspend fun loadGroupList(@Query("text") text : String, @Query("id_university") idUniversity : Int): Response<List<SearchItem>>
+
+    @GET("profile?type=corpus")
+    suspend fun loadCorpusList(@Query("text") text : String, @Query("id_university") idUniversity : Int): Response<List<SearchItem>>
 }

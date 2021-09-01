@@ -1,9 +1,10 @@
 package com.example.myvoozkotlin.user.data
 
 import com.example.myvoozkotlin.BaseApp
-import com.example.myvoozkotlin.data.api.UserApi
+import com.example.myvoozkotlin.user.api.UserApi
 import com.example.myvoozkotlin.data.db.DbUtils
 import com.example.myvoozkotlin.helpers.*
+import com.example.myvoozkotlin.searchEmptyAuditory.model.Classroom
 import com.example.myvoozkotlin.user.domain.UserRepository
 import io.realm.Realm
 import kotlinx.coroutines.flow.Flow
@@ -54,6 +55,28 @@ class UserRepositoryImpl @Inject constructor(
     override fun getIdGroup(): Int {
         return BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0)
     }
+
+    override fun getEmptyAuditory(
+        date: String,
+        idCorpus: Int,
+        lowNumber: Int,
+        upperNumber: Int,
+        idUniversity: Int
+    ): Flow<Event<List<List<Classroom>>>> =
+        flow<Event<List<List<Classroom>>>> {
+            emit(Event.loading())
+            val apiResponse = userApi.getEmptyAuditory(date, idCorpus, lowNumber, upperNumber, idUniversity)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null){
+                emit(Event.success(apiResponse.body()!!))
+            }
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
 
     override fun getNameUniversity(): String {
         return BaseApp.getSharedPref().getString(Constants.APP_PREFERENCES_USER_UNIVERSITY_NAME, "Не выбрано")!!

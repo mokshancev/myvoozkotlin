@@ -37,24 +37,31 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
     lateinit var searchHandler: Handler
     lateinit var searchRunnable: Runnable
     lateinit var searchView: SearchView
+
     var type: Int = 0
     var addValue: Int = 0
+    var minLength: Int = 0
 
     companion object{
         const val SEARCH_TIME_DELAY = 700L
+        const val DEFAULT_MIN_LENGTH = 3
         const val CONSTANT_TYPE = "type"
         const val CONSTANT_WITH_REQUEST = "withRequest"
+        const val CONSTANT_MIN_LENGTH = "min_length"
         const val CONSTANT_ADDITIONAL_VALUE = "add_value"
         const val REQUEST_UNIVERSITY = "search_response_university"
         const val REQUEST_GROUP = "search_response_group"
         const val REQUEST_OBJECT = "search_response_object"
+        const val REQUEST_CORPUS = "search_response_corpus"
         const val KEY_FULL_NAME = "fullName"
         const val KEY_ID = "id"
 
-        fun newInstance(type: Int, addValue: Int): SearchFragment {
+        fun newInstance(type: Int, addValue: Int, minLength: Int? = null): SearchFragment {
             val bundle = Bundle().apply {
                 putInt(CONSTANT_TYPE, type)
                 putInt(CONSTANT_ADDITIONAL_VALUE, addValue)
+                if(minLength != null)
+                    putInt(CONSTANT_MIN_LENGTH, minLength)
             }
             val fragment = SearchFragment()
             fragment.arguments = bundle
@@ -76,8 +83,9 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
         setListeners()
         initRunnable()
 
-        type = arguments?.getInt(CONSTANT_TYPE)!!
-        addValue = arguments?.getInt(CONSTANT_ADDITIONAL_VALUE)!!
+        type = requireArguments().getInt(CONSTANT_TYPE)
+        addValue = requireArguments().getInt(CONSTANT_ADDITIONAL_VALUE)
+        minLength = requireArguments().getInt(CONSTANT_MIN_LENGTH, DEFAULT_MIN_LENGTH)
     }
 
     private fun configureViews(){
@@ -109,7 +117,7 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
     private fun initRunnable() {
         searchHandler = Handler()
         searchRunnable = Runnable {
-            if(searchView.query.toString().length < 3){
+            if(searchView.query.toString().length < minLength){
                 binding.progressBar.hide()
                 binding.root.findViewById<View>(R.id.ll_enter_value).show()
                 binding.root.findViewById<View>(R.id.ll_empty).hide()
@@ -121,6 +129,9 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
                 }
                 else if(type == SearchEnum.GROUP.ordinal){
                     searchViewModel.loadGroupList(searchView.query.toString(), addValue)
+                }
+                else if(type == SearchEnum.CORPUS.ordinal){
+                    searchViewModel.loadCorpusList(searchView.query.toString(), addValue)
                 }
                 else if(type == SearchEnum.OBJECT.ordinal){
                     searchViewModel.loadObjectList(searchView.query.toString(), addValue)
@@ -207,6 +218,9 @@ class SearchFragment : Fragment(), OnSearchItemPicked {
         }
         else if(type == SearchEnum.GROUP.ordinal){
             parentFragmentManager.setFragmentResult(REQUEST_GROUP, bundle)
+        }
+        else if(type == SearchEnum.CORPUS.ordinal){
+            parentFragmentManager.setFragmentResult(REQUEST_CORPUS, bundle)
         }
         else if(type == SearchEnum.OBJECT.ordinal){
             parentFragmentManager.setFragmentResult(REQUEST_OBJECT, bundle)

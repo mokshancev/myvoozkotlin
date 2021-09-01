@@ -1,8 +1,6 @@
 package com.example.myvoozkotlin.home.di
 
-import com.example.myvoozkotlin.data.api.NewsApi
-import com.example.myvoozkotlin.data.api.ScheduleApi
-import com.example.myvoozkotlin.data.api.SearchApi
+import com.example.myvoozkotlin.search.api.SearchApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

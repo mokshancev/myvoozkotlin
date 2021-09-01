@@ -135,4 +135,6 @@ dependencies {
 
     //pagination
     implementation 'androidx.paging:paging-runtime:2.1.2'
+
+    implementation 'me.bendik.simplerangeview:simplerangeview:0.2.0'
 }

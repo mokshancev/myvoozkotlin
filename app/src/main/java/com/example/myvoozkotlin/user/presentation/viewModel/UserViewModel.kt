@@ -9,7 +9,9 @@ import com.example.myvoozkotlin.data.db.realmModels.AuthUserModel
 import com.example.myvoozkotlin.data.db.DbUtils
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.helpers.Utils
+import com.example.myvoozkotlin.searchEmptyAuditory.model.Classroom
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
+import com.example.myvoozkotlin.user.domain.EmptyAuditoryUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.Realm
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val changeFullNameUseCase: ChangeFullNameUseCase,
     private val userRepository: UserRepository,
+    private val emptyAuditoryUseCase: EmptyAuditoryUseCase,
     private val dbUtils: DbUtils,
     private val realm: Realm
 ) : ViewModel() {
@@ -53,6 +56,15 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             changeFullNameUseCase(accessToken, idUser, firstName, secondName).collect {
                 changeFullNameResponse.postValue(it)
+            }
+        }
+    }
+
+    val emptyClassroomResponse = MutableLiveData<Event<List<List<Classroom>>>>()
+    fun getEmptyClassroom(date: String, idCorpus: Int, lowNumber: Int, upperNumber: Int, idUniversity: Int) {
+        viewModelScope.launch {
+            emptyAuditoryUseCase(date, idCorpus, lowNumber, upperNumber, idUniversity).collect {
+                emptyClassroomResponse.postValue(it)
             }
         }
     }

@@ -42,5 +42,7 @@
     <string name="slide_about_new_posttitle_2">Создавай заметки, которые будут доступны всем участникам группы, либо создавай личные, которые будут доступны только самому себе</string>
     <string name="slide_about_new_title_3">Свободные аудитории</string>
     <string name="slide_about_new_posttitle_3">Находи свободные аудитории своего университета в 2 клика</string>
+    <string name="title_search_empty_auditory">Пустые аудитории</string>
+    <string name="toast_select_corpus">Выберите корпус</string>
     <integer name="com_vk_sdk_AppId">7261626</integer>
 </resources>

@@ -9,4 +9,5 @@ interface SearchRepository {
     fun loadUniversityList(text: String): Flow<Event<List<SearchItem>>>
     fun loadGroupList(text: String, idUniversity: Int): Flow<Event<List<SearchItem>>>
     fun loadObjectList(text: String, idUniversity: Int): Flow<Event<List<SearchItem>>>
+    fun loadCorpusList(text: String, idUniversity: Int): Flow<Event<List<SearchItem>>>
 }

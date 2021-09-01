@@ -1,6 +1,7 @@
-package com.example.myvoozkotlin.data.api
+package com.example.myvoozkotlin.user.api
 
 import com.example.homelibrary.model.AuthUser
+import com.example.myvoozkotlin.searchEmptyAuditory.model.Classroom
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
@@ -12,6 +13,13 @@ interface UserApi {
                        @Query("user_id") id_user: Int,
                        @Query("first_name") firstName: String,
                        @Query("last_name") secondName: String): Response<Boolean>
+
+    @GET("profile?type=classroom")
+    suspend fun getEmptyAuditory(@Query("date") date: String,
+                                 @Query("id_corpus") idCorpus: Int,
+                                 @Query("low_number") lowNumber: Int,
+                                 @Query("upper_number") upperNumber: Int,
+                                 @Query("id_university") idUniversity: Int): Response<List<List<Classroom>>>
 
     @Multipart
     @POST("profile?type=image_profile")

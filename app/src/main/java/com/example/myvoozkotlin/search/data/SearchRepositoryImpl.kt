@@ -1,7 +1,6 @@
 package com.example.myvoozkotlin.search.data
 
-import android.util.Log
-import com.example.myvoozkotlin.data.api.SearchApi
+import com.example.myvoozkotlin.search.api.SearchApi
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.search.domain.SearchRepository
 import com.example.myvoozkotlin.models.SearchItem
@@ -48,6 +47,21 @@ class SearchRepositoryImpl @Inject constructor(
         flow<Event<List<SearchItem>>> {
             emit(Event.loading())
             val apiResponse = searchApi.loadObjectsList(text, idUniversity)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null)
+                emit(Event.success(apiResponse.body()!!))
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
+
+    override fun loadCorpusList(text: String, idUniversity: Int): Flow<Event<List<SearchItem>>> =
+        flow<Event<List<SearchItem>>> {
+            emit(Event.loading())
+            val apiResponse = searchApi.loadCorpusList(text, idUniversity)
 
             if (apiResponse.isSuccessful && apiResponse.body() != null)
                 emit(Event.success(apiResponse.body()!!))

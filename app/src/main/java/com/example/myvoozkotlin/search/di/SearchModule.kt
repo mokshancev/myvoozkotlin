@@ -1,14 +1,8 @@
-package com.example.myvoozkotlin.data.di
+package com.example.myvoozkotlin.search.di
 
-import com.example.myvoozkotlin.data.api.SearchApi
-import com.example.myvoozkotlin.search.data.SearchGroupUseCaseImpl
-import com.example.myvoozkotlin.search.data.SearchObjectUseCaseImpl
-import com.example.myvoozkotlin.search.data.SearchRepositoryImpl
-import com.example.myvoozkotlin.search.data.SearchUniversityUseCaseImpl
-import com.example.myvoozkotlin.search.domain.SearchGroupUseCase
-import com.example.myvoozkotlin.search.domain.SearchObjectUseCase
-import com.example.myvoozkotlin.search.domain.SearchRepository
-import com.example.myvoozkotlin.search.domain.SearchUniversityUseCase
+import com.example.myvoozkotlin.search.api.SearchApi
+import com.example.myvoozkotlin.search.data.*
+import com.example.myvoozkotlin.search.domain.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,6 +25,11 @@ object SearchModule {
     @Provides
     fun provideSearchObjectUseCase(searchRepository: SearchRepository): SearchObjectUseCase {
         return SearchObjectUseCaseImpl(searchRepository)
+    }
+
+    @Provides
+    fun provideSearchCorpusUseCase(searchRepository: SearchRepository): SearchCorpusUseCase {
+        return SearchCorpusUseCaseImpl(searchRepository)
     }
 
     @Provides

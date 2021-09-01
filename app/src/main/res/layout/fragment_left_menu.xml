@@ -324,13 +324,40 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_vk_social_button"
+            android:id="@+id/ll_search_empty_auditory_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:paddingVertical="16dp"
             app:layout_constraintTop_toBottomOf="@+id/ll_notification_setting_button">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/textLink" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:text="Свободные аудитории"
+                android:textColor="@color/textPrimary"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_vk_social_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingVertical="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/ll_search_empty_auditory_button">
 
             <ImageView
                 android:layout_width="24dp"

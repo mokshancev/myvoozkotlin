@@ -20,6 +20,7 @@ interface Navigator {
     fun showNoteScreen(note: Note)
     fun showHomeScreen()
     fun showAddNoteScreen()
+    fun showSearchEmptyAuditoryScreen()
     fun showSplashScreen()
     fun showSelectGroupScreen(@IdRes idRes: Int, isFirst: Boolean, isBackStack: Boolean)
     fun showCreateGroupOfUserScreen()

@@ -30,6 +30,7 @@ import com.example.myvoozkotlin.note.NoteFragment
 import com.example.myvoozkotlin.note.NoteListFragment
 import com.example.myvoozkotlin.note.model.Note
 import com.example.myvoozkotlin.notification.presentation.NotificationFragment
+import com.example.myvoozkotlin.searchEmptyAuditory.presentation.SearchEmptyAuditoryFragment
 import com.example.myvoozkotlin.selectGroup.SelectGroupFragment
 import com.example.myvoozkotlin.splash.SplashFragment
 import com.example.myvoozkotlin.user.presentation.UserFragment
@@ -125,6 +126,10 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
 
     override fun showAddNoteScreen() {
         launchFragment(AddNoteFragment.newInstance())
+    }
+
+    override fun showSearchEmptyAuditoryScreen() {
+        launchFragment(SearchEmptyAuditoryFragment.newInstance())
     }
 
     override fun showSplashScreen() {

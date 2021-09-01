@@ -63,6 +63,7 @@ class LeftMenuFragment : Fragment() {
         setAboutClickListener()
         setLeftMenuClickListener()
         setNotificationClickListener()
+        setSearchEmptyAuditoryClickListener()
     }
 
     private fun setPaddingTopMenu() {
@@ -78,6 +79,12 @@ class LeftMenuFragment : Fragment() {
     private fun setVkClickListener() {
         binding.llVkSocialButton.setOnClickListener {
             openLink(Constants.APP_PREFERENCES_VK_SOCIAL_LINK)
+        }
+    }
+
+    private fun setSearchEmptyAuditoryClickListener() {
+        binding.llSearchEmptyAuditoryButton.setOnClickListener {
+            openSearchEmptyAuditoryFragment()
         }
     }
 
@@ -121,6 +128,10 @@ class LeftMenuFragment : Fragment() {
 
     private fun openUserFragment() {
         navigator().showUserScreen()
+    }
+
+    private fun openSearchEmptyAuditoryFragment() {
+        navigator().showSearchEmptyAuditoryScreen()
     }
 
     private fun openGroupOfUserFragment() {
