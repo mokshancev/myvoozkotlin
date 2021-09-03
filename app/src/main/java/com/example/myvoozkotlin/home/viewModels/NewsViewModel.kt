@@ -7,6 +7,7 @@ import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.domain.NewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class NewsViewModel @Inject constructor(
 
     val newsResponse = MutableLiveData<Event<List<News>>>()
     fun loadNews(idGroup: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             newsUseCase(idGroup).collect {
                 newsResponse.postValue(it)
             }

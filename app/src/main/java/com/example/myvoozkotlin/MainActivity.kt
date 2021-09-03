@@ -51,9 +51,7 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureViews()
-
-        startService(Intent(this, FCMInstance::class.java))
-        startService(Intent(this, FCMService::class.java))
+        initFCM()
     }
 
     private fun configureViews() {
@@ -64,13 +62,17 @@ class MainActivity : AppCompatActivity(), Navigator, BottomNavigationView.OnNavi
         hideSystemUI()
     }
 
+    private fun initFCM(){
+        startService(Intent(this, FCMInstance::class.java))
+        startService(Intent(this, FCMService::class.java))
+    }
+
     private fun hideSystemUI() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, binding.activityMainContainer).let { controller ->
 
         }
         binding.root.setOnApplyWindowInsetsListener { v, insets ->
-            println("BOTTOM = ${insets.systemWindowInsetBottom}")
             v.updatePadding(bottom = insets.systemWindowInsetBottom)
             return@setOnApplyWindowInsetsListener insets
         }

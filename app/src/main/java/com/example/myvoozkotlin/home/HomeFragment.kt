@@ -151,7 +151,6 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
         var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         dayOfWeek = if (dayOfWeek == 1) 6 else dayOfWeek - 2
-        println("-----" + idGroup + " " + weekOfYear + " " + dayOfWeek)
         scheduleViewModel.loadScheduleDay(idGroup, weekOfYear, dayOfWeek)
     }
 

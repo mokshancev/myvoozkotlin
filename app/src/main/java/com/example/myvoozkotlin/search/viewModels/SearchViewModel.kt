@@ -10,6 +10,7 @@ import com.example.myvoozkotlin.search.domain.SearchCorpusUseCase
 import com.example.myvoozkotlin.search.domain.SearchGroupUseCase
 import com.example.myvoozkotlin.search.domain.SearchObjectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class SearchViewModel @Inject constructor(
 
     val searchResponse = MutableLiveData<Event<List<SearchItem>>>()
     fun loadUniversityList(text: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             searchUniversityUseCase(text).collect {
                 searchResponse.postValue(it)
             }
@@ -32,7 +33,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadGroupList(text: String, idUniversity: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             searchGroupUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }
@@ -40,7 +41,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadObjectList(text: String, idUniversity: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             searchObjectUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }
@@ -48,7 +49,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadCorpusList(text: String, idUniversity: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             searchCorpusUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }

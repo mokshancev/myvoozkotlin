@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundContent"
+    android:clickable="true"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -31,7 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/backgroundContent"
-                    app:titleTextAppearance="@style/ActionBar.nameText" />
+                    app:titleTextAppearance="@style/ActionBar.nameText"
+                    app:titleTextColor="@color/textPrimary" />
             </com.google.android.material.appbar.AppBarLayout>
 
             <TextView
@@ -154,51 +156,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Пары"
-                    android:textColor="@color/textTertiary"
                     android:layout_marginLeft="16dp"
                     android:fontFamily="@font/roboto_regular"
-                    android:textSize="15sp"/>
+                    android:text="Пары"
+                    android:textColor="@color/textTertiary"
+                    android:textSize="15sp" />
+
                 <TextView
+                    android:id="@+id/tvPairRange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="с 1 по 8 "
-                    android:id="@+id/tvPairRange"
-                    android:textColor="@color/textPrimary"
-                    android:layout_marginRight="16dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
                     android:fontFamily="@font/roboto_regular"
-                    android:textSize="15sp"/>
+                    android:text="с 1 по 8 "
+                    android:textColor="@color/textPrimary"
+                    android:textSize="15sp" />
             </RelativeLayout>
 
-            <me.bendik.simplerangeview.SimpleRangeView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <me.bendik.simplerangeview.SimpleRangeView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/rangeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 app:activeLineColor="@color/textLink"
                 app:activeThumbColor="@color/backgroundDefaultButton"
                 app:count="8"
-                app:start="0"
                 app:end="7"
                 app:endFixed="7"
-                app:startFixed="0"
-                app:minDistance="0"/>
+                app:minDistance="0"
+                app:start="0"
+                app:startFixed="0" />
 
             <TextView
+                android:id="@+id/tvClassrooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvClassrooms"
-                android:textColor="@color/textSecondary"
-                android:layout_marginTop="16dp"
                 android:layout_marginHorizontal="16dp"
-                android:textSize="16dp"/>
+                android:layout_marginTop="16dp"
+                android:textColor="@color/textSecondary"
+                android:textSize="16dp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvSearchButton"

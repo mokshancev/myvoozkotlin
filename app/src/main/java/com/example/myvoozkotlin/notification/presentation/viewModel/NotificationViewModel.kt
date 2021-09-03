@@ -9,6 +9,7 @@ import com.example.myvoozkotlin.notification.domain.NotificationListUseCase
 import com.example.myvoozkotlin.notification.domain.UniversityNotificationListUseCase
 import com.example.myvoozkotlin.notification.domain.UserWithUniversityNotificationListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,14 +23,14 @@ class NotificationViewModel @Inject constructor(
 
     val notificationListResponse = MutableLiveData<Event<List<Notification>>>()
     fun loadUserNotification(accessToken: String, idUser: Int, type: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             notificationListUseCase(accessToken, idUser, type).collect {
                 notificationListResponse.postValue(it)
             }
         }
     }
     fun loadUserWithUniversityNotification(accessToken: String, idUser: Int, type: Int, idUniversity: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userWithUniversityNotificationListUseCase(accessToken, idUser, type, idUniversity).collect {
                 notificationListResponse.postValue(it)
             }
@@ -37,7 +38,7 @@ class NotificationViewModel @Inject constructor(
     }
 
     fun loadUniversityNotification(idUniversity: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             universityNotificationListUseCase(idUniversity).collect {
                 notificationListResponse.postValue(it)
             }

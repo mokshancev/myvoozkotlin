@@ -9,6 +9,7 @@ import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.domain.NewsUseCase
 import com.example.myvoozkotlin.home.domain.ScheduleDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class ScheduleViewModel @Inject constructor(
 
     val scheduleDayResponse = MutableLiveData<Event<List<List<Lesson>>>>()
     fun loadScheduleDay(idGroup: Int, week: Int, day: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             scheduleDayUseCase(idGroup, week, day).collect {
                 scheduleDayResponse.postValue(it)
             }

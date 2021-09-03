@@ -62,7 +62,6 @@ class SplashFragment : Fragment() {
                 }
                 else{
                     getCurrentUser()?.let {
-                        Log.d("bgrbeberb", it.accessToken +" "+ it.id +" "+ it.idUniversity +" "+ it.idGroup+" "+ FirebaseInstanceId.getInstance().token!!)
                         authViewModel.authVk(it.accessToken, it.id, it.idUniversity, it.idGroup, FirebaseInstanceId.getInstance().token!!)
                     }
                 }

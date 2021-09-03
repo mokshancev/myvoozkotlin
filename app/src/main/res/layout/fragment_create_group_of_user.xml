@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/backgroundContent"
-            app:titleTextAppearance="@style/ActionBar.nameText" />
+            app:titleTextAppearance="@style/ActionBar.nameText"
+            app:titleTextColor="@color/textPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
@@ -198,16 +199,18 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
             <ImageView
+                android:id="@+id/iv_loading"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:id="@+id/iv_loading"
-                android:layout_marginRight="16dp"
-                android:visibility="gone"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_circle_notch"
+                android:layout_marginRight="16dp"
                 android:alpha="0.6"
+                android:src="@drawable/ic_circle_notch"
+                android:visibility="gone"
                 app:tint="@color/white" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

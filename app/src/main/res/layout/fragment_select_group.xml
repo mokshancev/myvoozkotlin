@@ -30,6 +30,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:titleTextColor="@color/textPrimary"
                     android:background="@color/backgroundContent"
                     app:titleTextAppearance="@style/ActionBar.nameText" />
             </com.google.android.material.appbar.AppBarLayout>

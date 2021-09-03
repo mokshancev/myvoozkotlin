@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundContent"
+    android:clickable="true"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,14 +22,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/backgroundContent"
-            app:titleTextAppearance="@style/ActionBar.nameText" />
+            app:titleTextAppearance="@style/ActionBar.nameText"
+            app:titleTextColor="@color/textPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlTypesNotification"
+        style="@style/CustomTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/CustomTabLayout"
         app:layout_constraintTop_toBottomOf="@+id/appbar"
         app:tabMode="scrollable" />
 

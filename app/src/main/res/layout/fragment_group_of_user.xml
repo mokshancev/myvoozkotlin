@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundContent"
+    android:clickable="true"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -31,7 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/backgroundContent"
-                    app:titleTextAppearance="@style/ActionBar.nameText" />
+                    app:titleTextAppearance="@style/ActionBar.nameText"
+                    app:titleTextColor="@color/textPrimary" />
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -373,8 +375,8 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
@@ -405,6 +407,7 @@
                                 app:layout_constraintLeft_toRightOf="@+id/cvTitleListGroup"
                                 app:layout_constraintTop_toTopOf="parent" />
                         </LinearLayout>
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"

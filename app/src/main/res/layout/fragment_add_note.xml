@@ -1,215 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/addNoteRootView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/backgroundContent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:id="@+id/addNoteRootView"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundContent">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:elevation="0dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/backgroundContent"
             app:titleTextAppearance="@style/ActionBar.nameText"
-            android:background="@color/backgroundContent" />
+            app:titleTextColor="@color/textPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
+        android:id="@+id/ivShortText"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:id="@+id/ivShortText"
         android:layout_marginLeft="16dp"
-        app:layout_constraintTop_toTopOf="@+id/etShortText"
-        app:layout_constraintBottom_toBottomOf="@+id/etShortText"
         android:src="@drawable/ic_quote_left"
+        app:layout_constraintBottom_toBottomOf="@+id/etShortText"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etShortText"
         app:tint="@color/textTertiary" />
+
     <EditText
+        android:id="@+id/etShortText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/etShortText"
-        android:hint="Вкратце"
+        android:layout_marginTop="16dp"
         android:background="@null"
+        android:hint="Вкратце"
         android:maxLength="64"
-        android:textColorHint="@color/textTertiary"
+        android:padding="16dp"
         android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textTertiary"
         app:layout_constraintLeft_toRightOf="@+id/ivShortText"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/etShortText"
-        android:background="@color/backgroundFill"/>
+        android:background="@color/backgroundFill"
+        app:layout_constraintTop_toBottomOf="@+id/etShortText" />
 
     <ImageView
+        android:id="@+id/ivLongText"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:id="@+id/ivLongText"
         android:layout_marginLeft="16dp"
-        app:layout_constraintTop_toTopOf="@+id/etLongText"
-        app:layout_constraintBottom_toBottomOf="@+id/etLongText"
         android:src="@drawable/ic_paragraph"
+        app:layout_constraintBottom_toBottomOf="@+id/etLongText"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etLongText"
         app:tint="@color/textTertiary" />
 
     <EditText
+        android:id="@+id/etLongText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/etLongText"
-        android:maxLength="256"
-        android:lines="2"
         android:background="@null"
+        android:hint="Опишите более детально"
+        android:lines="2"
+        android:maxLength="256"
+        android:padding="16dp"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textTertiary"
         app:layout_constraintLeft_toRightOf="@+id/ivLongText"
         app:layout_constraintRight_toRightOf="parent"
-        android:hint="Опишите более детально"
-        android:textColorHint="@color/textTertiary"
-        android:textColor="@color/textPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/etShortText"
-        android:padding="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/etShortText" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/etLongText"
-        android:background="@color/backgroundFill"/>
+        android:background="@color/backgroundFill"
+        app:layout_constraintTop_toBottomOf="@+id/etLongText" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/tvObjectButton"
-        app:layout_constraintTop_toBottomOf="@+id/etLongText"
-        android:paddingRight="8dp"
-        android:textSize="13dp"
-        android:gravity="center_vertical"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="#a1a4a5"
-        android:text="@string/object"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tvObjectButton"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:paddingRight="8dp"
+        android:text="@string/object"
+        android:textColor="#a1a4a5"
+        android:textSize="13dp"
+        app:layout_constraintTop_toBottomOf="@+id/etLongText" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clObjectButton"
-        android:padding="16dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvObjectName"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:textSize="17dp"
-            android:textColor="@color/textPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginRight="28dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:text="@string/select_object" />
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_angle_right"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/textTertiary" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/clObjectButton"
-        android:background="@color/backgroundFill"/>
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvTime"
-        app:layout_constraintTop_toBottomOf="@+id/clObjectButton"
-        android:paddingRight="8dp"
-        android:textSize="13dp"
-        android:gravity="center_vertical"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="#a1a4a5"
-        android:text="Срок"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tvTime"
         android:foreground="?attr/selectableItemBackground"
-        android:id="@+id/clTimeButton"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvObjectButton">
+
         <TextView
+            android:id="@+id/tvObjectName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/tvTimeName"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:textSize="17dp"
-            android:textColor="@color/textPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="28dp"
+            android:text="@string/select_object"
+            android:textColor="@color/textPrimary"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="@string/time_success" />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_angle_right"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="@color/textTertiary" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/clTimeButton"
-        android:background="@color/backgroundFill"/>
+        android:background="@color/backgroundFill"
+        app:layout_constraintTop_toBottomOf="@+id/clObjectButton" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:paddingRight="8dp"
+        android:text="Срок"
+        android:textColor="#a1a4a5"
+        android:textSize="13dp"
+        app:layout_constraintTop_toBottomOf="@+id/clObjectButton" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clTimeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvTime">
+
+        <TextView
+            android:id="@+id/tvTimeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="28dp"
+            android:text="@string/time_success"
+            android:textColor="@color/textPrimary"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_angle_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textTertiary" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgroundFill"
+        app:layout_constraintTop_toBottomOf="@+id/clTimeButton" />
 
     <LinearLayout
+        android:id="@+id/llPhotoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/llPhotoContainer"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/clTimeButton">
+
         <include
             android:id="@+id/cvAddPhoto"
-            layout="@layout/item_add_photo"/>
+            layout="@layout/item_add_photo" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPhoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_photo"
+            app:layout_constraintTop_toBottomOf="@+id/clTimeButton"
             tools:itemCount="2"
-            app:layout_constraintTop_toBottomOf="@+id/clTimeButton"/>
+            tools:listitem="@layout/item_photo" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvTypeAccess"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvTypeAccess"
-        app:layout_constraintTop_toBottomOf="@+id/llPhotoContainer"
-        android:paddingRight="8dp"
-        android:textSize="13dp"
-        android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:paddingRight="8dp"
+        android:text="@string/type_access"
         android:textColor="#a1a4a5"
-        android:text="@string/type_access"/>
+        android:textSize="13dp"
+        app:layout_constraintTop_toBottomOf="@+id/llPhotoContainer" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTypeAccess"
@@ -217,47 +233,50 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        tools:listitem="@layout/item_radio_button"
+        app:layout_constraintTop_toBottomOf="@+id/tvTypeAccess"
         tools:itemCount="2"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypeAccess"/>
+        tools:listitem="@layout/item_radio_button" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cv_save_button"
-        android:elevation="0dp"
-        app:cardElevation="0dp"
         android:layout_margin="16dp"
+        android:elevation="0dp"
+        android:outlineAmbientShadowColor="#ff1267ee"
+        android:outlineSpotShadowColor="#ff1267ee"
+        app:cardBackgroundColor="#1267ee"
         app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvTypeAccess"
-        app:cardBackgroundColor="#1267ee"
-        android:outlineAmbientShadowColor="#ff1267ee"
-        android:outlineSpotShadowColor="#ff1267ee">
+        app:layout_constraintTop_toBottomOf="@+id/rvTypeAccess">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
             <ImageView
+                android:id="@+id/ivLoadingSaveButton"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                android:id="@+id/ivLoadingSaveButton"
-                android:visibility="gone"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_circle_notch"
                 android:alpha="0.6"
+                android:src="@drawable/ic_circle_notch"
+                android:visibility="gone"
                 app:tint="@color/white" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:gravity="center"
+                android:padding="16dp"
+                android:text="Сохранить изменения"
                 android:textColor="@color/white"
-                android:textSize="16dp"
-                android:text="Сохранить изменения"/>
+                android:textSize="16dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

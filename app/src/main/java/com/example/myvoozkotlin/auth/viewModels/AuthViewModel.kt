@@ -10,6 +10,7 @@ import com.example.myvoozkotlin.models.news.News
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.domain.NewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class AuthViewModel @Inject constructor(
 
     val authVkResponse = MutableLiveData<Event<AuthUser>>()
     fun authVk(accessToken: String, idUser : Int, idUniversity : Int, idGroup : Int, keyNotification : String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             authVkUseCase(accessToken, idUser, idUniversity, idGroup, keyNotification).collect {
                 authVkResponse.postValue(it)
             }
@@ -32,7 +33,7 @@ class AuthViewModel @Inject constructor(
     val authYaResponse = MutableLiveData<Event<AuthUser>>()
     fun authYa(accessToken: String, idUniversity : Int, idGroup : Int, keyNotification : String) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             authYaUseCase(accessToken, idUniversity, idGroup, keyNotification).collect {
                 authYaResponse.postValue(it)
             }

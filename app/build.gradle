@@ -6,6 +6,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.google.firebase.crashlytics'
 
 buildscript {
     repositories {
@@ -112,6 +113,11 @@ dependencies {
     implementation platform ('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //Crashlytics
+    implementation 'com.google.firebase:firebase-crashlytics'
+
+    //google auth
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
