@@ -1,5 +1,6 @@
 package com.example.myvoozkotlin.user.data
 
+import android.util.Log
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.user.api.UserApi
 import com.example.myvoozkotlin.data.db.DbUtils
@@ -35,6 +36,33 @@ class UserRepositoryImpl @Inject constructor(
                     authUserModel.lastName = secondName
                     dbUtils.setCurrentAuthUser(authUserModel)
                 }
+            }
+            else{
+                emit(Event.error("lol"))
+            }
+        }.catch { e ->
+            emit(Event.error("lol2"))
+            e.printStackTrace()
+        }
+
+    override fun changeIdGroupUser(
+        accessToken: String,
+        idUser: Int,
+        nameGroup: String,
+        idGroup: Int
+    ): Flow<Event<Boolean>> =
+        flow<Event<Boolean>> {
+            emit(Event.loading())
+            val apiResponse = userApi.changeIdGroup(accessToken, idUser, idGroup)
+
+            if (apiResponse.isSuccessful && apiResponse.body() != null){
+                val authUserModel = dbUtils.getCurrentAuthUser()
+                if(authUserModel != null){
+                    authUserModel.idGroup = idGroup
+                    authUserModel.nameGroup = nameGroup
+                    dbUtils.setCurrentAuthUser(authUserModel)
+                }
+                emit(Event.success(apiResponse.body()!!))
             }
             else{
                 emit(Event.error("lol"))

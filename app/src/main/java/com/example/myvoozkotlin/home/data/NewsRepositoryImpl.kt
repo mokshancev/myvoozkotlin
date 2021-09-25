@@ -1,7 +1,7 @@
 package com.example.myvoozkotlin.home.data
 
 import com.example.myvoozkotlin.models.news.News
-import com.example.myvoozkotlin.data.api.NewsApi
+import com.example.myvoozkotlin.home.api.NewsApi
 import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.home.domain.NewsRepository
 import kotlinx.coroutines.flow.Flow

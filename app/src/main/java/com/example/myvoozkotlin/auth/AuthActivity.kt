@@ -102,16 +102,17 @@ class AuthActivity: AppCompatActivity() {
                     showWait(true)
                 }
                 Status.SUCCESS -> {
-
+                    showWait(false)
                     if (it.data == null) {
 
                     } else {
-                        showWait(false)
+
                         finish()
                     }
                 }
                 Status.ERROR -> {
                     UtilsUI.makeToast("error auth")
+                    showWait(false)
                 }
             }
         })
@@ -143,15 +144,16 @@ class AuthActivity: AppCompatActivity() {
                     showWait(true)
                 }
                 Status.SUCCESS -> {
+                    showWait(false)
                     Log.d("bermlrbemerb", "bvwebwbwbwb")
                     if (it.data == null) {
 
                     } else {
-                        showWait(false)
                         finish()
                     }
                 }
                 Status.ERROR -> {
+                    showWait(false)
                     UtilsUI.makeToast("error auth")
                 }
             }
@@ -216,6 +218,7 @@ class AuthActivity: AppCompatActivity() {
     }
 
     private fun addBackButton(){
+        binding.toolbar.title = "Авторизация"
         binding.toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_arrow_left)
         binding.toolbar.setNavigationOnClickListener {
             finish()

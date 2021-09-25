@@ -146,7 +146,6 @@ class NoteListFragment: Fragment(), (Note) -> Unit {
                     if (it.data == null) {
 
                     } else {
-                        Log.d("brmwlbmlwmbwer", "b wbwberwebweb")
                         initNotesAdapter(it.data)
                         if (it.data.isEmpty()) {
                             binding.rvNotes.hide()

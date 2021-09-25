@@ -1,6 +1,7 @@
 package com.example.myvoozkotlin.leftMenu.presentation
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class LeftMenuFragment : Fragment() {
+class LeftMenuFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         fun newInstance(): LeftMenuFragment {
@@ -64,6 +65,7 @@ class LeftMenuFragment : Fragment() {
         setLeftMenuClickListener()
         setNotificationClickListener()
         setSearchEmptyAuditoryClickListener()
+        BaseApp.getSharedPref().registerOnSharedPreferenceChangeListener(this)
     }
 
     private fun setPaddingTopMenu() {
@@ -211,6 +213,12 @@ class LeftMenuFragment : Fragment() {
                 setNameUser("${authUserModel.lastName} ${authUserModel.firstName[0]}.")
                 setNameGroup(authUserModel.groupOfUser!!.nameGroup)
             }
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key.equals(Constants.APP_PREFERENCES_USER_GROUP_ID)){
+            initUserBlock(userViewModel.getCurrentAuthUser())
         }
     }
 

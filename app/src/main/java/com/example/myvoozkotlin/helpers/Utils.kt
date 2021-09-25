@@ -19,11 +19,12 @@ import java.util.*
 object Utils {
     fun getDayName(position: Int): String{
         when(position){
-            0 -> return "Пн"
-            1 -> return "Вт"
-            2 -> return "Ср"
-            3 -> return "Чт"
-            4 -> return "Пт"
+            1 -> return "Вс"
+            2 -> return "Пн"
+            3 -> return "Вт"
+            4 -> return "Ср"
+            5 -> return "Чт"
+            6 -> return "Пт"
             else -> return "Сб"
         }
     }
@@ -81,12 +82,6 @@ object Utils {
                             val url = jsonObject.getString("path")
 
                             if(url != null){
-                                val config = RealmConfiguration.Builder()
-                                    .name("myvooz.realm")
-                                    .schemaVersion(1)
-                                    .allowWritesOnUiThread(true)
-                                    .build()
-                                Realm.setDefaultConfiguration(config)
                                 val dbUtils = DbUtils(Realm.getDefaultInstance())
                                 val authUserModel = dbUtils.getCurrentAuthUser()
                                 if(type == "group_profile"){

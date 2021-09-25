@@ -9,9 +9,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.myvoozkotlin.BaseApp
+import com.example.myvoozkotlin.MainActivity
 import com.example.myvoozkotlin.R
 import com.example.myvoozkotlin.databinding.FragmentSelectGroupBinding
 import com.example.myvoozkotlin.helpers.Constants
+import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.navigation.navigator
 import com.example.myvoozkotlin.helpers.show
@@ -55,6 +57,7 @@ class SelectGroupFragment : Fragment() {
         initIntentData()
         configureViews()
         setListeners()
+        initObservers()
         initData()
         setPaddingTopMenu()
     }
@@ -154,11 +157,22 @@ class SelectGroupFragment : Fragment() {
                         navigator().showMainScreen()
                     }
                     else{
-                        parentFragmentManager.popBackStack()
+                        if(userViewModel.getCurrentAuthUser() == null){
+                            parentFragmentManager.popBackStack()
+                        }
+                        else{
+                            userViewModel.getCurrentAuthUser()?.let {
+                                userViewModel.changeIdGroupUser(it.accessToken, it.id, nameGroup, idGroup)
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun initObservers() {
+        observeOnChangeIdGroupResponse()
     }
 
     private fun saveSelectValue() {
@@ -181,6 +195,23 @@ class SelectGroupFragment : Fragment() {
         if(!isFirst){
             addBackButton()
         }
+    }
+
+    private fun observeOnChangeIdGroupResponse() {
+        userViewModel.changeIdGroupUserResponse.observe(viewLifecycleOwner, {
+            when (it.status) {
+                Status.LOADING -> {
+                    (requireActivity() as MainActivity).showWait(true)
+                }
+                Status.SUCCESS -> {
+                    (requireActivity() as MainActivity).showWait(false)
+                    parentFragmentManager.popBackStack()
+                }
+                Status.ERROR -> {
+                    (requireActivity() as MainActivity).showWait(false)
+                }
+            }
+        })
     }
 
     private fun addBackButton(){

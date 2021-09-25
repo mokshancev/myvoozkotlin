@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asksira.loopingviewpager.LoopingViewPager
-import com.example.homelibrary.model.Lesson
+import com.example.myvoozkotlin.home.model.Lesson
 import com.example.myvoozkotlin.R
 import com.rd.PageIndicatorView
 

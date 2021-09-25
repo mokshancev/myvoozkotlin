@@ -16,6 +16,7 @@ import com.example.myvoozkotlin.databinding.FragmentSplashBinding
 import com.example.myvoozkotlin.helpers.Status
 import com.example.myvoozkotlin.helpers.UtilsUI
 import com.example.myvoozkotlin.helpers.navigation.navigator
+import com.example.myvoozkotlin.home.viewModels.ScheduleViewModel
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.google.firebase.iid.FirebaseInstanceId
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +35,7 @@ class SplashFragment : Fragment() {
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
+    private val scheduleViewModel: ScheduleViewModel by viewModels()
     private val onBoardingViewModel: OnBoardingViewModel by viewModels()
 
     override fun onCreateView(
@@ -62,6 +64,7 @@ class SplashFragment : Fragment() {
                 }
                 else{
                     getCurrentUser()?.let {
+                        Log.d("authUserInfo", it.accessToken + " " + it.id)
                         authViewModel.authVk(it.accessToken, it.id, it.idUniversity, it.idGroup, FirebaseInstanceId.getInstance().token!!)
                     }
                 }
@@ -75,6 +78,7 @@ class SplashFragment : Fragment() {
 
     private fun initObservers() {
         observeOnAuthResponse()
+        //observeOnLoadAllScheduleResponse()
     }
 
     private fun observeOnAuthResponse() {
@@ -90,6 +94,9 @@ class SplashFragment : Fragment() {
                     }
                     else{
                         navigator().showMainScreen()
+//                        getCurrentUser()?.apply {
+//                            scheduleViewModel.loadAllSchedule(accessToken, id)
+//                        }
                     }
                 }
                 Status.ERROR -> {
@@ -99,4 +106,21 @@ class SplashFragment : Fragment() {
             }
         })
     }
+
+//    private fun observeOnLoadAllScheduleResponse() {
+//        scheduleViewModel.allScheduleResponse.observe(viewLifecycleOwner, {
+//            when (it.status) {
+//                Status.LOADING -> {
+//                    scheduleViewModel.removeAllSchedule()
+//                    binding.tvStateLoad.text = "Обновляю расписание"
+//                }
+//                Status.SUCCESS -> {
+//                    navigator().showMainScreen()
+//                }
+//                Status.ERROR -> {
+//                    navigator().showMainScreen()
+//                }
+//            }
+//        })
+//    }
 }

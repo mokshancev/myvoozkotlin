@@ -23,7 +23,7 @@ class AuthViewModel @Inject constructor(
 
     val authVkResponse = MutableLiveData<Event<AuthUser>>()
     fun authVk(accessToken: String, idUser : Int, idUniversity : Int, idGroup : Int, keyNotification : String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             authVkUseCase(accessToken, idUser, idUniversity, idGroup, keyNotification).collect {
                 authVkResponse.postValue(it)
             }
@@ -33,7 +33,7 @@ class AuthViewModel @Inject constructor(
     val authYaResponse = MutableLiveData<Event<AuthUser>>()
     fun authYa(accessToken: String, idUniversity : Int, idGroup : Int, keyNotification : String) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             authYaUseCase(accessToken, idUniversity, idGroup, keyNotification).collect {
                 authYaResponse.postValue(it)
             }

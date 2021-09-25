@@ -179,6 +179,7 @@ class CreateGroupOfUserFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     setOpenStateBtn()
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })

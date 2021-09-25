@@ -245,9 +245,10 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
         calendar = Calendar.getInstance()
         currentCalendar = calendar.clone() as Calendar
 
-        val radioItem1 = RadioItem("Личное", 1, true)
-        val radioItem2 = RadioItem("ИБ-416", 0, false)
-        val listTypeAccess = listOf(radioItem1, radioItem2)
+        val listTypeAccess = mutableListOf<RadioItem>()
+        listTypeAccess.add(RadioItem("Личное", 1, true))
+        if(userViewModel.getCurrentAuthUser()!!.idGroupOfUser != 0)
+            listTypeAccess.add(RadioItem(userViewModel.getCurrentAuthUser()!!.groupOfUser!!.name, 0, false))
         initTypeAccessAdapter(listTypeAccess)
     }
 
@@ -355,6 +356,7 @@ class AddNoteFragment: Fragment(), OnTabItemPicked, OnSearchItemPicked, OnPhotoP
                 }
                 Status.ERROR -> {
                     setOpenStateBtn()
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })

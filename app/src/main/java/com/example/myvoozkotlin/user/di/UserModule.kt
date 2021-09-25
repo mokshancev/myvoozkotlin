@@ -3,9 +3,11 @@ package com.example.myvoozkotlin.user.di
 import com.example.myvoozkotlin.user.api.UserApi
 import com.example.myvoozkotlin.data.db.DbUtils
 import com.example.myvoozkotlin.user.data.ChangeFullNameUseCaseImpl
+import com.example.myvoozkotlin.user.data.ChangeIdGroupUserUseCaseImpl
 import com.example.myvoozkotlin.user.data.EmptyAuditoryUseCaseImpl
 import com.example.myvoozkotlin.user.data.UserRepositoryImpl
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
+import com.example.myvoozkotlin.user.domain.ChangeIdGroupUserUseCase
 import com.example.myvoozkotlin.user.domain.EmptyAuditoryUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.Module
@@ -26,6 +28,11 @@ object UserModule {
     @Provides
     fun provideEmptyAuditoryUseCase(userRepository: UserRepository): EmptyAuditoryUseCase{
         return EmptyAuditoryUseCaseImpl(userRepository)
+    }
+
+    @Provides
+    fun provideChangeIdGroupUserUseCase(userRepository: UserRepository): ChangeIdGroupUserUseCase{
+        return ChangeIdGroupUserUseCaseImpl(userRepository)
     }
 
     @Provides

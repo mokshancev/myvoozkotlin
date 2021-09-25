@@ -128,6 +128,14 @@ class GroupOfUserFragment: Fragment(){
         binding.tvGroupName.text = authUserModel!!.groupOfUser!!.nameGroup
         binding.tvCountUsers.text = authUserModel!!.groupOfUser!!.countUsers.toString()
         binding.tvHeadUser.text = authUserModel!!.groupOfUser!!.userVeryShortModel!!.name
+        if(authUserModel!!.id == authUserModel!!.groupOfUser!!.idOlder){
+            binding.clChangeGroupButton.show()
+            binding.clChangeGroupOfUserNameButton.show()
+        }
+        else{
+            binding.clChangeGroupButton.hide()
+            binding.clChangeGroupOfUserNameButton.hide()
+        }
         binding.tvChangeGroupOfUserName.text = authUserModel!!.groupOfUser!!.name
         binding.tvPostTitleListGroup.text = "${authUserModel!!.groupOfUser!!.countUsers} чел."
         binding.tvChangeGroup.text = authUserModel!!.groupOfUser!!.nameGroup
@@ -164,7 +172,7 @@ class GroupOfUserFragment: Fragment(){
                     }
                 }
                 Status.ERROR -> {
-
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })
@@ -228,7 +236,7 @@ class GroupOfUserFragment: Fragment(){
                     }
                 }
                 Status.ERROR -> {
-
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })

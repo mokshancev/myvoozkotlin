@@ -1,9 +1,6 @@
 package com.example.myvoozkotlin.notification.data.api
 
-import com.example.homelibrary.model.Lesson
 import com.example.homelibrary.model.Notification
-import com.example.myvoozkotlin.models.SearchItem
-import com.example.myvoozkotlin.models.news.News
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

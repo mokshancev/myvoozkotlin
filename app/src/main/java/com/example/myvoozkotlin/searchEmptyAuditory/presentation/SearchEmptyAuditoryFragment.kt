@@ -121,7 +121,7 @@ class SearchEmptyAuditoryFragment : Fragment(), OnDatePicked {
                     }
                 }
                 Status.ERROR -> {
-
+                    (requireActivity() as MainActivity).showWait(false)
                 }
             }
         })
@@ -179,7 +179,7 @@ class SearchEmptyAuditoryFragment : Fragment(), OnDatePicked {
     }
 
     private fun openDatePicker(){
-        fragmentManager?.let {
+        childFragmentManager?.let {
             DatePickerDialogFragment.newInstance(calendar, this)
                 .show(it, DatePickerDialogFragment.javaClass.simpleName)
         }

@@ -2,6 +2,8 @@ package com.example.myvoozkotlin.data.di
 
 import com.example.myvoozkotlin.data.api.*
 import com.example.myvoozkotlin.groupOfUser.api.GroupOfUserApi
+import com.example.myvoozkotlin.home.api.NewsApi
+import com.example.myvoozkotlin.home.api.ScheduleApi
 import com.example.myvoozkotlin.notification.data.api.NotificationApi
 import com.example.myvoozkotlin.user.api.UserApi
 import dagger.Module

@@ -45,7 +45,7 @@
     </style>
 
     <style name="TransparentBottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+
     </style>
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
@@ -62,5 +62,12 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/textTertiary</item>
         <item name="android:fontFamily">@font/roboto_fonts_family</item>
+    </style>
+
+    <style name="BottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 </resources>

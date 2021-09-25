@@ -19,7 +19,7 @@ class NewsViewModel @Inject constructor(
 
     val newsResponse = MutableLiveData<Event<List<News>>>()
     fun loadNews(idGroup: Int) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch {
             newsUseCase(idGroup).collect {
                 newsResponse.postValue(it)
             }

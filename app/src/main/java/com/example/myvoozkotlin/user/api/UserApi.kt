@@ -14,6 +14,11 @@ interface UserApi {
                        @Query("first_name") firstName: String,
                        @Query("last_name") secondName: String): Response<Boolean>
 
+    @GET("profile?type=change_user_id_group")
+    suspend fun changeIdGroup(@Query("access_token") accessToken: String,
+                       @Query("user_id") id_user: Int,
+                       @Query("id_group") idGroup: Int): Response<Boolean>
+
     @GET("profile?type=classroom")
     suspend fun getEmptyAuditory(@Query("date") date: String,
                                  @Query("id_corpus") idCorpus: Int,

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.myvoozkotlin.R
@@ -29,7 +30,7 @@ class ChangeNameDialogFragment: BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.TransparentBottomSheet)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogStyle)
     }
 
     override fun onCreateView(

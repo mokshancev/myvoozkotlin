@@ -23,7 +23,7 @@ class NoteViewModel @Inject constructor(
 
     val noteListResponse = MutableLiveData<Event<List<Note>>>()
     fun loadUserNote(accessToken: String, idUser: Int, type: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             noteListUseCase(accessToken, idUser, type).collect {
                 noteListResponse.postValue(it)
             }
@@ -32,7 +32,7 @@ class NoteViewModel @Inject constructor(
 
     val addNoteResponse = MutableLiveData<Event<Note>>()
     fun addNote(accessToken: String, idUser: Int, idObject: Int, title: String, text: String, date: String, markMe: Int, images: List<Int>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             addNoteUseCase(accessToken, idUser, idObject, title, text, date, markMe, images).collect {
                 addNoteResponse.postValue(it)
             }
@@ -41,7 +41,7 @@ class NoteViewModel @Inject constructor(
 
     val completedNoteResponse = MutableLiveData<Event<Any>>()
     fun completedNote(accessToken: String, idUser: Int, notes: List<Int>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             completedNoteUseCase(accessToken, idUser, notes).collect {
                 completedNoteResponse.postValue(it)
             }

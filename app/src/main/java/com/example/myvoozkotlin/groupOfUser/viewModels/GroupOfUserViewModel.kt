@@ -46,7 +46,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val inviteGroupOfUserResponse = MutableLiveData<Event<InviteData>>()
     fun inviteGroupOfUser(accessToken: String, idUser: Int, name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             inviteGroupOfUserUseCase(accessToken, idUser, name).collect {
                 inviteGroupOfUserResponse.postValue(it)
             }
@@ -55,7 +55,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val logoutGroupOfUserResponse = MutableLiveData<Event<Boolean>>()
     fun logoutGroupOfUser(accessToken: String, idUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             logoutGroupOfUserUseCase(accessToken, idUser).collect {
                 logoutGroupOfUserResponse.postValue(it)
             }
@@ -64,7 +64,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val changeGroupResponse = MutableLiveData<Event<Boolean>>()
     fun changeIdGroup(accessToken: String, idUser: Int, idGroup: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             changeIdGroupGroupOfUserUseCase(accessToken, idUser, idGroup).collect {
                 changeGroupResponse.postValue(it)
             }
@@ -73,7 +73,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val changeNameResponse = MutableLiveData<Event<Boolean>>()
     fun changeName(accessToken: String, idUser: Int, text: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             changeNameGroupOfUserUseCase(accessToken, idUser, text).collect {
                 changeNameResponse.postValue(it)
             }
@@ -82,7 +82,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val userListResponse = MutableLiveData<Event<List<UserShort>>>()
     fun getUserList(accessToken: String, idUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userListGroupOfUserUseCase(accessToken, idUser).collect {
                 userListResponse.postValue(it)
             }
@@ -91,7 +91,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val getEntryLinkResponse = MutableLiveData<Event<EntryLink>>()
     fun getEntryLink(accessToken: String, idUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             getEntryLinkGroupOfUserUseCase(accessToken, idUser).collect {
                 getEntryLinkResponse.postValue(it)
             }
@@ -100,7 +100,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val updateEntryLinkResponse = MutableLiveData<Event<EntryLink>>()
     fun updateEntryLink(accessToken: String, idUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             updateEntryLinkGroupOfUserUseCase(accessToken, idUser).collect {
                 updateEntryLinkResponse.postValue(it)
             }
@@ -109,7 +109,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val lockLinkResponse = MutableLiveData<Event<Boolean>>()
     fun lockEntryLink(accessToken: String, idUser: Int, state: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             lockEntryLinkGroupOfUserUseCase(accessToken, idUser, state).collect {
                 lockLinkResponse.postValue(it)
             }
@@ -118,7 +118,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val makeHeadResponse = MutableLiveData<Event<Boolean>>()
     fun makeHead(accessToken: String, idUser: Int, idSelUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             makeHeadGroupOfUserUseCase(accessToken, idUser, idSelUser).collect {
                 makeHeadResponse.postValue(it)
             }
@@ -127,7 +127,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val removeUserResponse = MutableLiveData<Event<Boolean>>()
     fun removeUser(accessToken: String, idUser: Int, idSelUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             removeUserGroupOfUserUseCase(accessToken, idUser, idSelUser).collect {
                 removeUserResponse.postValue(it)
             }
@@ -136,7 +136,7 @@ class GroupOfUserViewModel @Inject constructor(
 
     val groupOfUserResponse = MutableLiveData<Event<InviteData>>()
     fun getGroupOfUserUser(accessToken: String, idUser: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             groupOfUserUseCase(accessToken, idUser).collect {
                 groupOfUserResponse.postValue(it)
             }
@@ -159,6 +159,5 @@ class GroupOfUserViewModel @Inject constructor(
             userVeryShortModel!!.photo = photo
             dbUtils.setCurrentAuthUser(authUser)
         }
-
     }
 }

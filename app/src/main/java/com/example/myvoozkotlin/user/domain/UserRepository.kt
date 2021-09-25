@@ -14,6 +14,7 @@ import okhttp3.MultipartBody
 
 interface UserRepository {
     fun changeUserFullName(accessToken: String, idUser : Int, firstName : String, secondName : String): Flow<Event<Boolean>>
+    fun changeIdGroupUser(accessToken: String, idUser: Int, nameGroup: String, idGroup: Int): Flow<Event<Boolean>>
     fun getIdUniversity(): Int
     fun getNameGroup(): String
     fun getIdGroup(): Int

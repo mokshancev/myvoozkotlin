@@ -4,18 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
 import com.asksira.loopingviewpager.LoopingPagerAdapter
-import com.bumptech.glide.Glide
-import com.example.homelibrary.model.Lesson
+import com.example.myvoozkotlin.home.model.Lesson
 import com.example.myvoozkotlin.R
-import com.example.myvoozkotlin.databinding.ItemStoryBinding
 import com.example.myvoozkotlin.helpers.hide
 import com.example.myvoozkotlin.helpers.show
-import com.example.myvoozkotlin.models.news.News
 
 class SchedulePairAdapter(
     context: Context?,
@@ -38,6 +32,7 @@ class SchedulePairAdapter(
         convertView!!.findViewById<TextView>(R.id.tv_name)!!.text = lesson.number.toString() + ". " + lesson.name
         convertView.findViewById<TextView>(R.id.tv_type).text = lesson.typeName
         convertView!!.findViewById<TextView>(R.id.tv_fio)!!.text = lesson.teacher
+        convertView!!.findViewById<TextView>(R.id.tv_place)!!.text = lesson.classroom
 
         if(lesson.teacher.isEmpty()){
             convertView.findViewById<View>(R.id.ivTeacher).hide()

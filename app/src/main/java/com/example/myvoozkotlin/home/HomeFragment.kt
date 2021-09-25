@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.homelibrary.model.Lesson
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.example.myvoozkotlin.home.model.Lesson
 import com.example.myvoozkotlin.BaseApp
 import com.example.myvoozkotlin.main.presentation.MainFragment
 import com.example.myvoozkotlin.R
@@ -33,9 +33,9 @@ import com.example.myvoozkotlin.home.helpers.OnStoryClick
 import com.example.myvoozkotlin.home.helpers.ScheduleState
 import com.example.myvoozkotlin.home.viewModels.NewsViewModel
 import com.example.myvoozkotlin.home.viewModels.ScheduleViewModel
+import com.example.myvoozkotlin.models.TabItem
 import com.example.myvoozkotlin.user.presentation.viewModel.UserViewModel
 import com.example.myvoozkotlin.models.news.News
-import com.example.myvoozkotlin.note.NoteListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import omari.hamza.storyview.StoryView
 import omari.hamza.storyview.callback.StoryClickListeners
@@ -77,11 +77,6 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
         return binding.root
     }
 
-    fun onMyButtonClick(view: View?) {
-        // выводим сообщение
-        Toast.makeText(requireContext(), "Зачем вы нажали?", Toast.LENGTH_SHORT).show()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         calendar = Calendar.getInstance()
@@ -109,6 +104,7 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
     }
 
     private fun initAuthUser(){
+        initSiteButton()
         loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
         loadNews(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
     }
@@ -137,6 +133,28 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
                 startWeekRVAnimate()
             }
         }
+
+        setSiteClickListener()
+    }
+
+    private fun initSiteButton(){
+        Glide.with(requireContext())
+            .load("https://myvooz.ru/public/images/university/icon-ugatu-100.png")
+            .centerCrop()
+            .transition(DrawableTransitionOptions.withCrossFade(ANIMATE_TRANSITION_DURATION))
+            .into(binding.ivSiteButton)
+        setSiteClickListener()
+    }
+
+    private fun setSiteClickListener(){
+        binding.cvSiteButton.setOnClickListener {
+            openLink("https://www.ugatu.su/")
+        }
+    }
+
+    private fun openLink(link: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        startActivity(browserIntent)
     }
 
     private fun loadNews(idGroup: Int) {
@@ -297,7 +315,14 @@ class HomeFragment : Fragment(), OnDayPicked, OnDatePicked,
             endWeekRVAnimate()
 
             checkDateAnother()
-            loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
+            Utils.getAuthorisationState(userViewModel.getCurrentAuthUser()).let {
+                when(Utils.getAuthorisationState(userViewModel.getCurrentAuthUser())){
+                    AuthorizationState.UNAUTORIZATE -> loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
+                    AuthorizationState.GROUP_AUTORIZATE -> loadSchedule(userViewModel.getCurrentAuthUser()!!.groupOfUser!!.idGroup)
+                    AuthorizationState.AUTORIZATE -> loadSchedule(BaseApp.getSharedPref().getInt(Constants.APP_PREFERENCES_USER_GROUP_ID, 0))
+                }
+
+            }
         }
     }
 

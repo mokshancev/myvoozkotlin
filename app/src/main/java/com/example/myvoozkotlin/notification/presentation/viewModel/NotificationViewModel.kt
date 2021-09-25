@@ -23,14 +23,14 @@ class NotificationViewModel @Inject constructor(
 
     val notificationListResponse = MutableLiveData<Event<List<Notification>>>()
     fun loadUserNotification(accessToken: String, idUser: Int, type: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notificationListUseCase(accessToken, idUser, type).collect {
                 notificationListResponse.postValue(it)
             }
         }
     }
     fun loadUserWithUniversityNotification(accessToken: String, idUser: Int, type: Int, idUniversity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userWithUniversityNotificationListUseCase(accessToken, idUser, type, idUniversity).collect {
                 notificationListResponse.postValue(it)
             }
@@ -38,7 +38,7 @@ class NotificationViewModel @Inject constructor(
     }
 
     fun loadUniversityNotification(idUniversity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             universityNotificationListUseCase(idUniversity).collect {
                 notificationListResponse.postValue(it)
             }

@@ -11,6 +11,7 @@ import com.example.myvoozkotlin.helpers.Event
 import com.example.myvoozkotlin.helpers.Utils
 import com.example.myvoozkotlin.searchEmptyAuditory.model.Classroom
 import com.example.myvoozkotlin.user.domain.ChangeFullNameUseCase
+import com.example.myvoozkotlin.user.domain.ChangeIdGroupUserUseCase
 import com.example.myvoozkotlin.user.domain.EmptyAuditoryUseCase
 import com.example.myvoozkotlin.user.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ class UserViewModel @Inject constructor(
     private val changeFullNameUseCase: ChangeFullNameUseCase,
     private val userRepository: UserRepository,
     private val emptyAuditoryUseCase: EmptyAuditoryUseCase,
+    private val changeIdGroupUserUseCase: ChangeIdGroupUserUseCase,
     private val dbUtils: DbUtils,
     private val realm: Realm
 ) : ViewModel() {
@@ -56,6 +58,15 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             changeFullNameUseCase(accessToken, idUser, firstName, secondName).collect {
                 changeFullNameResponse.postValue(it)
+            }
+        }
+    }
+
+    val changeIdGroupUserResponse = MutableLiveData<Event<Boolean>>()
+    fun changeIdGroupUser(accessToken: String, idUser: Int, nameGroup: String, idGroup: Int) {
+        viewModelScope.launch {
+            changeIdGroupUserUseCase(accessToken, idUser, nameGroup, idGroup).collect {
+                changeIdGroupUserResponse.postValue(it)
             }
         }
     }

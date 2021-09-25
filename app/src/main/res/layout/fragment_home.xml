@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootHomeView"
+    style="@style/Theme.MyVoozKotlin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Theme.MyVoozKotlin"
     android:clickable="true"
     tools:context=".MainActivity">
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
@@ -18,21 +18,21 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stateListAnimator="@null"
-            android:background="@color/backgroundFill">
+            android:background="@color/backgroundFill"
+            android:stateListAnimator="@null">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/ctl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:scrimAnimationDuration="100"
                 app:contentScrim="@color/backgroundFill"
-                app:titleTextAppearance="@style/ActionBar.nameText"
                 app:expandedTitleMarginEnd="48dp"
                 app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:scrimAnimationDuration="100"
                 app:statusBarScrim="@android:color/transparent"
                 app:titleEnabled="false"
-                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+                app:titleTextAppearance="@style/ActionBar.nameText">
 
                 <LinearLayout
                     android:id="@+id/head_layout"
@@ -42,28 +42,153 @@
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.5">
 
-                    <com.example.myvoozkotlin.Views.Shimmer.ShimmerFrameLayout
-                        android:id="@+id/news_shimmer_view"
-                        android:layout_gravity="center"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"
-                        android:visibility="visible"
-                        android:paddingTop="82dp"
-                        app:shimmer_duration="1000">
-                        <include
-                            layout="@layout/item_story_shimmer"/>
-                    </com.example.myvoozkotlin.Views.Shimmer.ShimmerFrameLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_story"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_marginTop="82dp"
-                        tools:listitem="@layout/item_story"
-                        tools:itemCount="2"
-                        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="61dp"
+                                    android:layout_height="61dp"
+                                    android:visibility="gone"
+                                    app:cardCornerRadius="16dp"
+                                    app:cardBackgroundColor="@color/backgroundDefaultButton"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:alpha="0.8"
+                                        android:src="@drawable/ic_users_solid"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintRight_toRightOf="parent"
+                                        app:tint="@color/white" />
+                                </androidx.cardview.widget.CardView>
+
+
+                            </LinearLayout>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cvSiteButton"
+                                android:layout_width="61dp"
+                                android:layout_height="130dp"
+                                app:cardBackgroundColor="@color/white"
+                                app:cardCornerRadius="16dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:id="@+id/ivSiteButton"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_gravity="center"
+                                    android:alpha="0.8"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent" />
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="130dp"
+                                android:layout_height="61dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="8dp"
+                                app:cardBackgroundColor="@color/backgroundGreenButton"
+                                app:cardCornerRadius="16dp"
+                                app:cardElevation="0dp">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvTitleNextPair"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="16dp"
+                                        android:layout_marginRight="8dp"
+                                        android:ellipsize="end"
+                                        android:lines="1"
+                                        android:alpha="0.7"
+                                        android:text="Математическая логика"
+                                        android:textColor="@color/white"
+                                        android:textSize="14dp"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <TextView
+                                        android:id="@+id/tvDayNumberNextPair"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="16dp"
+                                        android:text="4"
+                                        android:alpha="0.4"
+                                        android:textColor="@color/textPrimary"
+                                        android:textSize="18dp"
+                                        android:textStyle="bold"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/tvTitleNextPair" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="8dp"
+                                        android:id="@+id/tvPairTitle"
+                                        android:text="Пара"
+                                        android:textColor="@color/white"
+                                        android:textSize="14dp"
+                                        app:layout_constraintBottom_toBottomOf="@+id/tvDayNumberNextPair"
+                                        app:layout_constraintLeft_toRightOf="@+id/tvDayNumberNextPair"
+                                        app:layout_constraintTop_toBottomOf="@+id/tvTitleNextPair"
+                                        app:layout_constraintTop_toTopOf="@+id/tvDayNumberNextPair" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="8dp"
+                                        android:text="18:00"
+                                        android:textColor="@color/white"
+                                        android:textSize="14dp"
+                                        app:layout_constraintBottom_toBottomOf="@+id/tvDayNumberNextPair"
+                                        app:layout_constraintLeft_toRightOf="@+id/tvPairTitle"
+                                        app:layout_constraintTop_toBottomOf="@+id/tvTitleNextPair"
+                                        app:layout_constraintTop_toTopOf="@+id/tvDayNumberNextPair" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.cardview.widget.CardView>
+                        </LinearLayout>
+
+                        <com.example.myvoozkotlin.Views.Shimmer.ShimmerFrameLayout
+                            android:id="@+id/news_shimmer_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="visible"
+                            app:shimmer_duration="1000">
+
+                            <include layout="@layout/item_story_shimmer" />
+                        </com.example.myvoozkotlin.Views.Shimmer.ShimmerFrameLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_story"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                            tools:itemCount="2"
+                            tools:listitem="@layout/item_story" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -72,27 +197,28 @@
                     android:layout_height="wrap_content"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@android:color/transparent"
-                android:paddingTop="20dp"
-                app:cardElevation="20dp"
                 android:outlineAmbientShadowColor="@color/textTertiary"
-                android:outlineSpotShadowColor="@color/textTertiary">
+                android:outlineSpotShadowColor="@color/textTertiary"
+                android:paddingTop="20dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardElevation="20dp">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_border_top">
 
                     <TextView
+                        android:id="@+id/tv_day_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_day_title"
                         android:layout_marginLeft="16dp"
                         android:fontFamily="@font/roboto_bold"
                         android:text="Понедельник"
@@ -101,13 +227,14 @@
                         app:layout_constraintBottom_toBottomOf="@+id/cv_date_button"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/cv_date_button" />
+
                     <TextView
+                        android:id="@+id/tv_date_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_date_title"
+                        android:layout_marginRight="8dp"
                         android:fontFamily="@font/roboto_regular"
                         android:text="Чт, 15 июл"
-                        android:layout_marginRight="8dp"
                         android:textColor="@color/textTertiary"
                         android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="@+id/cv_date_button"
@@ -115,19 +242,20 @@
                         app:layout_constraintTop_toTopOf="@+id/cv_date_button" />
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_date_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/cv_date_button"
-                        android:layout_marginRight="16dp"
                         android:layout_marginVertical="8dp"
+                        android:layout_marginRight="16dp"
                         android:layout_weight="0.1"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardCornerRadius="18dp"
                         app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="18dp"
                         app:cardElevation="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
@@ -135,24 +263,26 @@
                             android:layout_margin="8dp"
                             android:src="@drawable/ic_calendars"
                             app:tint="@color/buttonBkg" />
+
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_date_change_indicator"
                             android:layout_width="10dp"
                             android:layout_height="10dp"
-                            android:id="@+id/cv_date_change_indicator"
-                            android:layout_margin="5dp"
-                            app:cardCornerRadius="4dp"
-                            android:visibility="gone"
-                            app:cardElevation="0dp"
                             android:layout_gravity="right"
-                            app:cardBackgroundColor="@color/white">
+                            android:layout_margin="5dp"
+                            android:visibility="gone"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="4dp"
+                            app:cardElevation="0dp">
+
                             <androidx.cardview.widget.CardView
                                 android:layout_width="8dp"
                                 android:layout_height="8dp"
-                                android:layout_margin="5dp"
-                                app:cardCornerRadius="4dp"
-                                app:cardElevation="0dp"
                                 android:layout_gravity="center"
-                                app:cardBackgroundColor="#ff4e33"/>
+                                android:layout_margin="5dp"
+                                app:cardBackgroundColor="#ff4e33"
+                                app:cardCornerRadius="4dp"
+                                app:cardElevation="0dp" />
                         </androidx.cardview.widget.CardView>
                     </androidx.cardview.widget.CardView>
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -173,29 +303,33 @@
                 android:layout_height="fill_parent"
                 android:background="@color/backgroundContent"
                 android:orientation="vertical">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_week"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_marginBottom="8dp"
-                    tools:listitem="@layout/item_day"
                     android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/item_day" />
+
                 <LinearLayout
+                    android:id="@+id/ll_info_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/ll_info_table"
                     android:orientation="vertical">
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#e7e8e9"/>
+                        android:background="#e7e8e9" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:background="#f8f9fb"
+                        android:orientation="horizontal"
                         android:weightSum="1">
 
                         <TextView
@@ -214,8 +348,8 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="24dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="24dp"
                             android:layout_weight="0.7"
                             android:fontFamily="@font/roboto_regular"
                             android:text="Пары"
@@ -223,64 +357,70 @@
                             android:textSize="15sp" />
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_show_empty_lessons_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:id="@+id/cv_show_empty_lessons_button"
-                            app:cardBackgroundColor="@android:color/transparent"
                             android:layout_weight="0.1"
+                            android:visibility="gone"
+                            app:cardBackgroundColor="@android:color/transparent"
                             app:cardElevation="0dp">
 
                             <ImageView
+                                android:id="@+id/iv_show_empty_lessons"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:id="@+id/iv_show_empty_lessons"
                                 android:layout_gravity="center"
                                 android:layout_margin="8dp"
                                 android:src="@drawable/ic_eye"
                                 app:tint="@color/textSecondary" />
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#e7e8e9"/>
+                        android:background="#e7e8e9" />
                 </LinearLayout>
+
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:indeterminateTint="@color/textLink"
-                    android:layout_marginTop="16dp"
-                    android:layout_gravity="center_horizontal"
                     android:layout_centerInParent="true"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:indeterminateTint="@color/textLink"
+                    android:visibility="gone" />
+
                 <LinearLayout
+                    android:id="@+id/ll_empty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:id="@+id/ll_empty"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:padding="32dp"
-                    android:layout_gravity="center"
-                    android:gravity="center">
+                    android:visibility="gone">
+
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:src="@drawable/ic_conveyor_belt_boxes"
                         android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_conveyor_belt_boxes"
                         app:tint="@color/textTertiary" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:fontFamily='@font/roboto_regular'
-                        android:textColor="@color/textTertiary"
-                        android:textSize="18dp"
                         android:gravity="center_horizontal"
-                        android:text="Пустенько"/>
+                        android:text="Пустенько"
+                        android:textColor="@color/textTertiary"
+                        android:textSize="18dp" />
                 </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvLesson"
                     android:layout_width="match_parent"

@@ -25,7 +25,7 @@ class SearchViewModel @Inject constructor(
 
     val searchResponse = MutableLiveData<Event<List<SearchItem>>>()
     fun loadUniversityList(text: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             searchUniversityUseCase(text).collect {
                 searchResponse.postValue(it)
             }
@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadGroupList(text: String, idUniversity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             searchGroupUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }
@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadObjectList(text: String, idUniversity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             searchObjectUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }
@@ -49,7 +49,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadCorpusList(text: String, idUniversity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             searchCorpusUseCase(text, idUniversity).collect {
                 searchResponse.postValue(it)
             }

@@ -2,6 +2,7 @@ package com.example.myvoozkotlin.data.di
 
 import android.content.Context
 import com.example.myvoozkotlin.data.db.DbUtils
+import com.example.myvoozkotlin.data.db.MyMigration
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +23,9 @@ object DbModule {
             Realm.init(appContext)
             val config = RealmConfiguration.Builder()
                     .name("myvooz.realm")
-                    .schemaVersion(1)
+                    .schemaVersion(0)
+                .migration(MyMigration())
+                .deleteRealmIfMigrationNeeded()
                     .allowWritesOnUiThread(true)
                     .build()
             Realm.setDefaultConfiguration(config)
